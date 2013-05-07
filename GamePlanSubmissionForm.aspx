@@ -149,6 +149,40 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <tr class ="recordvalue">
+                                                <td class="recordlabel">
+                                                    <div class="fieldvalue">
+                                                        Date:
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div id="DatePicker" title="Your current month to date PCV.">
+
+
+
+
+                                                        <asp:TextBox id="datepicker" runat="server" />
+                                                        <input type="text" id="datepicker2" />
+                                                        <asp:Calendar ID="Calendar1" runat="server"></asp:Calendar>
+
+
+
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="recordrow">
+                                                <td class="recordlabel">
+                                                    <div class="fieldlabel">
+                                                        Approximate Net Worth:
+                                                    </div>
+                                                </td>
+                                                <td class="dropdowns">
+                                                    <div class="fieldvalue">
+                                                        <asp:DropDownList ID="netWorth" ClientIDMode="Static" runat="server" />
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             <tr class="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldlabel">

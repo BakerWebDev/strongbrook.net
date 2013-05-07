@@ -11,7 +11,6 @@
     <link href="../Assets/Plugins/twitter.bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="../Assets/Plugins/twitter.bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
 
-
     <script src="Assets/Scripts/jquery.min.js"></script>
     <script src="Assets/Plugins/twitter.bootstrap/js/bootstrap.js"></script>
     <!--[if lt IE 9]>  

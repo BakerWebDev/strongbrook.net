@@ -13,6 +13,26 @@
 
 
 
+
+
+
+    <!-- Start datepicker -->
+    <script type="text/javascript" src="Assets/Scripts/jquery.datepicker.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+    <script type="text/javascript">
+        $(function () {
+            $("#datepicker").datepicker({
+                dateFormat: 'DD, MM  d  yy'
+            });
+        });
+    </script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <!-- End datepicker -->
+
+
+
+
+
     <!--[if lt IE 9]>  
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>  
     <![endif]-->

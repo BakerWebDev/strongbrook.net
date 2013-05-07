@@ -21,6 +21,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
             Click_Submit();
         }
         PopulateAvailabilityFields();
+        PopulateNetWorthFields();
     }
     #endregion
 
@@ -57,6 +58,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
             request.Email = Email;
             request.Address1 = LikelyAvailable;
             request.Address2 = TimeZone;
+            request.Fax = NetWorth;
             request.Notes = NotesInLongForm.ToString();
             request.BirthDate = DateTime.Now;
             request.Zip = "1";
@@ -254,6 +256,18 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         timeZones.Items.Add(new ListItem("Hawaii Time"));
 
     }
+    private void PopulateNetWorthFields()
+    {
+        netWorth.Items.Clear();
+
+        netWorth.Items.Add(new ListItem("$0 - $10,000"));
+        netWorth.Items.Add(new ListItem("$10,000 - $20,000"));
+        netWorth.Items.Add(new ListItem("$10,000 - $20,000"));
+        netWorth.Items.Add(new ListItem("$10,000 - $20,000"));
+        netWorth.Items.Add(new ListItem("$10,000 - $20,000"));
+        netWorth.Items.Add(new ListItem("$10,000 - $20,000"));
+
+    }
     #endregion
 
     #region Properties
@@ -298,6 +312,24 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
     {
         get { return timeZones.SelectedValue; }
         set { timeZones.SelectedValue = value; }
+    }
+
+
+
+
+    //public string AppointmentDate
+    //{
+    //    get { return datepicker.Value; }
+    //    set { datepicker.Value = value; }
+    //}
+
+
+
+
+    public string NetWorth
+    {
+        get { return netWorth.SelectedValue; }
+        set { netWorth.SelectedValue = value; }
     }
     private string Comments
     {
