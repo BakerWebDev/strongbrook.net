@@ -54,20 +54,14 @@
     </div>
     --%>
 
-
-
-
     <div class="maincontent" style="border-left:0px;">
         <exigo:ErrorManager ID="Error" runat="server" />
 
-        
+            <%--<div id="calendar"></div>--%>
             <div style="width: 1050px;">
                 <iframe name="frm-disclaimer" src="http://www.strongbrookcalendar.com" style="width: 1050px; height: 1050px; overflow: scroll; border: 0px;"></iframe>
             </div>
 
     </div>
-
-
-
 </asp:Content>
 

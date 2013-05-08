@@ -405,7 +405,7 @@ Enroller Information:
 
         //Email SMTP Settings
         Int16 port = 25;
-        SmtpClient client = new SmtpClient("smtp.gmail.com", port); // ("smtpout.secureserver.net", port);
+        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
 
         // Use these properties for a un-secure SMTP connection.
         //client.UseDefaultCredentials = false;
@@ -414,7 +414,7 @@ Enroller Information:
         client.UseDefaultCredentials = true;
         client.EnableSsl = true;
         
-        client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123"); // ("support@strongbrookdirect.com", "Reic2012");
+        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
 
         try
         {
