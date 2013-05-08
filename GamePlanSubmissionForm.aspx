@@ -1,8 +1,14 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/MasterPages/PopUp.Master" AutoEventWireup="true"
     CodeFile="GamePlanSubmissionForm.aspx.cs" Inherits="GamePlanSubmissionForm" %>
 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
     <link rel="stylesheet" type="text/css" href="Assets/Styles/schedule.css" />
+    <link href="Assets/Styles/datepicker.css" rel="stylesheet" />
+
+
+
 </asp:Content>
 <asp:Content ID="Content2" runat="server" ContentPlaceHolderID="Content">
     <script type="text/javascript" language="javascript">
@@ -68,7 +74,7 @@
                                 </td>
                                 <td class="rightSide">
                                     <table class="record">
-                                        <tbody>
+                                        <tbody enableviewstate="False">
                                             <tr class="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldlabel">
@@ -149,25 +155,21 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr class ="recordvalue">
+                                            <tr class ="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldvalue">
                                                         Date:
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div id="DatePicker" title="Your current month to date PCV.">
-
-
-
-
-                                                        <asp:TextBox id="datepicker" runat="server" />
-                                                        <input type="text" id="datepicker2" />
-                                                        <asp:Calendar ID="Calendar1" runat="server"></asp:Calendar>
-
-
-
-
+                                                    <div id="DatePicker">
+                                                        <asp:TextBox ID="Date1" runat="server" Text="Optional" CssClass="textbox"></asp:TextBox>
+                                                        <asp:CalendarExtender ID="CalendarExtender1" runat="server" 
+                                                            TargetControlID="Date1" 
+                                                            CssClass="calendar"
+                                                            Format="MMMM d, yyyy" 
+                                                            Animated="true">
+                                                        </asp:CalendarExtender>
                                                     </div>
                                                 </td>
                                             </tr>

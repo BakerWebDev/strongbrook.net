@@ -9,20 +9,6 @@
     <link href="Assets/Styles/jquery.fancybox-thumbs.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="Assets/Styles/schedule.css" />
 
-
-    <!-- Start datepicker -->
-    <script type="text/javascript" src="Assets/Scripts/jquery.datepicker.js"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
-    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            $("#datepicker").datepicker({
-                dateFormat: 'DD, MM  d  yy'
-            });
-        });
-    </script>
-    <!-- End datepicker -->
-
     <script type="text/javascript">
         $(document).ready(function () {
             /*
@@ -266,11 +252,6 @@
 
                     <div style="padding: 50px"></div>
 
-
-                    <div id="DatePicker">
-                        Date:
-                        <input type="text" id="datepicker" />
-                    </div>
 
 
                 </div>

@@ -157,6 +157,10 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
             request.Address1 = LikelyAvailable;
             request.Address2 = TimeZone;
 
+            // Using the Other fields for misc data
+            request.Other16 = AppointmentDate;
+            request.Other17 = NetWorth;
+
             // Add Notes and the Date of the Order
             request.Notes = NotesInLongForm.ToString();
             request.OrderDate = DateTime.Now;
@@ -198,8 +202,18 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         {
             Request_PlaceGPRRorder();
             Request_CreateCustomerLead();
-            SendEmail();
-            Response.Redirect("GamePlanSubmissionThankYou.aspx");
+            try 
+            { 
+                SendEmail();
+                if (emailSent)
+                {
+                    Response.Redirect("GamePlanSubmissionThankYou.aspx");
+                }
+            }
+            catch(Exception ex) 
+            {
+                Response.Write("There was an error when attempting to send the email" + "<br /><br />" + ex);         
+            }
         }
         else
         {
@@ -234,7 +248,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         }
         catch
         {
-            Response.Write("User is invalid");
+            Response.Write("An invalid customer ID has been supplied. <br />");
         }
     }
     private void PopulateAvailabilityFields()
@@ -260,14 +274,13 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
     {
         netWorth.Items.Clear();
 
-        netWorth.Items.Add(new ListItem("$0 - $10,000"));
-        netWorth.Items.Add(new ListItem("$10,000 - $20,000"));
-        netWorth.Items.Add(new ListItem("$10,000 - $20,000"));
-        netWorth.Items.Add(new ListItem("$10,000 - $20,000"));
-        netWorth.Items.Add(new ListItem("$10,000 - $20,000"));
-        netWorth.Items.Add(new ListItem("$10,000 - $20,000"));
+        netWorth.Items.Add(new ListItem("$0 - $99,999"));
+        netWorth.Items.Add(new ListItem("$100,000 - $249,999"));
+        netWorth.Items.Add(new ListItem("$250,000 - $999,999"));
+        netWorth.Items.Add(new ListItem("$1,000,000+"));
 
     }
+
     #endregion
 
     #region Properties
@@ -313,24 +326,18 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         get { return timeZones.SelectedValue; }
         set { timeZones.SelectedValue = value; }
     }
-
-
-
-
-    //public string AppointmentDate
-    //{
-    //    get { return datepicker.Value; }
-    //    set { datepicker.Value = value; }
-    //}
-
-
-
+    public string AppointmentDate
+    {
+        get { return Date1.Text; }
+        set { Date1.Text = value; }
+    }
 
     public string NetWorth
     {
         get { return netWorth.SelectedValue; }
         set { netWorth.SelectedValue = value; }
     }
+
     private string Comments
     {
         get { return txtComments.InnerText; }
@@ -338,12 +345,13 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
     }
 
     public bool isValid { get; set; }
+    public bool emailSent { get; set; }
     #endregion
 
     #region Email Sender
     private bool SendEmail()
     {
-        bool emailSent = false;
+        emailSent = false;
 
         //First Create the Address Info
         MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
@@ -356,9 +364,9 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         message.CC.Add(cc);
         message.Bcc.Add("Chris.Ferguson@strongbrook.com");
         message.Bcc.Add("Tyler.Bennett@strongbrook.com");
-        message.Bcc.Add("aaronbaker315@me.com");
         message.Bcc.Add(bcc);
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
+        #region Email Message Body
         message.Body = string.Format(@"
 A request for a Game Plan Report has been submitted for the following individual:
 
@@ -368,43 +376,56 @@ Secondary Phone: {3}
 Email Address: {4}
 Likely Available: {5}
 TimeZone: {6}
+Date Requested if any: {7}
+Estimated Net Worth: {8}
 
 Comments: 
-{7}
+{9}
 
 
 Enroller Information:
-{8}
-{9}
 {10}
-        ", FirstName
-         , LastName
-         , Phone1
-         , Phone2
-         , Email
-         , LikelyAvailable
-         , TimeZone
-         , Comments
-         , CurrentUser_FirstName + " " + CurrentUser_LastName
-         , CurrentUser_Email
-         , CurrentUser_Phone
+{11}
+{12}
+        ", FirstName // 0
+         , LastName // 1
+         , Phone1 // 2
+         , Phone2 // 3
+         , Email // 4
+         , LikelyAvailable // 5
+         , TimeZone // 6
+         , AppointmentDate // 7
+         , NetWorth // 8
+         , Comments  // 9
+         , CurrentUser_FirstName + " " + CurrentUser_LastName // 10
+         , CurrentUser_Email // 11
+         , CurrentUser_Phone  // 12
          );
+        #endregion Email Message Body
 
         //Email SMTP Settings
         Int16 port = 25;
-        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
-        client.UseDefaultCredentials = false;
-        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        SmtpClient client = new SmtpClient("smtp.gmail.com", port); // ("smtpout.secureserver.net", port);
+
+        // Use these properties for a un-secure SMTP connection.
+        //client.UseDefaultCredentials = false;
+
+        // Use these properties for a secure SMTP connection.
+        client.UseDefaultCredentials = true;
+        client.EnableSsl = true;
+        
+        client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123"); // ("support@strongbrookdirect.com", "Reic2012");
 
         try
         {
-            emailSent = true;
             client.Send(message);
+            emailSent = true;
         }
         catch (Exception ex)
         {
             emailSent = false;
             HtmlTextWriter writer = new HtmlTextWriter(Response.Output);
+            Response.Write(ex);
             writer.Write("We're sorry, your request could not be completed.  If this problem persists, please contact customer support " + ex.ToString());
         }
 
@@ -449,4 +470,11 @@ Enroller Information:
     }
 
     #endregion
+
+
+
+
+
+
+
 }

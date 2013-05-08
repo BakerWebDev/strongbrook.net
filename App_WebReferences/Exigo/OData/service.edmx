@@ -180,6 +180,7 @@
         <Property Name="Other19" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
         <Property Name="Other20" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
         <Property Name="ReturnOrderID" Type="Edm.Int32" Nullable="true" />
+        <Property Name="ParentOrderID" Type="Edm.Int32" Nullable="true" />
         <Property Name="ShippedDate" Type="Edm.DateTime" Nullable="true" />
         <Property Name="CreatedDate" Type="Edm.DateTime" Nullable="false" />
         <Property Name="TaxFedRate" Type="Edm.Decimal" Nullable="false" Precision="18" Scale="2" />
