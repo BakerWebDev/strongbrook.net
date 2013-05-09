@@ -12,6 +12,12 @@
     left: 0px;
 }
 
+#DatePicker #Time .calendar .ajax__calendar_container {
+    position: relative;
+    bottom: 10px;
+    right: 99px;
+}
+
 
     #DatePicker .calendar .ajax__calendar_other .ajax__calendar_day,
     #DatePicker .calendar .ajax__calendar_other .ajax__calendar_year,
@@ -40,5 +46,10 @@
 #DatePicker .textbox {
     font-size: 10px;
     text-align: center;
-    color: #CCCCCC;
+    color: #808080;
+    width: 89px;
+}
+
+#DatePicker #Time .textbox {
+    width:97px;
 }

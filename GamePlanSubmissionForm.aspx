@@ -9,6 +9,9 @@
 
 
 
+
+
+
 </asp:Content>
 <asp:Content ID="Content2" runat="server" ContentPlaceHolderID="Content">
     <script type="text/javascript" language="javascript">
@@ -48,13 +51,13 @@
     <asp:HiddenField ID="ShowMessage" runat="server" />
     <div class="main-wrapper">
         <div class="scheduler panel">
-            <div class="panels" id="panels" style="position: relative;">
+            <div id="Main_Content" class="panels" id="panels" style="position: relative;">
                 <div class="j" id="introduction" style="display: block; position: absolute; width: 100%;">
                     <h1 class="heading">Request Your Free Personalized Game Plan Report</h1>
                     <table id="grid1">
                         <tbody>
                             <tr style="margin-top: 0px; vertical-align: top;">
-                                <td colspan="2" class="leftSide">
+                                <td id="ExplanationOfPage" colspan="2" class="leftSide">
                                     <div class="notes panel">
                                         Congratulations on taking your first step to requesting a one-on-one custom Game
                                         Plan Report. Your Game Plan Report will show all of your financial options moving
@@ -72,10 +75,10 @@
                                             your understanding and we look forward to speaking with you!</i>
                                     </div>
                                 </td>
-                                <td class="rightSide">
+                                <td id="FormFields" class="rightSide">
                                     <table class="record">
                                         <tbody enableviewstate="False">
-                                            <tr class="recordrow">
+                                            <tr id="FirstName" class="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldlabel">
                                                         First Name
@@ -88,7 +91,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr class="recordrow">
+                                            <tr id="LastName" class="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldlabel">
                                                         Last Name
@@ -101,7 +104,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr class="recordrow">
+                                            <tr id="Phone1" class="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldlabel">
                                                         Phone 1
@@ -114,7 +117,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr class="recordrow">
+                                            <tr id="Phone2" class="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldlabel">
                                                         Phone 2
@@ -127,7 +130,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr class="recordrow">
+                                            <tr id="Email" class="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldlabel">
                                                         Email
@@ -140,7 +143,19 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr class="recordrow">
+                                            <tr id="NetWorth" class="recordrow">
+                                                <td class="recordlabel">
+                                                    <div class="fieldlabel">
+                                                        Approximate Net Worth:
+                                                    </div>
+                                                </td>
+                                                <td class="dropdowns">
+                                                    <div class="fieldvalue">
+                                                        <asp:DropDownList ID="netWorth" ClientIDMode="Static" runat="server" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr id="Likely_Available" class="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldlabel">
                                                         Likely Available
@@ -155,15 +170,15 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr class ="recordrow">
+                                            <tr id="Date_Request" class ="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldvalue">
                                                         Date:
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <div id="DatePicker">
-                                                        <asp:TextBox ID="Date1" runat="server" Text="Optional" CssClass="textbox"></asp:TextBox>
+                                                <td id="DatePicker" class="dropdowns">
+                                                    <div id="Date" class="time">
+                                                        <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
                                                         <asp:CalendarExtender ID="CalendarExtender1" runat="server" 
                                                             TargetControlID="Date1" 
                                                             CssClass="calendar"
@@ -171,21 +186,20 @@
                                                             Animated="true">
                                                         </asp:CalendarExtender>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="recordrow">
-                                                <td class="recordlabel">
-                                                    <div class="fieldlabel">
-                                                        Approximate Net Worth:
+                                                    <div id="Time" class="zone">
+
+
+
+
+                                                        <asp:DropDownList ID="time2" runat="server" />
+
+
+
+
                                                     </div>
                                                 </td>
-                                                <td class="dropdowns">
-                                                    <div class="fieldvalue">
-                                                        <asp:DropDownList ID="netWorth" ClientIDMode="Static" runat="server" />
-                                                    </div>
-                                                </td>
                                             </tr>
-                                            <tr class="recordrow">
+                                            <tr id="Comments" class="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldlabel">
                                                         Comments
@@ -217,6 +231,8 @@
                             </tr>
                         </tbody>
                     </table>
+
+
                     <input class="input hidden" name="ibdemail" id="ibdemail" value="" type="hidden">
                     <input class="input hidden" name="ibdphone" id="ibdphone" value="" type="hidden">
                     <input class="input hidden" name="ibdname" id="ibdname" value=" " type="hidden">

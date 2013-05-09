@@ -16,7 +16,7 @@
         .scheduler #grid1 .rightSide .recordvalue .fieldvalue { max-width:245px; }
 
         .scheduler #grid1 .rightSide .dropdowns { width:100px; text-align:right; }
-        .scheduler #grid1 .rightSide .dropdowns .time { float:left; width:105px; }
+        .scheduler #grid1 .rightSide .dropdowns .time { float:left; width:100px; }
         .scheduler #grid1 .rightSide .dropdowns .time select { width:100px; }
         .scheduler #grid1 .rightSide .dropdowns .zone { float:right; width:115px; }
         .scheduler #grid1 .rightSide .dropdowns .zone select { width:110px; }

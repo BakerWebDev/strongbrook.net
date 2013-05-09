@@ -13,7 +13,10 @@ public partial class Other : System.Web.UI.Page
     #region Page Load
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if (!IsPostBack && Request.IsLocal)
+        {
+            Response.Redirect("Other.aspx" + "?id=" + "adb");
+        }
     }
     #endregion
 

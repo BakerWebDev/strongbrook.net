@@ -15,6 +15,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
     #region Page Load
     protected void Page_Load(object sender, EventArgs e)
     {
+        theDateParsedToGetTheDayOfTheWeek("Tuesday");
         if(IsPostBack)
         {
             SetCurrentUser();
@@ -24,6 +25,8 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         PopulateNetWorthFields();
     }
     #endregion
+
+
 
     #region Exigo API requests
     private CreateCustomerLeadRequest Request_CreateCustomerLead()
@@ -262,13 +265,12 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         lstAvailableTime.Items.Add(new ListItem("3pm - 5pm"));
         lstAvailableTime.Items.Add(new ListItem("5pm - 7pm"));
 
-
+        timeZones.Items.Clear();
         timeZones.Items.Add(new ListItem("Pacific Time"));
         timeZones.Items.Add(new ListItem("Mountain Time"));
         timeZones.Items.Add(new ListItem("Central Time"));
         timeZones.Items.Add(new ListItem("Eastern Time"));
         timeZones.Items.Add(new ListItem("Hawaii Time"));
-
     }
     private void PopulateNetWorthFields()
     {
@@ -278,7 +280,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         netWorth.Items.Add(new ListItem("$100,000 - $249,999"));
         netWorth.Items.Add(new ListItem("$250,000 - $999,999"));
         netWorth.Items.Add(new ListItem("$1,000,000+"));
-
+        netWorth.Items.Add(new ListItem("Don't Know"));
     }
 
     #endregion
@@ -471,6 +473,74 @@ Enroller Information:
 
     #endregion
 
+    #region Models
+    public class RenderNodes
+    {
+        public string MondayHours { get; set; }
+        public string TuesdayHours { get; set; }
+    }
+    #endregion
+
+
+    public string theDateParsedToGetTheDayOfTheWeek(string theDateSelected)
+    {
+        string foo = theDateSelected;
+
+        switch (foo)
+        { 
+            case "Monday":
+                FetchScheduleHours(DayOfWeek.Monday);
+                break;
+            case "Tuesday":
+                FetchScheduleHours(DayOfWeek.Tuesday);
+                break;
+        }
+        return foo;
+    }
+
+
+    #region Schedule Lists
+
+    public void FetchScheduleHours(DayOfWeek day)
+    {
+        switch(day)
+        {
+            case DayOfWeek.Monday:
+                PopulateMondayList();
+                break;
+            case DayOfWeek.Tuesday:
+                PopulateTuesdayList();
+                break;
+
+        }
+    }
+    
+
+
+    public void PopulateMondayList()
+    {
+        time2.Items.Clear();
+
+        time2.Items.Add(new ListItem("Monday"));
+        time2.Items.Add(new ListItem("9 - 10"));
+        time2.Items.Add(new ListItem("10 - 11"));
+    }
+
+    public void PopulateTuesdayList()
+    {
+        time2.Items.Clear();
+
+        time2.Items.Add(new ListItem("Tuesday"));
+        time2.Items.Add(new ListItem("9 - 10"));
+        time2.Items.Add(new ListItem("10 - 11"));
+    }
+
+
+
+
+
+
+    #endregion
 
 
 
