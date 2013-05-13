@@ -21,8 +21,6 @@
 
     <script src="Assets/Plugins/twitter.bootstrap/js/bootstrap.js"></script>
 
-    <script src="Assets/Plugins/jquery.multiselect/arc90_multiselect.js"></script>
-
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 
@@ -115,114 +113,6 @@
 
     </script>
 
-		<style type="text/css">
-			@import "http://lab.arc90.com/tools/c/css/tool_global.css";	/* Style for this page */
-			
-			.a9multiselect {
-				width: 9.9em;
-				font-family: Arial, Helvetica, sans-serif;
-				position: relative;
-				height: 22px;
-				padding: 0;
-				margin: -.05em 0 1em 0;
-				border: 0;
-			}
-			.a9multiselect .expcol-click, .a9multiselect .expcol-click-open {
-				background-color: #fff;
-				border: 1px solid #999;
-				padding: 0;
-				margin: 0;
-				cursor: default;
-				min-width: 9.8em;
-			}
-			.a9multiselect div.expcol-click {
-				position: absolute;
-				z-index: 104;
-				height: 20px;
-			}
-			.a9multiselect div.expcol-click-open {
-				border-bottom: 1px solid #fff;
-			}
-			.a9multiselect .title { 
-				font-size: .8em;
-				height: 1.3em;
-				line-height: 1.2em;
-				overflow: hidden;
-				padding: .3em 1.1em .1em .5em;
-				background: white url(images/multiselect.gif) no-repeat top right;
-			}
-			.a9multiselect .title:hover { 
-				background: white url(images/multiselect-hover.gif) no-repeat top right; 
-			}
-			.expcol-body {
-				position: absolute;
-				z-index: 106;
-				min-height: 1em;
-				background: #e9f3f8;
-				padding: .1em;
-				display: block;
-				font-size: 75%;
-				display: none;
-				margin-top: -1px;
-				border: 1px solid #999;
-			}
-			.expcol-body ul {
-				overflow: auto;
-				min-height: 1em;
-				min-width: 20em;
-				margin: 0;
-				padding: 0;
-			}
-			.expcol-body li { margin: 0 0 .2em 0; list-style:none; }
-			.expcol-body li:hover {
-				background: #ddd;
-			}
-			.arc90_multiselect {
-				width: 12.5em;
-				height: 1.35em;
-				visibility: hidden;
-			}
-			.a9selectall {
-				border-bottom: 1px solid #ccc;
-			}
-			
-			/* Styles for page layout */
-			DIV.examples {
-				margin: 0 0 2em 0;
-				width: 17em;
-				border: 1px solid #e9e9e9;
-				padding: .3em;
-			}
-			
-			DIV.examples LABEL.examples {
-				display: block;
-				margin: 0 0 .2em 0;
-			}
-
-			/* Styles for page layout */
-			DIV.example2 {
-				margin: 0 0 2em 0;
-				width: 27em;
-				border: 1px solid #e9e9e9;
-				padding: .3em;
-			}
-			
-			DIV.example2 LABEL.example2 {
-				display: block;
-				margin: 0 0 .2em 0;
-			}
-		</style>
-
-
-		<script type="text/javascript">
-		    // change the default options for all multiselects
-		    a$.NO_SELECTION = 'No selection';		// TEXT for 'No selection' when nothing selected
-		    a$.SELECTED = 'Options selected';	// TEXT for 'XX Options selected' when over 1 selected
-		    a$.SELECT_ALL = 'Select All';			// TEXT for 'Select All' for checkboxes
-		    a$.SelectAllMin = 6;					// minimum number of options needed to show 'Select All'
-		    a$.WhenToUse = 'class';				// class | multiple | all : for how to make selects become multiselects
-		    a$.msSeparator = '|';					// separator for values (can be multiple characters)
-		</script>
 
 
 </head>
@@ -328,66 +218,6 @@
 
 
 
-
-
-
-
-
-			<div class="examples">
-				<label class="examples">First example of MultiSelect</label>
-				<select id="lang" name="lang" class="arc90_multiselect" multiple="multiple" size="4" title="Languages">
-					<option value="fr">French</option>
-					<option value="du">Dutch</option>
-					<option value="kk">Klingon</option>
-					<option value="et">Esperanto</option>
-					<option value="ru">Russian</option>
-					<option value="ce">Canadian English</option>
-					<option value="ar">Arabic</option>
-					<option value="gr">German</option>
-					<option value="ar">Aramaic</option>
-					<option value="ch">Chinese</option>
-					<option value="po">Polish</option>
-					<option value="yi">Yiddish</option>
-					<option value="kr">Korean</option>
-					<option value="xx">A really really really very very unbeleivably crazy loooooooooooooooooooong option title</option>
-				</select>
-			</div>
-		
-
-
-				<select style="display:none">
-
-				</select>
-
-		
-
-		
-
-		
-
-			<div class="examples">
-				<label class="examples">First example of MultiSelect</label>
-				<select id="Select1" name="lang" class="arc90_multiselect" multiple="multiple" size="4" title="Languages">
-					<option value="fr">French</option>
-					<option value="en" selected="true">English</option>
-					<option value="sp">Spanish</option>
-					<option value="jp" selected="true">Japanese</option>
-					<option value="du">Dutch</option>
-					<option value="kk">Klingon</option>
-					<option value="et">Esperanto</option>
-					<option value="ru">Russian</option>
-					<option value="ce">Canadian English</option>
-					<option value="ar">Arabic</option>
-					<option value="gr">German</option>
-					<option value="ar">Aramaic</option>
-					<option value="ch">Chinese</option>
-					<option value="po">Polish</option>
-					<option value="yi">Yiddish</option>
-					<option value="kr">Korean</option>
-					<option value="xx">A really really really very very unbeleivably crazy loooooooooooooooooooong option title</option>
-				</select>
-			</div>
-		
 
 
 
