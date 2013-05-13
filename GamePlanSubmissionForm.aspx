@@ -1,16 +1,99 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/MasterPages/PopUp.Master" AutoEventWireup="true"
     CodeFile="GamePlanSubmissionForm.aspx.cs" Inherits="GamePlanSubmissionForm" %>
 
-<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+
+
+
+
+
 
 <asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
     <link rel="stylesheet" type="text/css" href="Assets/Styles/schedule.css" />
     <link href="Assets/Styles/datepicker.css" rel="stylesheet" />
 
 
+<script src="//ajax.microsoft.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
 
 
 
+
+
+    <script>
+
+        $(function () {
+            $('#Date').hide();
+            $('#Time').hide();
+            $('#Time2').hide();
+        });
+
+        function update() {
+
+
+
+
+
+
+            $('#Date').show();
+            $('#Time').show();
+        }
+
+       
+
+        function Save() {
+            $('DIV#saving').show(); //Show saving indicator
+            var counter = 1,
+                saveString = "";
+
+            while (counter <= 3) {
+                var currentColumn = "#column-" + counter; //Get the current column to work on
+
+                $(currentColumn).children('div').each(function () { //for each child div in column, get the row and contents
+                    var row = $(this).attr('class').split('-');
+
+                    $(this).children('div').each(function () {
+                        var obj = $(this).attr('id').split('-');
+
+                        saveString += obj[1] + ',' + counter + ',' + row[2] + '|'; //Append the string with current object
+                    });
+                });
+
+                counter++;
+            }
+            saveString = saveString.substring(0, saveString.length - 1); //Remove the last '|'
+            var extID = $('INPUT[id*="detailid"]').val();
+
+            var args = '"cid": "' + 11309 + '", "extID": "' + extID + '", "s": "' + saveString + '"';
+
+            $.ajax({
+                url: 'GamePlanSubmissionForm.aspx/SaveDashboard',
+                data: '{' + args + '}',
+                type: 'POST',
+                dataType: 'JSON',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    alert("save");
+                    $('DIV#saving').children().fadeOut('200');
+                    setTimeout(function () {
+                        $('DIV#saving').children('div').fadeIn('600');
+                    }, 600);
+                },
+                errror: function (result) {
+                    alert(result.status + ' ' + resut.statusText);
+                }
+            });
+
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        function getdata() {
+
+            var countryId = $("#drdcountry").val();
+
+            alert(countryId);
+        }
+    </script>
 
 </asp:Content>
 <asp:Content ID="Content2" runat="server" ContentPlaceHolderID="Content">
@@ -48,6 +131,51 @@
             });
         });
     </script>
+
+
+    <script type="text/javascript">
+        function checkDate(sender, args) {
+            if (sender._selectedDate < new Date()) {
+                alert("Please select a date after tomorrows date.");
+                sender._selectedDate = new Date();
+                // set the date back to the current date
+                sender._textbox.set_Value(sender._selectedDate.format(sender._format))
+            }
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <asp:HiddenField ID="ShowMessage" runat="server" />
     <div class="main-wrapper">
         <div class="scheduler panel">
@@ -165,9 +293,20 @@
                                                     <div class="time">
                                                         <asp:DropDownList ID="lstAvailableTime" ClientIDMode="Static" runat="server" />
                                                     </div>
+
+
+
+
+
+
                                                     <div class="zone">
-                                                        <asp:DropDownList ID="timeZones" ClientIDMode="Static" runat="server" />
+                                                        <asp:DropDownList ID="timeZones" runat="server" onchange="update();" />
                                                     </div>
+
+
+
+
+
                                                 </td>
                                             </tr>
                                             <tr id="Date_Request" class ="recordrow">
@@ -176,29 +315,79 @@
                                                         Date:
                                                     </div>
                                                 </td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                 <td id="DatePicker" class="dropdowns">
+
+
+
                                                     <div id="Date" class="time">
                                                         <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
-                                                        <asp:CalendarExtender ID="CalendarExtender1" runat="server" 
+<%--                                                        <asp:CalendarExtender ID="CalendarExtender1" runat="server" 
                                                             TargetControlID="Date1" 
                                                             CssClass="calendar"
-                                                            Format="MMMM d, yyyy" 
+                                                            Format="MMMM d, yyyy"
+                                                            OnClientDateSelectionChanged="checkDate"
                                                             Animated="true">
-                                                        </asp:CalendarExtender>
+                                                        </asp:CalendarExtender>--%>
                                                     </div>
                                                     <div id="Time" class="zone">
 
-
-
-
                                                         <asp:DropDownList ID="time2" runat="server" />
 
+                                                    </div>
+                                                    <div id="Time2" class="zone">
 
+                                                        <asp:DropDownList ID="DropDownList1" runat="server" />
 
 
                                                     </div>
                                                 </td>
+
+
+
+
+
+
+
+
+
+
                                             </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <asp:DropDownList ID="drdlTimeZone" runat="server">
+                                                        <asp:ListItem>Eastern</asp:ListItem>
+                                                        <asp:ListItem>Central</asp:ListItem>
+                                                        <asp:ListItem>Mountain</asp:ListItem>
+                                                        <asp:ListItem>Pacific</asp:ListItem>
+                                                        <asp:ListItem>Hawaii</asp:ListItem>
+                                                    </asp:DropDownList>
+
+                                                    <asp:DropDownList ID="drdlAppTime" runat="server"></asp:DropDownList>
+                                                </td>
+                                            </tr>
+
+
+
+
+
+
                                             <tr id="Comments" class="recordrow">
                                                 <td class="recordlabel">
                                                     <div class="fieldlabel">
@@ -233,6 +422,11 @@
                     </table>
 
 
+
+
+
+
+
                     <input class="input hidden" name="ibdemail" id="ibdemail" value="" type="hidden">
                     <input class="input hidden" name="ibdphone" id="ibdphone" value="" type="hidden">
                     <input class="input hidden" name="ibdname" id="ibdname" value=" " type="hidden">
@@ -245,9 +439,9 @@
                         <tbody>
                             <tr>
                                 <td class="toolbar-expand"></td>
-                                <td class="toolbar-expand"></td>
                                 <td class="toolbar-cell toolbar-right toolbar-last">
                                     <div id="loginButton" class="login-button">
+                                        <asp:Button ID="nextButton1" runat="server" CausesValidation="true" />
                                         <asp:Button ID="submitButton" runat="server" Text="Submit" CausesValidation="true"
                                             OnClientClick="foop();" />
                                     </div>

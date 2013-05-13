@@ -13,26 +13,21 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Web.Services;
 
-public partial class GamePlanSubmissionForm : System.Web.UI.Page
+public partial class GPRform : System.Web.UI.Page
 {
     #region Page Load
     protected void Page_Load(object sender, EventArgs e)
     {
-
-
+        drdlTimeZone.Attributes.Add("onchange", "Save();" + Page.ClientScript.GetPostBackEventReference(drdlTimeZone, null).ToString());
         if (!IsPostBack)
         {
+            //
             drdlTimeZone.Attributes.Add("onchange", "getdata()");
+            //drdlTimeZone.Attributes.Add("onchange", "update()");
+
+            //drdcity.Attributes.Add("onchange", "getdata2()");
         }
-
-
-        timeZones.Attributes.Add("OnTextChanged", "Save();" + Page.ClientScript.GetPostBackEventReference(timeZones, null).ToString());
-
-
-     
-
-        
-        if(IsPostBack)
+        if (IsPostBack)
         {
 
             SetCurrentUser();
@@ -41,28 +36,8 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         PopulateAvailabilityFields();
         PopulateNetWorthFields();
     }
-    #endregion
 
-    public int MyProperty { get; set; }
-
-    #region Save Methods
-    [WebMethod()]
-    public static void SaveDashboard(string cid, string extID, string s)
-    {
-        if (cid == "11309")
-        {
-            foo asf = new foo();
-            asf.bla = cid;
-        }
-    }
-    #endregion
-
-
-    public class foo
-    {
-        public string bla { get; set; }
-    }
-
+    #endregion Page Load
 
     #region Exigo API requests
     private CreateCustomerLeadRequest Request_CreateCustomerLead()
@@ -95,7 +70,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
             request.Phone = Phone1;
             request.Phone2 = Phone2;
             request.Email = Email;
-            request.Address1 = LikelyAvailable;
+            //request.Address1 = LikelyAvailable;
             request.Address2 = TimeZone;
             request.Fax = NetWorth;
             request.Notes = NotesInLongForm.ToString();
@@ -109,7 +84,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         {
             isValid = false;
         }
-      
+
         return request;
     }
     private CreateCustomerLeadRequest Request_CreateCustomerLeadForCorporate()
@@ -142,7 +117,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
             request.Phone = Phone1;
             request.Phone2 = Phone2;
             request.Email = Email;
-            request.Address1 = LikelyAvailable;
+            //request.Address1 = LikelyAvailable;
             request.Address2 = TimeZone;
             request.Notes = NotesInLongForm.ToString();
             request.BirthDate = DateTime.Now;
@@ -155,7 +130,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         {
             isValid = false;
         }
-      
+
         return request;
     }
     private CreateOrderRequest Request_PlaceGPRRorder()
@@ -193,7 +168,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
             request.LastName = LastName;
             request.Phone = Phone1;
             request.Email = Email;
-            request.Address1 = LikelyAvailable;
+            //request.Address1 = LikelyAvailable;
             request.Address2 = TimeZone;
 
             // Using the Other fields for misc data
@@ -237,27 +212,27 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
     {
         // Any time a GPR request Lead is created there will also be one created for the corporate account 24100 first.
         Request_CreateCustomerLeadForCorporate();
-        if(isValid)
+        if (isValid)
         {
             Request_PlaceGPRRorder();
             Request_CreateCustomerLead();
-            try 
-            { 
+            try
+            {
                 SendEmail();
                 if (emailSent)
                 {
                     Response.Redirect("GamePlanSubmissionThankYou.aspx");
                 }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-                Response.Write("There was an error when attempting to send the email" + "<br /><br />" + ex);         
+                Response.Write("There was an error when attempting to send the email" + "<br /><br />" + ex);
             }
         }
         else
         {
             HtmlTextWriter writer = new HtmlTextWriter(Response.Output);
-            writer.Write("We're sorrry, your request could not be completed.  If this problem persists, please contact customer support ");            
+            writer.Write("We're sorrry, your request could not be completed.  If this problem persists, please contact customer support ");
         }
     }
     #endregion Do Stuff
@@ -292,31 +267,36 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
     }
     private void PopulateAvailabilityFields()
     {
-        lstAvailableTime.Items.Clear();
 
-        lstAvailableTime.Items.Add(new ListItem("Anytime"));
-        lstAvailableTime.Items.Add(new ListItem("9am - 11am"));
-        lstAvailableTime.Items.Add(new ListItem("11am - 1pm"));
-        lstAvailableTime.Items.Add(new ListItem("1pm - 3pm"));
-        lstAvailableTime.Items.Add(new ListItem("3pm - 5pm"));
-        lstAvailableTime.Items.Add(new ListItem("5pm - 7pm"));
+        //daysAvailable.Items.Clear();
 
-        timeZones.Items.Clear();
-        timeZones.Items.Add(new ListItem("Pacific Time"));
-        timeZones.Items.Add(new ListItem("Mountain Time"));
-        timeZones.Items.Add(new ListItem("Central Time"));
-        timeZones.Items.Add(new ListItem("Eastern Time"));
-        timeZones.Items.Add(new ListItem("Hawaii Time"));
 
-        time2.Items.Add(new ListItem("Hawaii Time"));
+
+        //daysAvailable.Items.Add(new ListItem("Any Day of the week"));
+        //daysAvailable.Items.Add(new ListItem("11am - 1pm"));
+        //daysAvailable.Items.Add(new ListItem("1pm - 3pm"));
+        //daysAvailable.Items.Add(new ListItem("3pm - 5pm"));
+        //daysAvailable.Items.Add(new ListItem("5pm - 7pm"));
+
+        drdlTimeZone.Items.Clear();
+        drdlTimeZone.Items.Add(new ListItem("Select Your Time Zone"));
+        drdlTimeZone.Items.Add(new ListItem("Pacific Time"));
+        drdlTimeZone.Items.Add(new ListItem("Mountain Time"));
+        drdlTimeZone.Items.Add(new ListItem("Central Time"));
+        drdlTimeZone.Items.Add(new ListItem("Eastern Time"));
+        drdlTimeZone.Items.Add(new ListItem("Hawaii Time"));
+
     }
     private void PopulateNetWorthFields()
     {
         netWorth.Items.Clear();
 
-        netWorth.Items.Add(new ListItem("$0 - $99,999"));
+        netWorth.Items.Add(new ListItem("Estimated Net Worth (optional)"));
+        netWorth.Items.Add(new ListItem("$0 - $49,999"));
+        netWorth.Items.Add(new ListItem("$50,000 - $99,999"));
         netWorth.Items.Add(new ListItem("$100,000 - $249,999"));
-        netWorth.Items.Add(new ListItem("$250,000 - $999,999"));
+        netWorth.Items.Add(new ListItem("$250,000 - $499,999"));
+        netWorth.Items.Add(new ListItem("$500,000 - $1,000,000"));
         netWorth.Items.Add(new ListItem("$1,000,000+"));
         netWorth.Items.Add(new ListItem("Don't Know"));
     }
@@ -356,15 +336,15 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         set { txtEmail.Text = value; }
     }
 
-    public string LikelyAvailable
-    {
-        get { return lstAvailableTime.SelectedValue; }
-        set { lstAvailableTime.SelectedValue = value; }
-    }
+    //public string LikelyAvailable
+    //{
+    //    get { return daysAvailable.SelectedValue; }
+    //    set { daysAvailable.SelectedValue = value; }
+    //}
     public string TimeZone
     {
-        get { return timeZones.SelectedValue; }
-        set { timeZones.SelectedValue = value; }
+        get { return drdlTimeZone.SelectedValue; }
+        set { drdlTimeZone.SelectedValue = value; }
     }
     public string AppointmentDate
     {
@@ -432,7 +412,7 @@ Enroller Information:
          , Phone1 // 2
          , Phone2 // 3
          , Email // 4
-         , LikelyAvailable // 5
+         , "LikelyAvailable" // 5
          , TimeZone // 6
          , AppointmentDate // 7
          , NetWorth // 8
@@ -453,7 +433,7 @@ Enroller Information:
         // Use these properties for a secure SMTP connection.
         client.UseDefaultCredentials = true;
         client.EnableSsl = true;
-        
+
         client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123"); // ("support@strongbrookdirect.com", "Reic2012");
 
         try
@@ -498,7 +478,7 @@ Enroller Information:
         set
         {
             _message += value;
-            ShowMessage.Value = "True";
+            //ShowMessage.Value = "True";
         }
     }
     private string _message;
@@ -506,75 +486,10 @@ Enroller Information:
     private void ClearMessage()
     {
         Message = string.Empty;
-        ShowMessage.Value = "";
+        //ShowMessage.Value = "";
     }
 
     #endregion
-
-
-
-    public string theDateParsedToGetTheDayOfTheWeek(string theDateSelected)
-    {
-        string foo = theDateSelected;
-
-        switch (foo)
-        { 
-            case "Monday":
-                FetchScheduleHours(DayOfWeek.Monday);
-                break;
-            case "Tuesday":
-                FetchScheduleHours(DayOfWeek.Tuesday);
-                break;
-        }
-        return foo;
-    }
-
-
-    #region Schedule Lists
-
-    public void FetchScheduleHours(DayOfWeek day)
-    {
-        switch(day)
-        {
-            case DayOfWeek.Monday:
-                PopulateMondayList();
-                break;
-            case DayOfWeek.Tuesday:
-                PopulateTuesdayList();
-                break;
-
-        }
-    }
-    
-
-
-    public void PopulateMondayList()
-    {
-        time2.Items.Clear();
-
-        time2.Items.Add(new ListItem("Monday"));
-        time2.Items.Add(new ListItem("9 - 10"));
-        time2.Items.Add(new ListItem("10 - 11"));
-    }
-
-    public void PopulateTuesdayList()
-    {
-        time2.Items.Clear();
-
-        time2.Items.Add(new ListItem("Tuesday"));
-        time2.Items.Add(new ListItem("9 - 10"));
-        time2.Items.Add(new ListItem("10 - 11"));
-    }
-
-
-
-
-
-
-    #endregion
-
-
-
 
 
 
