@@ -33,6 +33,9 @@
             $('#DaysAvailable').hide();
             $('#Comments').hide();
             $('#loginButton').hide();
+
+
+            
             
         });
 
@@ -113,6 +116,55 @@
 
     </script>
 
+
+    <script type="text/javascript">
+
+        $(function () {
+            $('#MondayTimeFrames').hide();
+            $('#MondayMorningHours').hide();
+            //$('#MondayAfternoonHours').hide();
+
+
+
+        });
+
+
+        $(function MondayTimeFrames() {
+            $('#MondayCheckbox').on('change', function () {
+                if ($(this).is(':checked')) {
+                    $('#MondayTimeFrames').show();
+                } else {
+                    $('#MondayTimeFrames').hide();
+                    $('#MondayMorningCheckbox').prop('checked', false);
+                    $('#MondayMorningHours').hide();
+                    $('#MondayMorning_10to11_Checkbox').prop('checked', false);
+                    $('#MondayMorning_11to12_Checkbox').prop('checked', false);
+                    $('#MondayMorning_12to1_Checkbox').prop('checked', false);
+                }
+            });
+        });
+
+
+        $(function mondayMorningChecked() {
+            $('#MondayMorningCheckbox').on('change', function () {
+                if ($(this).is(':checked')) {
+                    $('#MondayMorningHours').show();
+                    $('#MondayAfternoonCheckbox').hide();
+                    
+                } else {
+                    $('#MondayMorningHours').hide();
+                    $('#MondayMorning_10to11_Checkbox').prop('checked', false);
+                    $('#MondayMorning_11to12_Checkbox').prop('checked', false);
+                    $('#MondayMorning_12to1_Checkbox').prop('checked', false);
+                }
+            });
+        });
+
+
+
+
+        
+    </script>
 
 
 </head>
@@ -221,8 +273,33 @@
 
 
                                                     <div>
+                                                        <input id="MondayCheckbox" type="checkbox" />Monday<br />
+         
 
-                                                        <asp:CheckBoxList ID="daysAvailable" runat="server"></asp:CheckBoxList>
+                                                        <div id="MondayTimeFrames">
+                                                            <input id="MondayMorningCheckbox" type="checkbox" />Morning<br />
+                                                            
+                                                        </div>
+
+                                                        <div id="MondayMorningHours">
+                                                            <input id="MondayMorning_10to11_Checkbox" type="checkbox" onclick="mondayMoring_10to11_Checked()" />Between 10 and 11<br />
+                                                            <input id="MondayMorning_11to12_Checkbox" type="checkbox" onclick="mondayMoring_11to12_Checked()" />Between 11 and 12<br />
+                                                        </div>
+
+
+                                                        <div id="MondayAfternoonTimeFrames">
+                                                            <input id="MondayAfternoonCheckbox" type="checkbox" />Afternoon<br />
+                                                            
+                                                        </div>
+
+
+                                                        <div id="MondayAfternoonHours">
+                                                            
+                                                            <input id="MondayMorning_12to1_Checkbox" type="checkbox" onclick="mondayMoring_12to1_Checked()" />Between 12 and 1<br />
+
+                                                        </div>
+
+                                                        
 
 
 
@@ -230,6 +307,18 @@
 
 
 
+
+
+                                                    </div>
+
+                                                    <div id="spacer"><br /></div>
+
+                                                    <div>
+                                                        <input id="Checkbox2" type="checkbox" />Tuesday<br />
+                                                    </div>
+
+                                                    <div>
+                                                        <input id="Checkbox1" type="checkbox" />Tuesday<br />
                                                     </div>
 
 
