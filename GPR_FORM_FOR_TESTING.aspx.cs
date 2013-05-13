@@ -268,13 +268,13 @@ public partial class GPRform : System.Web.UI.Page
     private void PopulateAvailabilityFields()
     {
 
-        //daysAvailable.Items.Clear();
+        daysAvailable.Items.Clear();
 
 
 
-        //daysAvailable.Items.Add(new ListItem("Any Day of the week"));
-        //daysAvailable.Items.Add(new ListItem("11am - 1pm"));
-        //daysAvailable.Items.Add(new ListItem("1pm - 3pm"));
+        daysAvailable.Items.Add(new ListItem("Any Day of the week"));
+        daysAvailable.Items.Add(new ListItem("Monday"));
+        daysAvailable.Items.Add(new ListItem("Tuesday"));
         //daysAvailable.Items.Add(new ListItem("3pm - 5pm"));
         //daysAvailable.Items.Add(new ListItem("5pm - 7pm"));
 

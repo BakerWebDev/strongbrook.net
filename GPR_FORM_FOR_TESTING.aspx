@@ -220,7 +220,17 @@
 
 
 
+                                                    <div>
 
+                                                        <asp:CheckBoxList ID="daysAvailable" runat="server"></asp:CheckBoxList>
+
+
+
+
+
+
+
+                                                    </div>
 
 
 
