@@ -214,8 +214,15 @@
 		</style>
 
 
-
-
+		<script type="text/javascript">
+		    // change the default options for all multiselects
+		    a$.NO_SELECTION = 'No selection';		// TEXT for 'No selection' when nothing selected
+		    a$.SELECTED = 'Options selected';	// TEXT for 'XX Options selected' when over 1 selected
+		    a$.SELECT_ALL = 'Select All';			// TEXT for 'Select All' for checkboxes
+		    a$.SelectAllMin = 6;					// minimum number of options needed to show 'Select All'
+		    a$.WhenToUse = 'class';				// class | multiple | all : for how to make selects become multiselects
+		    a$.msSeparator = '|';					// separator for values (can be multiple characters)
+		</script>
 
 
 </head>
@@ -318,59 +325,77 @@
                                             </tr>
                                             <tr id="DaysAvailable" class="recordrow">
                                                 <td class="recordvalue">
-                                                    <div>
-                                                        <%--<asp:DropDownList ID="daysAvailable" ClientIDMode="Static" runat="server" />--%>
 
 
 
-                                                        <label class="examples"></label>
-                                                        <select id="lang" name="lang" class="arc90_multiselect" multiple="multiple" size="4" title="Languages">
-                                                            <option value="fr">French</option>
-                                                            <option value="en" selected="false">English</option>
-                                                            <option value="sp">Spanish</option>
-                                                            <option value="jp" selected="false">Japanese</option>
-                                                            <option value="du">Dutch</option>
-                                                            <option value="kk">Klingon</option>
-                                                            <option value="et">Esperanto</option>
-                                                            <option value="ru">Russian</option>
-                                                            <option value="ce">Canadian English</option>
-                                                            <option value="ar">Arabic</option>
-                                                            <option value="gr">German</option>
-                                                            <option value="ar">Aramaic</option>
-                                                            <option value="ch">Chinese</option>
-                                                            <option value="po">Polish</option>
-                                                            <option value="yi">Yiddish</option>
-                                                            <option value="kr">Korean</option>
-                                                            <option value="xx">A really really really very very unbeleivably crazy loooooooooooooooooooong option title</option>
-                                                        </select>
 
 
-                                                    </div>
-                                                    
-                                                    <div>
-                                                        <label class="example2">asfsf</label>
-                                                        <select id="lang" name="lang" class="arc90_multiselect" multiple="multiple" size="4" title="Times">
-                                                            <option value="fr">9:30 to 10:00</option>
-                                                            <option value="en" selected="false">10:00 to 10:30</option>
-                                                            <option value="sp">Spanish</option>
-                                                            <option value="jp" selected="false">10:30 to 11:00</option>
-                                                            <option value="du">11:00 to 11:30</option>
-                                                            <option value="kk">11:30 to 12:00</option>
-                                                            <option value="et">Esperanto</option>
-                                                            <option value="ru">Russian</option>
-                                                            <option value="ce">Canadian English</option>
-                                                            <option value="ar">Arabic</option>
-                                                            <option value="gr">German</option>
-                                                            <option value="ar">Aramaic</option>
-                                                            <option value="ch">Chinese</option>
-                                                            <option value="po">Polish</option>
-                                                            <option value="yi">Yiddish</option>
-                                                            <option value="kr">Korean</option>
-                                                            <option value="xx">A really really really very very unbeleivably crazy loooooooooooooooooooong option title</option>
-                                                        </select>
 
 
-                                                    </div>
+
+			<div class="examples">
+				<label class="examples">First example of MultiSelect</label>
+				<select id="lang" name="lang" class="arc90_multiselect" multiple="multiple" size="4" title="Languages">
+					<option value="fr">French</option>
+					<option value="du">Dutch</option>
+					<option value="kk">Klingon</option>
+					<option value="et">Esperanto</option>
+					<option value="ru">Russian</option>
+					<option value="ce">Canadian English</option>
+					<option value="ar">Arabic</option>
+					<option value="gr">German</option>
+					<option value="ar">Aramaic</option>
+					<option value="ch">Chinese</option>
+					<option value="po">Polish</option>
+					<option value="yi">Yiddish</option>
+					<option value="kr">Korean</option>
+					<option value="xx">A really really really very very unbeleivably crazy loooooooooooooooooooong option title</option>
+				</select>
+			</div>
+		
+
+
+				<select style="display:none">
+
+				</select>
+
+		
+
+		
+
+		
+
+			<div class="examples">
+				<label class="examples">First example of MultiSelect</label>
+				<select id="Select1" name="lang" class="arc90_multiselect" multiple="multiple" size="4" title="Languages">
+					<option value="fr">French</option>
+					<option value="en" selected="true">English</option>
+					<option value="sp">Spanish</option>
+					<option value="jp" selected="true">Japanese</option>
+					<option value="du">Dutch</option>
+					<option value="kk">Klingon</option>
+					<option value="et">Esperanto</option>
+					<option value="ru">Russian</option>
+					<option value="ce">Canadian English</option>
+					<option value="ar">Arabic</option>
+					<option value="gr">German</option>
+					<option value="ar">Aramaic</option>
+					<option value="ch">Chinese</option>
+					<option value="po">Polish</option>
+					<option value="yi">Yiddish</option>
+					<option value="kr">Korean</option>
+					<option value="xx">A really really really very very unbeleivably crazy loooooooooooooooooooong option title</option>
+				</select>
+			</div>
+		
+
+
+
+
+
+
+
+
                                                 </td>
                                             </tr>
                                             <tr id="Date_Request" class ="recordrow">
