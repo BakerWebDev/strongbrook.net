@@ -64,16 +64,7 @@
                 sender._textbox.set_Value(sender._selectedDate.format(sender._format))
             }
             
-            var dateTextbox = $('#Date1').val();
-
-            //var Sunday;
-            //var Monday;
-            //var Tuesday;
-            //var Wednesday;
-            //var Thursday;
-            //var Friday;
-            //var Saturday;
-            
+            var dateTextbox = $('#Date1').val();            
             var theDayOfTheWeek;
 
             if (dateTextbox.indexOf("Sunday") >= 0) {
@@ -84,6 +75,18 @@
             }
             if (dateTextbox.indexOf("Tuesday") >= 0) {
                 theDayOfTheWeek = "Tuesday";
+            }
+            if (dateTextbox.indexOf("Wednesday") >= 0) {
+                theDayOfTheWeek = "Wednesday";
+            }
+            if (dateTextbox.indexOf("Thursday") >= 0) {
+                theDayOfTheWeek = "Thursday";
+            }
+            if (dateTextbox.indexOf("Friday") >= 0) {
+                theDayOfTheWeek = "Friday";
+            }
+            if (dateTextbox.indexOf("Saturday") >= 0) {
+                theDayOfTheWeek = "Saturday";
             }
 
             var selectedTimeZone = $("#drdlTimeZone").val();
