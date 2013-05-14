@@ -63,7 +63,7 @@
                 // set the date back to the current date
                 sender._textbox.set_Value(sender._selectedDate.format(sender._format))
             }
-
+            
             var dateTextbox = $('#Date1').val();
 
             var Sunday;
@@ -74,9 +74,7 @@
             var Friday;
             var Saturday;
             
-            var theDayOfTheWeek = string.Empty;
-
-            alert(theDayOfTheWeek);
+            var theDayOfTheWeek;
 
             if (dateTextbox.indexOf("Sunday") >= 0) {
                 Sunday = "Sunday";
@@ -87,11 +85,7 @@
                 theDayOfTheWeek = Monday;
             }
 
-            return theDayOfTheWeek;
-
-            alert(theDayOfTheWeek);
-
-            var selectedDay = string.Empty;
+            var selectedDay;
             
             switch(theDayOfTheWeek) 
             {
@@ -99,9 +93,8 @@
 
             }
             
-            
 
-            alert(theDayOfTheWeek);
+            alert(selectedDay);
 
             var selectedTimeZone = $("#drdlTimeZone").val();
 
