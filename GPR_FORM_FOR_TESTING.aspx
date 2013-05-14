@@ -66,21 +66,24 @@
             
             var dateTextbox = $('#Date1').val();
 
-            var Sunday;
-            var Monday;
-            var Tuesday;
-            var Wednesday;
-            var Thursday;
-            var Friday;
-            var Saturday;
+            //var Sunday;
+            //var Monday;
+            //var Tuesday;
+            //var Wednesday;
+            //var Thursday;
+            //var Friday;
+            //var Saturday;
             
             var theDayOfTheWeek;
 
             if (dateTextbox.indexOf("Sunday") >= 0) {
-                theDayOfTheWeek = Sunday;
+                theDayOfTheWeek = "Sunday";
             }
             if (dateTextbox.indexOf("Monday") >= 0) {
                 theDayOfTheWeek = "Monday";
+            }
+            if (dateTextbox.indexOf("Tuesday") >= 0) {
+                theDayOfTheWeek = "Tuesday";
             }
 
             var selectedTimeZone = $("#drdlTimeZone").val();
