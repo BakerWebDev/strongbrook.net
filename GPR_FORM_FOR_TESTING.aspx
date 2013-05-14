@@ -48,39 +48,15 @@
 
 
 
-        function getdata() {
+        function showRadioButtons() {
 
             $('#RadioButtons').show();
 
-
-
-            //var asdf = $('#Date1').val();
-
-            //if (asdf.indexOf("Sunday") >= 0) {
-            //    alert("Sunday");
-            //}
-            //if (asdf.indexOf("Monday") >= 0) {
-            //    alert("Monday");
-            //}
-
-
-            var selectedTimeZone = $("#drdlTimeZone").val();
-
-            //if (asdf.indexOf("Monday") >= 0) {
-            //    var selectedDay = asdf.indexOf("Monday");
-            //}
-
-            //alert(selectedTimeZone);
-            
-            $.post("Default7.aspx", { timeZone: selectedTimeZone }, function (data1) {
-                //alert(data1);
-                $("#drdlAppTime").html(data1);
-
-            });
         }
 
 
         function checkDate(sender, args) {
+
             if (sender._selectedDate < new Date()) {
                 alert("Please select a day no earlier than tomorrow.");
                 sender._selectedDate = new Date();
@@ -88,35 +64,49 @@
                 sender._textbox.set_Value(sender._selectedDate.format(sender._format))
             }
 
-            var asdf = $('#Date1').val();
+            var dateTextbox = $('#Date1').val();
 
-            var mondy;
+            var Sunday;
+            var Monday;
+            var Tuesday;
+            var Wednesday;
+            var Thursday;
+            var Friday;
+            var Saturday;
+            
+            var theDayOfTheWeek = string.Empty;
 
-            if (asdf.indexOf("Sunday") >= 0) {
-                alert("Sunday");
+            alert(theDayOfTheWeek);
+
+            if (dateTextbox.indexOf("Sunday") >= 0) {
+                Sunday = "Sunday";
+                theDayOfTheWeek = Sunday;
             }
-            if (asdf.indexOf("Monday") >= 0) {
-                mondy = "Monday";
+            if (dateTextbox.indexOf("Monday") >= 0) {
+                Monday = "Monday";
+                theDayOfTheWeek = Monday;
             }
 
+            return theDayOfTheWeek;
 
-            if (asdf.indexOf("Monday") >= 0) {
-                var selectedDay = mondy;
+            alert(theDayOfTheWeek);
+
+            var selectedDay = string.Empty;
+            
+            switch(theDayOfTheWeek) 
+            {
+                case Monday: selectedDay = "Monday"; break;
+
             }
+            
+            
 
-            alert("The selectedDay is: " + selectedDay);
-
-
+            alert(theDayOfTheWeek);
 
             var selectedTimeZone = $("#drdlTimeZone").val();
 
-            //if (asdf.indexOf("Monday") >= 0) {
-            //}
-                //var selectedDay = asdf.indexOf("Monday");
-
-            //alert(selectedTimeZone);
-
-                $.post("Default7.aspx", { timeZone: selectedTimeZone, timeZon: selectedDay }, function (data1) {
+            $.post("Default7.aspx", { timeZone: selectedTimeZone, timeFrame: selectedDay }, function (data1) {
+                $("#drdlAppTime").html(data1);
 
             });
         }
@@ -213,7 +203,7 @@
                                             <tr id="TimeZone" class="recordrow">
                                                 <td class="recordvalue">
                                                     <div>
-                                                        <asp:DropDownList ID="drdlTimeZone" runat="server" onchange="getdata();" />
+                                                        <asp:DropDownList ID="drdlTimeZone" runat="server" onchange="showRadioButtons();" />
                                                     </div>
                                                 </td>
                                             </tr>

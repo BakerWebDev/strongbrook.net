@@ -18,17 +18,20 @@ public partial class GPRform : System.Web.UI.Page
     #region Page Load
     protected void Page_Load(object sender, EventArgs e)
     {
-        drdlTimeZone.Attributes.Add("onchange", "Save();" + Page.ClientScript.GetPostBackEventReference(drdlTimeZone, null).ToString());
+        //drdlTimeZone.Attributes.Add("onchange", "Save();" + Page.ClientScript.GetPostBackEventReference(drdlTimeZone, null).ToString());
         if (!IsPostBack)
         {
             //
-            drdlTimeZone.Attributes.Add("onchange", "getdata()");
+            
             //drdlTimeZone.Attributes.Add("onchange", "update()");
 
             //drdcity.Attributes.Add("onchange", "getdata2()");
         }
         if (IsPostBack)
         {
+
+            drdlTimeZone.Attributes.Add("onchange", "getdata()");
+
             string cachedTimeZone = drdlAppTime.Text;
 
             string timeZon = Request.Form["timeZon"];
