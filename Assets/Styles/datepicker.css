@@ -39,17 +39,3 @@
         font-size:12px;
         font-weight:bold;
     }
-
-
-
-/* TEXTBOX */
-#DatePicker .textbox {
-    font-size: 10px;
-    text-align: center;
-    color: #808080;
-    width: 89px;
-}
-
-#DatePicker #Time .textbox {
-    width:97px;
-}

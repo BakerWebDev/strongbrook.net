@@ -30,46 +30,48 @@
             $('#RadioButtons').hide();
             $('#Date').hide();
             $('#Time').hide();
-            $('#DaysAvailable').hide();
-            $('#Comments').hide();
-            $('#loginButton').hide();
-
-
-            
-            
+            $('#LikelyAvailable').hide();
         });
-
-
 
         function showSchedule() {
             $('#Date').show();
             $('#Time').show();
-            $('#DaysAvailable').hide();
+            $('#LikelyAvailable').hide();
         }
 
         function showRequest() {
-            $('#DaysAvailable').show();
+            $('#LikelyAvailable').show();
             $('#Date').hide();
             $('#Time').hide();
         }
 
 
-        function checkDate(sender, args) {
-            if (sender._selectedDate < new Date()) {
-                alert("Please select a date after tomorrows date.");
-                sender._selectedDate = new Date();
-                // set the date back to the current date
-                sender._textbox.set_Value(sender._selectedDate.format(sender._format))
-            }
-        }
 
 
         function getdata() {
 
             $('#RadioButtons').show();
 
+
+
+            //var asdf = $('#Date1').val();
+
+            //if (asdf.indexOf("Sunday") >= 0) {
+            //    alert("Sunday");
+            //}
+            //if (asdf.indexOf("Monday") >= 0) {
+            //    alert("Monday");
+            //}
+
+
             var selectedTimeZone = $("#drdlTimeZone").val();
+
+            //if (asdf.indexOf("Monday") >= 0) {
+            //    var selectedDay = asdf.indexOf("Monday");
+            //}
+
             //alert(selectedTimeZone);
+            
             $.post("Default7.aspx", { timeZone: selectedTimeZone }, function (data1) {
                 //alert(data1);
                 $("#drdlAppTime").html(data1);
@@ -88,27 +90,35 @@
 
             var asdf = $('#Date1').val();
 
+            var mondy;
+
             if (asdf.indexOf("Sunday") >= 0) {
                 alert("Sunday");
             }
-            if(asdf.indexOf("Monday") >= 0) {
-                alert("Monday");
+            if (asdf.indexOf("Monday") >= 0) {
+                mondy = "Monday";
             }
-            if (asdf.indexOf("Tuesday") >= 0) {
-                alert("Tuesday");
+
+
+            if (asdf.indexOf("Monday") >= 0) {
+                var selectedDay = mondy;
             }
-            if (asdf.indexOf("Wednesday") >= 0) {
-                alert("Wednesday");
-            }
-            if (asdf.indexOf("Thursday") >= 0) {
-                alert("Thursday");
-            }
-            if (asdf.indexOf("Friday") >= 0) {
-                alert("Friday");
-            }
-            if (asdf.indexOf("Saturday") >= 0) {
-                alert("Saturday");
-            }
+
+            alert("The selectedDay is: " + selectedDay);
+
+
+
+            var selectedTimeZone = $("#drdlTimeZone").val();
+
+            //if (asdf.indexOf("Monday") >= 0) {
+            //}
+                //var selectedDay = asdf.indexOf("Monday");
+
+            //alert(selectedTimeZone);
+
+                $.post("Default7.aspx", { timeZone: selectedTimeZone, timeZon: selectedDay }, function (data1) {
+
+            });
         }
 
 
@@ -117,54 +127,7 @@
     </script>
 
 
-    <script type="text/javascript">
 
-        $(function () {
-            $('#MondayTimeFrames').hide();
-            $('#MondayMorningHours').hide();
-            //$('#MondayAfternoonHours').hide();
-
-
-
-        });
-
-
-        $(function MondayTimeFrames() {
-            $('#MondayCheckbox').on('change', function () {
-                if ($(this).is(':checked')) {
-                    $('#MondayTimeFrames').show();
-                } else {
-                    $('#MondayTimeFrames').hide();
-                    $('#MondayMorningCheckbox').prop('checked', false);
-                    $('#MondayMorningHours').hide();
-                    $('#MondayMorning_10to11_Checkbox').prop('checked', false);
-                    $('#MondayMorning_11to12_Checkbox').prop('checked', false);
-                    $('#MondayMorning_12to1_Checkbox').prop('checked', false);
-                }
-            });
-        });
-
-
-        $(function mondayMorningChecked() {
-            $('#MondayMorningCheckbox').on('change', function () {
-                if ($(this).is(':checked')) {
-                    $('#MondayMorningHours').show();
-                    $('#MondayAfternoonCheckbox').hide();
-                    
-                } else {
-                    $('#MondayMorningHours').hide();
-                    $('#MondayMorning_10to11_Checkbox').prop('checked', false);
-                    $('#MondayMorning_11to12_Checkbox').prop('checked', false);
-                    $('#MondayMorning_12to1_Checkbox').prop('checked', false);
-                }
-            });
-        });
-
-
-
-
-        
-    </script>
 
 
 </head>
@@ -265,89 +228,35 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr id="DaysAvailable" class="recordrow">
+                                            <tr id="LikelyAvailable" class="recordrow">
                                                 <td class="recordvalue">
-
-
-
-
-
-                                                    <div>
-                                                        <input id="MondayCheckbox" type="checkbox" />Monday<br />
-         
-
-                                                        <div id="MondayTimeFrames">
-                                                            <input id="MondayMorningCheckbox" type="checkbox" />Morning<br />
-                                                            
-                                                        </div>
-
-                                                        <div id="MondayMorningHours">
-                                                            <input id="MondayMorning_10to11_Checkbox" type="checkbox" onclick="mondayMoring_10to11_Checked()" />Between 10 and 11<br />
-                                                            <input id="MondayMorning_11to12_Checkbox" type="checkbox" onclick="mondayMoring_11to12_Checked()" />Between 11 and 12<br />
-                                                        </div>
-
-
-                                                        <div id="MondayAfternoonTimeFrames">
-                                                            <input id="MondayAfternoonCheckbox" type="checkbox" />Afternoon<br />
-                                                            
-                                                        </div>
-
-
-                                                        <div id="MondayAfternoonHours">
-                                                            
-                                                            <input id="MondayMorning_12to1_Checkbox" type="checkbox" onclick="mondayMoring_12to1_Checked()" />Between 12 and 1<br />
-
-                                                        </div>
-
-                                                        
-
-
-
-
-
-
-
-
-
-                                                    </div>
-
-                                                    <div id="spacer"><br /></div>
-
-                                                    <div>
-                                                        <input id="Checkbox2" type="checkbox" />Tuesday<br />
-                                                    </div>
-
-                                                    <div>
-                                                        <input id="Checkbox1" type="checkbox" />Tuesday<br />
-                                                    </div>
-
-
-
-
-
+                                                    <asp:DropdownList ID="firstAvailableTime" runat="server"></asp:DropdownList>
                                                 </td>
                                             </tr>
                                             <tr id="Date_Request" class ="recordrow">
-                                                <td id="DatePicker" class="dropdowns">
-                                                    <div id="Date" class="time">
+                                                <td id="DatePicker" class="recordvalue">
+                                                    <div id="Date">
                                                         <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
-
-                                                        
                                                         <asp:CalendarExtender ID="CalendarExtender1" runat="server" 
                                                             TargetControlID="Date1" 
                                                             CssClass="calendar"
-                                                            Format="dddd, MMMM, dd yyyy"
+                                                            Format="dddd -- MMMM, dd yyyy"
                                                             OnClientDateSelectionChanged="checkDate"
                                                             Animated="true">
                                                         </asp:CalendarExtender>
-
-
                                                     </div>
-                                                    <div id="Time" class="zone">
+                                                </td>
+
+                                            </tr>
+
+                                            <tr id="Time_Request" class ="recordrow">
+                                                <td id="TimePicker" class="recordvalue">
+                                                    <div id="Time">
                                                         <asp:DropDownList ID="drdlAppTime" runat="server"></asp:DropDownList>
                                                     </div>
                                                 </td>
                                             </tr>
+
                                             <tr id="Comments" class="recordrow">
                                                 <td class="recordvalue">
                                                     Comments

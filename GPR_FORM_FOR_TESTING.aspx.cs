@@ -29,9 +29,22 @@ public partial class GPRform : System.Web.UI.Page
         }
         if (IsPostBack)
         {
+            string cachedTimeZone = drdlAppTime.Text;
+
+            string timeZon = Request.Form["timeZon"];
+
+            string isWorking = "It's working";
+
+            if (timeZon != null)
+            {
+                Response.Write("<option>" + isWorking + "</option>");
+            }
+
 
             SetCurrentUser();
             Click_Submit();
+
+
         }
         PopulateAvailabilityFields();
         PopulateNetWorthFields();
@@ -268,15 +281,11 @@ public partial class GPRform : System.Web.UI.Page
     private void PopulateAvailabilityFields()
     {
 
-        //daysAvailable.Items.Clear();
-
-
-
-        //daysAvailable.Items.Add(new ListItem("Any Day of the week"));
-        //daysAvailable.Items.Add(new ListItem("Monday"));
-        //daysAvailable.Items.Add(new ListItem("Tuesday"));
-        //daysAvailable.Items.Add(new ListItem("3pm - 5pm"));
-        //daysAvailable.Items.Add(new ListItem("5pm - 7pm"));
+        firstAvailableTime.Items.Clear();
+        firstAvailableTime.Items.Add(new ListItem("Most Likely Time Available"));
+        firstAvailableTime.Items.Add(new ListItem("Morning"));
+        firstAvailableTime.Items.Add(new ListItem("Afternoon"));
+        firstAvailableTime.Items.Add(new ListItem("Evening"));
 
         drdlTimeZone.Items.Clear();
         drdlTimeZone.Items.Add(new ListItem("Select Your Time Zone"));
