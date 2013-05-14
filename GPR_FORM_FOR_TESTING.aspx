@@ -224,7 +224,6 @@
                                                 </td>
 
                                             </tr>
-
                                             <tr id="Time_Request" class ="recordrow">
                                                 <td id="TimePicker" class="recordvalue">
                                                     <div id="Time">
@@ -232,7 +231,6 @@
                                                     </div>
                                                 </td>
                                             </tr>
-
                                             <tr id="Comments" class="recordrow">
                                                 <td class="recordvalue">
                                                     Comments

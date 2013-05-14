@@ -43,16 +43,13 @@ public partial class GPRform : System.Web.UI.Page
                 Response.Write("<option>" + isWorking + "</option>");
             }
 
-
             SetCurrentUser();
             Click_Submit();
-
 
         }
         PopulateAvailabilityFields();
         PopulateNetWorthFields();
     }
-
     #endregion Page Load
 
     #region Exigo API requests
@@ -86,7 +83,7 @@ public partial class GPRform : System.Web.UI.Page
             request.Phone = Phone1;
             request.Phone2 = Phone2;
             request.Email = Email;
-            //request.Address1 = LikelyAvailable;
+            request.Address1 = LikelyAvailable;
             request.Address2 = TimeZone;
             request.Fax = NetWorth;
             request.Notes = NotesInLongForm.ToString();
@@ -133,7 +130,7 @@ public partial class GPRform : System.Web.UI.Page
             request.Phone = Phone1;
             request.Phone2 = Phone2;
             request.Email = Email;
-            //request.Address1 = LikelyAvailable;
+            request.Address1 = LikelyAvailable;
             request.Address2 = TimeZone;
             request.Notes = NotesInLongForm.ToString();
             request.BirthDate = DateTime.Now;
@@ -184,7 +181,7 @@ public partial class GPRform : System.Web.UI.Page
             request.LastName = LastName;
             request.Phone = Phone1;
             request.Email = Email;
-            //request.Address1 = LikelyAvailable;
+            request.Address1 = LikelyAvailable;
             request.Address2 = TimeZone;
 
             // Using the Other fields for misc data
@@ -292,12 +289,11 @@ public partial class GPRform : System.Web.UI.Page
 
         drdlTimeZone.Items.Clear();
         drdlTimeZone.Items.Add(new ListItem("Select Your Time Zone"));
+        drdlTimeZone.Items.Add(new ListItem("Hawaii Time"));
         drdlTimeZone.Items.Add(new ListItem("Pacific Time"));
         drdlTimeZone.Items.Add(new ListItem("Mountain Time"));
         drdlTimeZone.Items.Add(new ListItem("Central Time"));
         drdlTimeZone.Items.Add(new ListItem("Eastern Time"));
-        drdlTimeZone.Items.Add(new ListItem("Hawaii Time"));
-
     }
     private void PopulateNetWorthFields()
     {
@@ -348,11 +344,12 @@ public partial class GPRform : System.Web.UI.Page
         set { txtEmail.Text = value; }
     }
 
-    //public string LikelyAvailable
-    //{
-    //    get { return daysAvailable.SelectedValue; }
-    //    set { daysAvailable.SelectedValue = value; }
-    //}
+    public string NetWorth
+    {
+        get { return netWorth.SelectedValue; }
+        set { netWorth.SelectedValue = value; }
+    }
+
     public string TimeZone
     {
         get { return drdlTimeZone.SelectedValue; }
@@ -364,10 +361,56 @@ public partial class GPRform : System.Web.UI.Page
         set { Date1.Text = value; }
     }
 
-    public string NetWorth
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public string AppointmentTime
     {
-        get { return netWorth.SelectedValue; }
-        set { netWorth.SelectedValue = value; }
+        get 
+        {
+            string foo = "";
+            if()
+            {
+                foo = "1";
+            }
+            return drdlAppTime.SelectedValue; 
+        }
+        set { drdlAppTime.SelectedValue = value; }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public string LikelyAvailable
+    {
+        get { return firstAvailableTime.SelectedValue; }
+        set { firstAvailableTime.SelectedValue = value; }
     }
 
     private string Comments
@@ -424,7 +467,7 @@ Enroller Information:
          , Phone1 // 2
          , Phone2 // 3
          , Email // 4
-         , "LikelyAvailable" // 5
+         , LikelyAvailable // 5
          , TimeZone // 6
          , AppointmentDate // 7
          , NetWorth // 8
@@ -437,16 +480,119 @@ Enroller Information:
 
         //Email SMTP Settings
         Int16 port = 25;
-        SmtpClient client = new SmtpClient("smtp.gmail.com", port); // ("smtpout.secureserver.net", port);
 
-        //// Use these properties for a un-secure SMTP connection.
-        //client.UseDefaultCredentials = false;
+        #region Main Mail server connection properties
+        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
 
-        // Use these properties for a secure SMTP connection.
-        client.UseDefaultCredentials = true;
-        client.EnableSsl = true;
+        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        client.UseDefaultCredentials = false;
 
-        client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123"); // ("support@strongbrookdirect.com", "Reic2012");
+        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        #endregion Main Mail server connection properties
+
+        #region Secondary Mail server connection properties. Use this as a backup if necessary!
+        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+
+        //// Use these properties for a secure SMTP connection.
+        //client.UseDefaultCredentials = true;
+        //client.EnableSsl = true;
+
+        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+
+        try
+        {
+            client.Send(message);
+            emailSent = true;
+        }
+        catch (Exception ex)
+        {
+            emailSent = false;
+            HtmlTextWriter writer = new HtmlTextWriter(Response.Output);
+            Response.Write(ex);
+            writer.Write("We're sorry, your request could not be completed.  If this problem persists, please contact customer support " + ex.ToString());
+        }
+
+        return emailSent;
+    }
+
+
+
+    private bool SendEmailToCallCenter()
+    {
+        emailSent = false;
+
+        //First Create the Address Info
+        MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
+        MailAddress to = new MailAddress("GamePlanRequest@strongbrook.com", "GPR Group");
+        MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
+        MailAddress bcc = new MailAddress("aaron.baker@strongbrook.com");
+
+        //Construct the email - just simple text email
+        MailMessage message = new MailMessage(from, to);
+        message.CC.Add(cc);
+        message.Bcc.Add(bcc);
+        message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
+        #region Email Message Body
+        message.Body = string.Format(@"
+A request for a Game Plan Report has been submitted for the following individual:
+
+Name: {0} {1}
+Main Phone: {2}
+Secondary Phone: {3}
+Email Address: {4}
+Likely Available: {5}
+TimeZone: {6}
+Date Requested if any: {7}
+Time Requested if any: {8}
+Estimated Net Worth: {9}
+
+Comments: 
+{10}
+
+
+Enroller Information:
+{11}
+{12}
+{13}
+        ", FirstName // 0
+         , LastName // 1
+         , Phone1 // 2
+         , Phone2 // 3
+         , Email // 4
+         , LikelyAvailable // 5
+         , TimeZone // 6
+         , AppointmentDate // 7
+         , AppointmentTime // 8
+         , NetWorth // 9
+         , Comments  // 10
+         , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
+         , CurrentUser_Email // 12
+         , CurrentUser_Phone  // 13
+         );
+        #endregion Email Message Body
+
+        //Email SMTP Settings
+        Int16 port = 25;
+
+        #region Main Mail server connection properties
+        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
+
+        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        client.UseDefaultCredentials = false;
+
+        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        #endregion Main Mail server connection properties
+
+        #region Secondary Mail server connection properties. Use this as a backup if necessary!
+        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+
+        //// Use these properties for a secure SMTP connection.
+        //client.UseDefaultCredentials = true;
+        //client.EnableSsl = true;
+
+        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
 
         try
         {
@@ -502,7 +648,4 @@ Enroller Information:
     }
 
     #endregion
-
-
-
 }
