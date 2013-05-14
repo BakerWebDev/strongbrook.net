@@ -77,28 +77,15 @@
             var theDayOfTheWeek;
 
             if (dateTextbox.indexOf("Sunday") >= 0) {
-                Sunday = "Sunday";
                 theDayOfTheWeek = Sunday;
             }
             if (dateTextbox.indexOf("Monday") >= 0) {
-                Monday = "Monday";
-                theDayOfTheWeek = Monday;
+                theDayOfTheWeek = "Monday";
             }
-
-            var selectedDay;
-            
-            switch(theDayOfTheWeek) 
-            {
-                case Monday: selectedDay = "Monday"; break;
-
-            }
-            
-
-            alert(selectedDay);
 
             var selectedTimeZone = $("#drdlTimeZone").val();
 
-            $.post("Default7.aspx", { timeZone: selectedTimeZone, timeFrame: selectedDay }, function (data1) {
+            $.post("Default7.aspx", { timeZone: selectedTimeZone, timeFrame: theDayOfTheWeek }, function (data1) {
                 $("#drdlAppTime").html(data1);
 
             });
