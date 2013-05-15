@@ -241,7 +241,6 @@
                                                 <td id="TimePicker" class="recordvalue">
                                                     <div id="Time">
                                                         <asp:DropDownList ID="drdlAppTime" runat="server" onchange="sendTimeFrame();" ></asp:DropDownList>
-                                                        <asp:DropDownList ID="netWorth2" ClientIDMode="Static" runat="server" />
                                                     </div>
                                                 </td>
                                             </tr>
