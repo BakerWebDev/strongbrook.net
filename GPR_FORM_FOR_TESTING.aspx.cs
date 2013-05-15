@@ -40,6 +40,7 @@ public partial class GPRform : System.Web.UI.Page
             if (timeFrameSelection != null)
             {
                 PopulateAppointmentTimeFields();
+
             }
 
             //string timeZoneSelection2 = Request.Form["timeZone2"];
