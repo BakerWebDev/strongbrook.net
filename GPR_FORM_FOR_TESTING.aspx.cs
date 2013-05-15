@@ -740,7 +740,7 @@ public partial class GPRform : System.Web.UI.Page
         get
         {
             string asdf = "";
-            if (TimeZone == "Hawaii" && theCookie == "from 6:00AM to 6:30AM")
+            if (TimeZone == "Hawaii Time" && theCookie == "from 6:00AM to 6:30AM")
             {
                 asdf = "from 10:00AM to 10:30AM";
 
