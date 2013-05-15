@@ -37,9 +37,9 @@ public partial class GPRform : System.Web.UI.Page
             if (timeFrameSelection != null)
             {
                 PopulateAppointmentTimeFields();
-                CreateACookie();
             }
-
+            CreateACookie();
+            GetCookie();
 
             //string timeFrame = Request.Form["timeFrameSelected"];
             //if (timeFrame != null)
@@ -61,8 +61,41 @@ public partial class GPRform : System.Web.UI.Page
 
     public void CreateACookie()
     {
-    
+        try
+        {
+            HttpCookie userCookie = new HttpCookie("userCookie");
+            userCookie.Expires = DateTime.Now.AddDays(1);
+
+            userCookie.Values.Add("CustomerID", "dfasdf");
+
+            Response.Cookies.Add(userCookie);
+        }
+        catch
+        {
+            // ErrorString = "Your request could not be completed.  If you continue to receive this error, please contact support";
+        }    
     }
+
+    public string GetCookie()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        // Get cookie from the current request.
+        HttpCookie cookie = Request.Cookies.Get("userCookie");
+
+        // Write the cookie.
+        sb.Append(cookie.Value[0]);
+
+        // Render to client side.
+        string asdf = "";
+        asdf = sb.ToString();
+
+        
+
+        return asdf;
+    }
+
+
 
 
 
