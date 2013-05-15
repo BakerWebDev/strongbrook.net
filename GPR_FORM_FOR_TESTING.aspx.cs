@@ -37,22 +37,19 @@ public partial class GPRform : System.Web.UI.Page
             if (timeFrameSelection != null)
             {
                 PopulateAppointmentTimeFields();
+                
+                
             }
-            CreateACookie();
-            GetCookie();
 
-            //string timeFrame = Request.Form["timeFrameSelected"];
-            //if (timeFrame != null)
-            //{
-            //    txtSelectedTimeFrame.Text = timeFrame;
-            //}
+
+            CreateACookie();
 
         }
         if (IsPostBack)
         {
 
-            //SetCurrentUser();
-            //Click_Submit();
+            SetCurrentUser();
+            Click_Submit();
 
         }
 
@@ -66,9 +63,13 @@ public partial class GPRform : System.Web.UI.Page
             HttpCookie userCookie = new HttpCookie("userCookie");
             userCookie.Expires = DateTime.Now.AddDays(1);
 
-            userCookie.Values.Add("CustomerID", "dfasdf");
+            string timeFrame = Request.Form["timeFrameSelected"];
+            if (timeFrame != null)
+            {
+                userCookie.Values.Add("AppointmentTime", timeFrame);
 
-            Response.Cookies.Add(userCookie);
+                Response.Cookies.Add(userCookie);
+            }
         }
         catch
         {
@@ -76,23 +77,14 @@ public partial class GPRform : System.Web.UI.Page
         }    
     }
 
-    public string GetCookie()
+    public string theCookie
     {
-        StringBuilder sb = new StringBuilder();
+        get
+        {
+            string appointmentTimeFromCookie = Request.Cookies["userCookie"].Values["AppointmentTime"];
 
-        // Get cookie from the current request.
-        HttpCookie cookie = Request.Cookies.Get("userCookie");
-
-        // Write the cookie.
-        sb.Append(cookie.Value[0]);
-
-        // Render to client side.
-        string asdf = "";
-        asdf = sb.ToString();
-
-        
-
-        return asdf;
+            return appointmentTimeFromCookie;
+        }
     }
 
 
@@ -189,7 +181,7 @@ public partial class GPRform : System.Web.UI.Page
         , Comments
         , LastName
         , AppointmentDate
-        , "AppointmentTime"
+        , AppointmentTime
         );
 
         CreateCustomerLeadRequest request = new CreateCustomerLeadRequest();
@@ -733,21 +725,29 @@ public partial class GPRform : System.Web.UI.Page
     //}
 
 
-    //public string AppointmentTime
-    //{
-    //    get 
-    //    {
-    //        return txtSelectedTimeFrame.Text;
-    //    }
-    //    set 
-    //    {
-    //        txtSelectedTimeFrame.Text = value; 
-    //    }
-    //}
+    public string AppointmentTime
+    {
+        get
+        {
+            return theCookie;
+        }
+    }
 
 
 
+    public string AdjustedAppointmentTime // <--- This is where I stopped yesterday.
+    {
+        get
+        {
+            string asdf = "";
+            if (TimeZone == "Hawaii" && theCookie == "from 6:00AM to 6:30AM")
+            {
+                asdf = "from 10:00AM to 10:30AM";
 
+            }
+            return asdf;
+        }
+    }
 
 
 
@@ -923,7 +923,7 @@ Enroller Information:
          , LikelyAvailable // 5
          , TimeZone // 6
          , AppointmentDate // 7
-         , "AppointmentTime" // 8
+         , AdjustedAppointmentTime // 8
          , NetWorth // 9
          , Comments  // 10
          , CurrentUser_FirstName + " " + CurrentUser_LastName // 11

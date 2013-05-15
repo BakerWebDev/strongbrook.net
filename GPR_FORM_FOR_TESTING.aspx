@@ -28,10 +28,10 @@
     <script type="text/javascript">
 
         $(function () {
-            //$('#RadioButtons').hide();
-            //$('#Date').hide();
-            //$('#Time').hide();
-            //$('#LikelyAvailable').hide();
+            $('#RadioButtons').hide();
+            $('#Date').hide();
+            $('#Time').hide();
+            $('#LikelyAvailable').hide();
         });
 
         function showSchedule() {
@@ -98,7 +98,6 @@
 
 
             var selectedTimeFrame = $("#drdlAppTime").val();
-            alert(selectedTimeFrame);
             $.post("GPR_FORM_FOR_TESTING.aspx", { timeFrameSelected: selectedTimeFrame }, function (data2) {
                 $("#txtSelectedTimeFrame").html(data2);
 
