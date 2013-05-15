@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GPR_FORM_FOR_TESTING.aspx.cs" Inherits="GPRform" %>
+﻿<%@ Page EnableEventValidation="false" Language="C#" AutoEventWireup="true" CodeFile="GPR_FORM_FOR_TESTING.aspx.cs" Inherits="GPRform" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -26,11 +26,12 @@
 
 
     <script type="text/javascript">
+
         $(function () {
-            $('#RadioButtons').hide();
-            $('#Date').hide();
-            $('#Time').hide();
-            $('#LikelyAvailable').hide();
+            //$('#RadioButtons').hide();
+            //$('#Date').hide();
+            //$('#Time').hide();
+            //$('#LikelyAvailable').hide();
         });
 
         function showSchedule() {
@@ -45,15 +46,11 @@
             $('#Time').hide();
         }
 
-
-
-
         function showRadioButtons() {
 
             $('#RadioButtons').show();
 
         }
-
 
         function checkDate(sender, args) {
 
@@ -91,14 +88,30 @@
 
             var selectedTimeZone = $("#drdlTimeZone").val();
 
-            $.post("Default7.aspx", { timeZone: selectedTimeZone, timeFrame: theDayOfTheWeek }, function (data1) {
+            $.post("GPR_FORM_FOR_TESTING.aspx", { timeZone: selectedTimeZone, timeFrame: theDayOfTheWeek }, function (data1) {
                 $("#drdlAppTime").html(data1);
 
             });
         }
 
+        function sendTimeFrame(sender, args) {
 
 
+            var selectedTimeZone2 = $("#drdlTimeZone2").val();
+
+            $.post("GPR_FORM_FOR_TESTING.aspx", { timeZone2: selectedTimeZone2 }, function (data2) {
+                $("#drdlAppTime2").html(data2);
+
+            });
+
+
+            //var selectedTimeFrame = $("#drdlAppTime").val();
+            //alert(selectedTimeFrame);
+            //$.post("GPR_FORM_FOR_TESTING.aspx", { timeFrameSelected: selectedTimeFrame }, function (data2) {
+            //    $("#txtSelectedTimeFrame").html(data2);
+
+            //});
+        }
 
     </script>
 
@@ -227,7 +240,8 @@
                                             <tr id="Time_Request" class ="recordrow">
                                                 <td id="TimePicker" class="recordvalue">
                                                     <div id="Time">
-                                                        <asp:DropDownList ID="drdlAppTime" runat="server"></asp:DropDownList>
+                                                        <asp:DropDownList ID="drdlAppTime" runat="server" onchange="sendTimeFrame();" ></asp:DropDownList>
+                                                        <asp:DropDownList ID="netWorth2" ClientIDMode="Static" runat="server" />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -256,8 +270,7 @@
                                             <tr>
                                                 <td>
                                                     <div id="loginButton" class="login-button">
-                                                        <asp:Button ID="submitButton" runat="server" Text="Submit" CausesValidation="true"
-                                                            OnClientClick="foop();" />
+                                                        <asp:Button ID="submitButton" runat="server" Text="Submit" CausesValidation="true" />
                                                     </div>
                                                 </td>
                                             </tr>
