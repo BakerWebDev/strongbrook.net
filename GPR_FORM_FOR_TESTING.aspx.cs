@@ -37,6 +37,7 @@ public partial class GPRform : System.Web.UI.Page
             if (timeFrameSelection != null)
             {
                 PopulateAppointmentTimeFields();
+                CreateACookie();
             }
 
 
@@ -50,13 +51,20 @@ public partial class GPRform : System.Web.UI.Page
         if (IsPostBack)
         {
 
-            SetCurrentUser();
-            Click_Submit();
+            //SetCurrentUser();
+            //Click_Submit();
 
         }
 
     }
     #endregion Page Load
+
+    public void CreateACookie()
+    {
+    
+    }
+
+
 
     #region Exigo API requests
     private CreateCustomerLeadRequest Request_CreateCustomerLead()

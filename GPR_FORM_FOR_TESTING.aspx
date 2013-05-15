@@ -97,20 +97,12 @@
         function sendTimeFrame(sender, args) {
 
 
-            var selectedTimeZone2 = $("#drdlTimeZone2").val();
-
-            $.post("GPR_FORM_FOR_TESTING.aspx", { timeZone2: selectedTimeZone2 }, function (data2) {
-                $("#drdlAppTime2").html(data2);
+            var selectedTimeFrame = $("#drdlAppTime").val();
+            alert(selectedTimeFrame);
+            $.post("GPR_FORM_FOR_TESTING.aspx", { timeFrameSelected: selectedTimeFrame }, function (data2) {
+                $("#txtSelectedTimeFrame").html(data2);
 
             });
-
-
-            //var selectedTimeFrame = $("#drdlAppTime").val();
-            //alert(selectedTimeFrame);
-            //$.post("GPR_FORM_FOR_TESTING.aspx", { timeFrameSelected: selectedTimeFrame }, function (data2) {
-            //    $("#txtSelectedTimeFrame").html(data2);
-
-            //});
         }
 
     </script>
