@@ -56,41 +56,6 @@ public partial class GPRform : System.Web.UI.Page
     }
     #endregion Page Load
 
-    public void CreateACookie()
-    {
-        try
-        {
-            HttpCookie userCookie = new HttpCookie("userCookie");
-            userCookie.Expires = DateTime.Now.AddDays(1);
-
-            string timeFrame = Request.Form["timeFrameSelected"];
-            if (timeFrame != null)
-            {
-                userCookie.Values.Add("AppointmentTime", timeFrame);
-
-                Response.Cookies.Add(userCookie);
-            }
-        }
-        catch
-        {
-            // ErrorString = "Your request could not be completed.  If you continue to receive this error, please contact support";
-        }    
-    }
-
-    public string theCookie
-    {
-        get
-        {
-            string appointmentTimeFromCookie = Request.Cookies["userCookie"].Values["AppointmentTime"];
-
-            return appointmentTimeFromCookie;
-        }
-    }
-
-
-
-
-
     #region Exigo API requests
     private CreateCustomerLeadRequest Request_CreateCustomerLead()
     {
@@ -294,8 +259,9 @@ public partial class GPRform : System.Web.UI.Page
             Request_CreateCustomerLead();
             try
             {
-                //SendEmail();
-                SendEmailToCallCenter();
+                SendEmailToProspect();
+                SendEmailToCorporate();
+                SendEmailToProspectsUpline();
                 if (emailSent)
                 {
                     Response.Redirect("GamePlanSubmissionThankYou.aspx");
@@ -360,9 +326,6 @@ public partial class GPRform : System.Web.UI.Page
         drdlTimeZone.Items.Add(new ListItem("Eastern Time"));
 
     }
-
-
-
     private void PopulateNetWorthFields()
     {
         netWorth.Items.Clear();
@@ -611,49 +574,35 @@ public partial class GPRform : System.Web.UI.Page
         #endregion
     }
 
+    public void CreateACookie()
+    {
+        try
+        {
+            HttpCookie userCookie = new HttpCookie("userCookie");
+            userCookie.Expires = DateTime.Now.AddDays(1);
 
+            string timeFrame = Request.Form["timeFrameSelected"];
+            if (timeFrame != null)
+            {
+                userCookie.Values.Add("AppointmentTime", timeFrame);
 
+                Response.Cookies.Add(userCookie);
+            }
+        }
+        catch
+        {
+            // ErrorString = "Your request could not be completed.  If you continue to receive this error, please contact support";
+        }
+    }
+    public string theCookie
+    {
+        get
+        {
+            string appointmentTimeFromCookie = Request.Cookies["userCookie"].Values["AppointmentTime"];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            return appointmentTimeFromCookie;
+        }
+    }
     #endregion
 
     #region Properties
@@ -700,31 +649,11 @@ public partial class GPRform : System.Web.UI.Page
         get { return drdlTimeZone.SelectedValue; }
         set { drdlTimeZone.SelectedValue = value; }
     }
-
-
-
     public string AppointmentDate
     {
         get { return Date1.Text; }
         set { Date1.Text = value; }
     }
-
-
-
-
-    //public string asdf
-    //{
-    //    get
-    //    {
-    //        return txtSelectedTimeFrame.Text;
-    //    }
-    //    set
-    //    {
-    //        txtSelectedTimeFrame.Text = value;
-    //    }
-    //}
-
-
     public string AppointmentTime
     {
         get
@@ -732,10 +661,7 @@ public partial class GPRform : System.Web.UI.Page
             return theCookie;
         }
     }
-
-
-
-    public string AdjustedAppointmentTime
+    public string CorporateTimeZoneApptTime
     {
         get
         {
@@ -1235,20 +1161,6 @@ public partial class GPRform : System.Web.UI.Page
             return theTimeAdjustedForTheCallCenter;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public string LikelyAvailable
     {
         get { return firstAvailableTime.SelectedValue; }
@@ -1263,145 +1175,97 @@ public partial class GPRform : System.Web.UI.Page
 
     public bool isValid { get; set; }
     public bool emailSent { get; set; }
-    #endregion
+    #endregion Properties
 
-    #region Email Sender
-    private bool SendEmail()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #region Email Senders
+    private bool SendEmailToProspect()
     {
         emailSent = false;
 
-        //First Create the Address Info
-        MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
-        MailAddress to = new MailAddress("GamePlanRequest@strongbrook.com", "GPR Group");
-        MailAddress cc = new MailAddress(Email);
-        MailAddress bcc = new MailAddress(CurrentUser_Email, CurrentUser_FirstName + " " + CurrentUser_LastName);
-
-        //Construct the email - just simple text email
-        MailMessage message = new MailMessage(from, to);
-        message.CC.Add(cc);
-        message.Bcc.Add("Chris.Ferguson@strongbrook.com");
-        message.Bcc.Add("Tyler.Bennett@strongbrook.com");
-        message.Bcc.Add(bcc);
-        message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
-        #region Email Message Body
-        message.Body = string.Format(@"
-A request for a Game Plan Report has been submitted for the following individual:
-
-Name: {0} {1}
-Main Phone: {2}
-Secondary Phone: {3}
-Email Address: {4}
-Likely Available: {5}
-TimeZone: {6}
-Date Requested if any: {7}
-Estimated Net Worth: {8}
-
-Comments: 
-{9}
-
-
-Enroller Information:
-{10}
-{11}
-{12}
-        ", FirstName // 0
-         , LastName // 1
-         , Phone1 // 2
-         , Phone2 // 3
-         , Email // 4
-         , LikelyAvailable // 5
-         , TimeZone // 6
-         , AppointmentDate // 7
-         , NetWorth // 8
-         , Comments  // 9
-         , CurrentUser_FirstName + " " + CurrentUser_LastName // 10
-         , CurrentUser_Email // 11
-         , CurrentUser_Phone  // 12
-         );
-        #endregion Email Message Body
-
-        //Email SMTP Settings
-        Int16 port = 25;
-
-        #region Main Mail server connection properties
-        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
-
-        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
-        client.UseDefaultCredentials = false;
-
-        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
-        #endregion Main Mail server connection properties
-
-        #region Secondary Mail server connection properties. Use this as a backup if necessary!
-        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
-
-        //// Use these properties for a secure SMTP connection.
-        //client.UseDefaultCredentials = true;
-        //client.EnableSsl = true;
-
-        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
-        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
-
-        try
-        {
-            client.Send(message);
-            emailSent = true;
-        }
-        catch (Exception ex)
-        {
-            emailSent = false;
-            HtmlTextWriter writer = new HtmlTextWriter(Response.Output);
-            Response.Write(ex);
-            writer.Write("We're sorry, your request could not be completed.  If this problem persists, please contact customer support " + ex.ToString());
-        }
-
-        return emailSent;
-    }
-
-
-
-    private bool SendEmailToCallCenter()
-    {
-        //string timeFrame = Request.Form["timeFrameSelected"];
-
-        emailSent = false;
-
+        #region Email Header Properties
         ////First Create the Address Info
         MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
-        //MailAddress to = new MailAddress("GamePlanRequest@strongbrook.com", "GPR Group");
+        MailAddress to = new MailAddress(Email, FirstName + " " + LastName);
         //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
-        //MailAddress bcc = new MailAddress("aaron.baker@strongbrook.com");
-
-        MailAddress to = new MailAddress("aaron.baker@strongbrook.com");
-
+        //MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
 
         ////Construct the email - just simple text email
         MailMessage message = new MailMessage(from, to);
         //message.CC.Add(cc);
         //message.Bcc.Add(bcc);
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
+        message.IsBodyHtml = true;
+        #endregion Email Header Properties
+
         #region Email Message Body
-        message.Body = string.Format(@"
-A request for a Game Plan Report has been submitted for the following individual:
 
-Name: {0} {1}
-Main Phone: {2}
-Secondary Phone: {3}
-Email Address: {4}
-Likely Available: {5}
-TimeZone: {6}
-Date Requested if any: {7}
-Time Requested if any: {8}
-Estimated Net Worth: {9}
+        var formattedMessage = new StringBuilder();
 
-Comments: 
-{10}
-
-
-Enroller Information:
-{11}
-{12}
-{13}
+        formattedMessage.AppendFormat(@"
+        <h1>Congratulations {0}!</h1>
+        <p>
+            By requesting your customized Game Plan Report you've taken your first step to creating positive cash-flow for life!
+        </p>
+        <p>
+            A Game Plan Counselor will be contacting you at your selected appointment time. He or she will spend a few minutes asking you questions that will be used to generate your customized Game Plan Report, which will then be immediately emailed to you.
+        </p>
+        <p>
+            <strong>The date and time you requested to be contacted for your Game Plan Report is:</strong><br />
+            {5}<br />
+            {6}<br />
+            {7}<br />
+            <strong>Make sure to mark your calendar for this conversation.</strong>
+        </p>
+        <p>
+            If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
+        </p>
+        <p>
+            In the meantime, feel free to visit UserName.Strongbrook.com/irc for more information: On this site you will be able to download our book, The Strait Path To Real Estate Wealth, for free if you enter the code, “FREE”. You will also be able to access several of our most recent completed real estate deals, reports, and what people all over the country are saying about Strongbrook.
+        </p>
+        <p>
+            We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
+        </p>
+        <p>
+            To Your Success,
+        </p>
+        <p>
+            The Strongbrook Team
+        </p>
+        <p>
+            Name: {0} {1}<br />
+            Main Phone: {2}<br />
+            Secondary Phone: {3}<br />
+            Email Address: {4}<br />
+            Likely Available: {5}<br />
+            TimeZone: {6}<br />
+            Date Requested if any: {7}<br />
+            Time Requested if any: {8}<br />
+            Estimated Net Worth: {9}<br />
+            <br />
+            Comments: <br />
+            {10}<br />
+            <br />
+            <br />
+            Enroller Information:<br />
+            {11}<br />
+            {12}<br />
+            {13}<br />
+        </p>
         ", FirstName // 0
          , LastName // 1
          , Phone1 // 2
@@ -1410,19 +1274,20 @@ Enroller Information:
          , LikelyAvailable // 5
          , TimeZone // 6
          , AppointmentDate // 7
-         , AdjustedAppointmentTime // 8
+         , CorporateTimeZoneApptTime // 8
          , NetWorth // 9
          , Comments  // 10
          , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
          , CurrentUser_Email // 12
          , CurrentUser_Phone  // 13
          );
+
+        message.Body = formattedMessage.ToString();
         #endregion Email Message Body
 
+        #region Main Mail server connection properties
         //Email SMTP Settings
         Int16 port = 25;
-
-        #region Main Mail server connection properties
         SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
 
         // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
@@ -1441,6 +1306,7 @@ Enroller Information:
         //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
         #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
 
+        #region Attempt to send the message
         try
         {
             client.Send(message);
@@ -1453,10 +1319,248 @@ Enroller Information:
             Response.Write(ex);
             writer.Write("We're sorry, your request could not be completed.  If this problem persists, please contact customer support " + ex.ToString());
         }
+        #endregion Attempt to send the message
 
         return emailSent;
     }
-    #endregion
+
+
+
+
+
+
+
+    private bool SendEmailToProspectsUpline()
+    {
+        emailSent = false;
+
+        #region Email Header Properties
+        ////First Create the Address Info
+        MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
+        MailAddress to = new MailAddress("aaronbaker315@me.com"); // (CurrentUser_Email, CurrentUser_FirstName + " " + CurrentUser_LastName);
+        //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
+        //MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
+
+        ////Construct the email - just simple text email
+        MailMessage message = new MailMessage(from, to);
+        //message.CC.Add(cc);
+        //message.Bcc.Add(bcc);
+        message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
+        message.IsBodyHtml = true;
+        #endregion Email Header Properties
+
+        #region Email Message Body
+
+        var formattedMessage = new StringBuilder();
+
+        formattedMessage.AppendFormat(@"
+        <h2>Congratulations {0} {1}, has just requested a Game Plan!</h2>
+        <p>
+            <strong>Requested Contact Time (If a specific date and time to be contacted was requested.)</strong><br />
+            {5}<br />
+            {6}<br />
+            {7}<br />
+            <strong>If possible, you may want to do a follow up call with them to see how it went.</strong>
+        </p>
+        <p>
+            To Your Success,<br />
+            The Strongbrook Team
+        </p>
+        <p>
+        <strong><u>The prospects information</u>   </strong>
+        <p>     Prospect Name: {0} {1}                  </p>
+        <p>     Main Phone: {2}                         </p>
+        <p>     Secondary Phone: {3}                    </p>
+        <p>     Email Address: {4}                      </p>
+        <p>     Likely Available: {5}                   </p>
+        <p>     Prospects TimeZone: {6}                 </p>
+        <p>     Date Requested if any: {7}              </p>
+        <p>     Time Requested if any: {8}              </p>
+        <p>     Comments: {9}                           </p>
+        ", FirstName // 0
+         , LastName // 1
+         , Phone1 // 2
+         , Phone2 // 3
+         , Email // 4
+         , LikelyAvailable // 5
+         , TimeZone // 6
+         , AppointmentDate // 7
+         , CorporateTimeZoneApptTime // 8
+         , Comments  // 9
+         );
+
+        message.Body = formattedMessage.ToString();
+        #endregion Email Message Body
+
+        #region Main Mail server connection properties
+        //Email SMTP Settings
+        Int16 port = 25;
+        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
+
+        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        client.UseDefaultCredentials = false;
+
+        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        #endregion Main Mail server connection properties
+
+        #region Secondary Mail server connection properties. Use this as a backup if necessary!
+        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+
+        //// Use these properties for a secure SMTP connection.
+        //client.UseDefaultCredentials = true;
+        //client.EnableSsl = true;
+
+        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+
+        #region Attempt to send the message
+        try
+        {
+            client.Send(message);
+            emailSent = true;
+        }
+        catch (Exception ex)
+        {
+            emailSent = false;
+            HtmlTextWriter writer = new HtmlTextWriter(Response.Output);
+            Response.Write(ex);
+            writer.Write("We're sorry, your request could not be completed.  If this problem persists, please contact customer support " + ex.ToString());
+        }
+        #endregion Attempt to send the message
+
+        return emailSent;
+    }
+
+
+
+
+
+
+
+
+    private bool SendEmailToCorporate()
+    {
+        emailSent = false;
+
+        #region Email Header Properties
+        ////First Create the Address Info
+        MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
+        MailAddress to = new MailAddress("aaron.baker@strongbrook.com"); // ("GamePlanRequest@strongbrook.com", "GPR Group");
+        //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
+        //MailAddress bcc = new MailAddress("aaron.baker@strongbrook.com");
+
+        ////Construct the email - just simple text email
+        MailMessage message = new MailMessage(from, to);
+        //message.CC.Add(cc);
+        //message.Bcc.Add(bcc);
+        message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
+        message.IsBodyHtml = true;
+        #endregion Email Header Properties
+
+        #region Email Message Body
+
+        var formattedMessage = new StringBuilder();
+
+        formattedMessage.AppendFormat(@"
+        <h1>    New Game Plan Request for: {0} {1}  </h1>
+        <br />
+        <p>     Name: {0} {1}                       </p>
+        <p>     Main Phone: {2}                     </p>
+        <p>     Secondary Phone: {3}                </p>
+        <p>     Email Address: {4}                  </p>
+        <p>     Likely Available: {5}               </p>
+        <p>     TimeZone: {6}                       </p>
+        <p>     Date Requested if any: {7}          </p>
+        <p>     Time Requested if any: {8}          </p>
+        <br />
+        <br />
+        <p>     Enroller Information:
+        <br />
+        {9}                                         
+        <br />
+        {10}                                        
+        <br />
+        {11}
+        </p>
+        ", FirstName // 0
+         , LastName // 1
+         , Phone1 // 2
+         , Phone2 // 3
+         , Email // 4
+         , LikelyAvailable // 5
+         , TimeZone // 6
+         , AppointmentDate // 7
+         , AppointmentTime // 8
+         , CurrentUser_FirstName + " " + CurrentUser_LastName // 9
+         , CurrentUser_Email // 10
+         , CurrentUser_Phone  // 11
+         );
+
+        message.Body = formattedMessage.ToString();
+        #endregion Email Message Body
+
+        #region Main Mail server connection properties
+        //Email SMTP Settings
+        Int16 port = 25;
+        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
+
+        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        client.UseDefaultCredentials = false;
+
+        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        #endregion Main Mail server connection properties
+
+        #region Secondary Mail server connection properties. Use this as a backup if necessary!
+        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+
+        //// Use these properties for a secure SMTP connection.
+        //client.UseDefaultCredentials = true;
+        //client.EnableSsl = true;
+
+        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+
+        #region Attempt to send the message
+        try
+        {
+            client.Send(message);
+            emailSent = true;
+        }
+        catch (Exception ex)
+        {
+            emailSent = false;
+            HtmlTextWriter writer = new HtmlTextWriter(Response.Output);
+            Response.Write(ex);
+            writer.Write("We're sorry, your request could not be completed.  If this problem persists, please contact customer support " + ex.ToString());
+        }
+        #endregion Attempt to send the message
+
+        return emailSent;
+    }
+    #endregion Email Senders
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     #region Button
     protected void Click_Submit()
