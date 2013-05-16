@@ -197,22 +197,6 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr id="Select_Options" class="recordrow">
-                                                <td>
-                                                    <div id="RadioButtons">
-
-                                                        <input type="radio" title="Schedule" onclick="showSchedule()" name="choice" /> Schedule an Appointment
-                                                        <br />
-                                                        <input type="radio" title="Request" onclick="showRequest()" name="choice" /> Request to be Contacted
-
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr id="LikelyAvailable" class="recordrow">
-                                                <td class="recordvalue">
-                                                    <asp:DropdownList ID="firstAvailableTime" runat="server"></asp:DropdownList>
-                                                </td>
-                                            </tr>
                                             <tr id="Date_Request" class ="recordrow">
                                                 <td id="DatePicker" class="recordvalue">
                                                     <div id="Date">
@@ -235,6 +219,23 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <tr id="Select_Options" class="recordrow">
+                                                <td>
+                                                    <div id="RadioButtons">
+
+                                                        <input type="radio" title="Schedule" onclick="showSchedule()" name="choice" /> Schedule an Appointment
+                                                        <br />
+                                                        <input type="radio" title="Request" onclick="showRequest()" name="choice" /> Request to be Contacted
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr id="LikelyAvailable" class="recordrow">
+                                                <td class="recordvalue">
+                                                    <asp:DropdownList ID="firstAvailableTime" runat="server"></asp:DropdownList>
+                                                </td>
+                                            </tr>
+
                                             <tr id="Comments" class="recordrow">
                                                 <td class="recordvalue">
                                                     Comments
