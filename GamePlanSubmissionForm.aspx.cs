@@ -13,56 +13,49 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Web.Services;
 
-public partial class GamePlanSubmissionForm : System.Web.UI.Page
+public partial class GPRform : System.Web.UI.Page
 {
     #region Page Load
+
     protected void Page_Load(object sender, EventArgs e)
     {
-
-
         if (!IsPostBack)
         {
-            drdlTimeZone.Attributes.Add("onchange", "getdata()");
+
+            
+
+            string timeZoneSelection = Request.Form["timeZone"];
+            if (timeZoneSelection == null)
+            { 
+                PopulateAvailabilityFields();
+
+                PopulateNetWorthFields();
+
+            }
+
+            string timeFrameSelection = Request.Form["timeFrame"];
+            if (timeFrameSelection != null)
+            {
+                PopulateAppointmentTimeFields();
+                
+                
+            }
+
+
+            CreateACookie();
+
         }
-
-
-        timeZones.Attributes.Add("OnTextChanged", "Save();" + Page.ClientScript.GetPostBackEventReference(timeZones, null).ToString());
-
-
-     
-
-        
-        if(IsPostBack)
+        if (IsPostBack)
         {
 
-            SetCurrentUser();
+            SetCurrentUserUsingOData();
+            SetCurrentUserUsingWebService();
             Click_Submit();
+
         }
-        PopulateAvailabilityFields();
-        PopulateNetWorthFields();
+
     }
-    #endregion
-
-    public int MyProperty { get; set; }
-
-    #region Save Methods
-    [WebMethod()]
-    public static void SaveDashboard(string cid, string extID, string s)
-    {
-        if (cid == "11309")
-        {
-            foo asf = new foo();
-            asf.bla = cid;
-        }
-    }
-    #endregion
-
-
-    public class foo
-    {
-        public string bla { get; set; }
-    }
-
+    #endregion Page Load
 
     #region Exigo API requests
     private CreateCustomerLeadRequest Request_CreateCustomerLead()
@@ -80,10 +73,22 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
                         This Lead came from the GPR form of: {1}
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        Requested date of appointment: {2}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Requested time of appointment: {3}
+                    </td>
+                </tr>
             </table>
         "
         , Comments
         , LastName
+        , AppointmentDate
+        , "AppointmentTime"
         );
 
         CreateCustomerLeadRequest request = new CreateCustomerLeadRequest();
@@ -109,7 +114,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         {
             isValid = false;
         }
-      
+
         return request;
     }
     private CreateCustomerLeadRequest Request_CreateCustomerLeadForCorporate()
@@ -127,10 +132,22 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
                         This is GPR test number: {1}
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        Requested date of appointment: {2}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Requested time of appointment: {3}
+                    </td>
+                </tr>
             </table>
         "
         , Comments
         , LastName
+        , AppointmentDate
+        , AppointmentTimeSelectedByTheProspect
         );
 
         CreateCustomerLeadRequest request = new CreateCustomerLeadRequest();
@@ -155,7 +172,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         {
             isValid = false;
         }
-      
+
         return request;
     }
     private CreateOrderRequest Request_PlaceGPRRorder()
@@ -237,33 +254,35 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
     {
         // Any time a GPR request Lead is created there will also be one created for the corporate account 24100 first.
         Request_CreateCustomerLeadForCorporate();
-        if(isValid)
+        if (isValid)
         {
             Request_PlaceGPRRorder();
             Request_CreateCustomerLead();
-            try 
-            { 
-                SendEmail();
+            try
+            {
+                SendEmailToProspect();
+                SendEmailToCorporate();
+                SendEmailToProspectsUpline();
                 if (emailSent)
                 {
                     Response.Redirect("GamePlanSubmissionThankYou.aspx");
                 }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-                Response.Write("There was an error when attempting to send the email" + "<br /><br />" + ex);         
+                Response.Write("There was an error when attempting to send the email" + "<br /><br />" + ex);
             }
         }
         else
         {
             HtmlTextWriter writer = new HtmlTextWriter(Response.Output);
-            writer.Write("We're sorrry, your request could not be completed.  If this problem persists, please contact customer support ");            
+            writer.Write("We're sorrry, your request could not be completed.  If this problem persists, please contact customer support ");
         }
     }
     #endregion Do Stuff
 
     #region Helpers
-    public void SetCurrentUser()
+    public void SetCurrentUserUsingOData()
     {
         try
         {
@@ -290,37 +309,320 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
             Response.Write("An invalid customer ID has been supplied. <br />");
         }
     }
+    public void SetCurrentUserUsingWebService()
+    {
+        try
+        {
+            //var tasks = new List<Task>();
+            var customerID = Convert.ToInt32(Request.QueryString["ID"]);
+
+            var data = ExigoApiContext.CreateWebServiceContext().GetCustomerSite(new GetCustomerSiteRequest
+            {
+                CustomerID = customerID
+            });
+
+            this.CurrentUser_WebAlias = data.WebAlias;
+        }
+        catch
+        {
+            Response.Write("An invalid customer ID has been supplied. <br />");
+        }
+    }
     private void PopulateAvailabilityFields()
     {
-        lstAvailableTime.Items.Clear();
 
-        lstAvailableTime.Items.Add(new ListItem("Anytime"));
-        lstAvailableTime.Items.Add(new ListItem("9am - 11am"));
-        lstAvailableTime.Items.Add(new ListItem("11am - 1pm"));
-        lstAvailableTime.Items.Add(new ListItem("1pm - 3pm"));
-        lstAvailableTime.Items.Add(new ListItem("3pm - 5pm"));
-        lstAvailableTime.Items.Add(new ListItem("5pm - 7pm"));
+        firstAvailableTime.Items.Clear();
+        firstAvailableTime.Items.Add(new ListItem("Most Likely Time Available"));
+        firstAvailableTime.Items.Add(new ListItem("Morning"));
+        firstAvailableTime.Items.Add(new ListItem("Afternoon"));
+        firstAvailableTime.Items.Add(new ListItem("Evening"));
 
-        timeZones.Items.Clear();
-        timeZones.Items.Add(new ListItem("Pacific Time"));
-        timeZones.Items.Add(new ListItem("Mountain Time"));
-        timeZones.Items.Add(new ListItem("Central Time"));
-        timeZones.Items.Add(new ListItem("Eastern Time"));
-        timeZones.Items.Add(new ListItem("Hawaii Time"));
+        drdlTimeZone.Items.Clear();
+        drdlTimeZone.Items.Add(new ListItem("Select Your Time Zone"));
+        drdlTimeZone.Items.Add(new ListItem("Hawaii Time"));
+        drdlTimeZone.Items.Add(new ListItem("Pacific Time"));
+        drdlTimeZone.Items.Add(new ListItem("Mountain Time"));
+        drdlTimeZone.Items.Add(new ListItem("Central Time"));
+        drdlTimeZone.Items.Add(new ListItem("Eastern Time"));
 
-        time2.Items.Add(new ListItem("Hawaii Time"));
     }
     private void PopulateNetWorthFields()
     {
         netWorth.Items.Clear();
 
-        netWorth.Items.Add(new ListItem("$0 - $99,999"));
+        netWorth.Items.Add(new ListItem("Estimated Net Worth (optional)"));
+        netWorth.Items.Add(new ListItem("$0 - $49,999"));
+        netWorth.Items.Add(new ListItem("$50,000 - $99,999"));
         netWorth.Items.Add(new ListItem("$100,000 - $249,999"));
-        netWorth.Items.Add(new ListItem("$250,000 - $999,999"));
+        netWorth.Items.Add(new ListItem("$250,000 - $499,999"));
+        netWorth.Items.Add(new ListItem("$500,000 - $1,000,000"));
         netWorth.Items.Add(new ListItem("$1,000,000+"));
         netWorth.Items.Add(new ListItem("Don't Know"));
     }
+    private void PopulateAppointmentTimeFields()
+    {
+        #region Populate Dropdown
+        Response.Expires = -1;
+        Response.ContentType = "text/plain";
 
+        #region Properties
+        string timeZone = Request.Form["timeZone"];
+        string timeFrameSelection = Request.Form["timeFrame"];
+
+        string oMin = "</option>" + " " + "<option>";
+
+        string closedSunday = "Closed Sunday";
+
+        #region Hawaii Hours
+        string from_6AM_to_1PM = "<option>" + "Select a Time" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + oMin + "from 8:00AM to 8:30AM" + oMin + "from 8:30AM to 9:00AM" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + "</option>";
+        string from_6AM_to_8AM = "<option>" + "Select a Time" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + "</option>";
+        string from_noon_to_4PM = "<option>" + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + "</option>";
+        string from_6AM_to_9AM = "<option>" + "Select a Time" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + oMin + "from 8:00AM to 8:30AM" + oMin + "from 8:30AM to 9:00AM" + "</option>";
+        #endregion Hawaii Hours
+
+        #region Pacific Hours
+        string from_9AM_to_4PM = "<option>" + "Select a Time" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + "</option>";
+        string from_9AM_to_11AM = "<option>" + "Select a Time" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "</option>";
+        string from_3PM_to_7PM = "<option>" + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + "</option>";
+        string from_9AM_to_noon = "<option>" + "Select a Time" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + "</option>";
+        #endregion Pacific Hours
+
+        #region Mountain Hours
+        string from_10AM_to_5PM = "<option>" + "Select a Time" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + "</option>";
+        string from_10AM_to_noon = "<option>" + "Select a Time" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + "</option>";
+        string from_4PM_to_8PM = "<option>" + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + "</option>";
+        string from_10AM_to_1PM = "<option>" + "Select a Time" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + "</option>";
+        #endregion Mountain Hours
+
+        #region Central Hours
+        string from_11AM_to_6PM = "<option>" + "Select a Time" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + "</option>";
+        string from_11AM_to_1PM = "<option>" + "Select a Time" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + "</option>";
+        string from_5PM_to_9PM = "<option>" + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + "</option>";
+        string from_11AM_to_2PM = "<option>" + "Select a Time" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + "</option>";
+        #endregion Central Hours
+
+        #region Eastern Hours
+        string from_12PM_to_7PM = "<option>" + "Select a Time" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + "</option>";
+        string from_12PM_to_2PM = "<option>" + "Select a Time" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + "</option>";
+        string from_6PM_to_10PM = "<option>" + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + oMin + "from 9:00PM to 9:30PM" + oMin + "from 9:30PM to 10:00PM";
+        string from_12AM_to_3PM = "<option>" + "Select a Time" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + "</option>";
+        #endregion Eastern Hours
+
+        #endregion Properties
+
+        #region Method for switching Time Zones
+        switch (timeZone)
+        {
+            #region Hawaii Times Original
+            //case "Hawaii Time":
+            //    switch (timeFrameSelection)
+            //    {
+            //        case "Sunday":
+            //            Response.Write("<option>" + closedSunday + "</option>");
+            //            break;
+            //        case "Monday":
+            //            Response.Write("<option>" + select + oMin + f7Ato730A + oMin + f730Ato8A + oMin + f8Ato830A + oMin + f830Ato9A + oMin + f9Ato930A + oMin + f930Ato10AM + oMin + f10Ato1030A + oMin + f1030Ato11A + oMin + f11Ato1130A + oMin + f1130Ato12P + oMin + f12Pto1230P + oMin + f1230Pto1P + oMin + f1Pto130P + oMin + f130Pto2P + oMin + f2Pto230P + oMin + f230Pto3P + oMin + f3Pto330P + oMin + f330Pto4P + oMin + f4Pto430P + oMin + f430Pto5P + oMin + f5Pto530P + oMin + f530Pto6P + oMin + f6Pto630P + oMin + f630Pto7P + "</option>");
+            //            break;
+            //        case "Tuesday":
+            //            Response.Write("<option>" + select + oMin + f7Ato730A + oMin + f730Ato8A + oMin + f8Ato830A + oMin + f830Ato9A + oMin + f9Ato930A + oMin + f930Ato10AM + oMin + f10Ato1030A + oMin + f1030Ato11A + oMin + f11Ato1130A + oMin + f1130Ato12P + oMin + f12Pto1230P + oMin + f1230Pto1P + oMin + f1Pto130P + oMin + f130Pto2P + oMin + f2Pto230P + oMin + f230Pto3P + oMin + f3Pto330P + oMin + f330Pto4P + oMin + f4Pto430P + oMin + f430Pto5P + oMin + f5Pto530P + oMin + f530Pto6P + oMin + f6Pto630P + oMin + f630Pto7P + "</option>");
+            //            break;
+            //        case "Wednesday":
+            //            Response.Write("<option>" + select + oMin + f7Ato730A + oMin + f730Ato8A + oMin + f8Ato830A + oMin + f830Ato9A + oMin + f9Ato930A + oMin + f930Ato10AM + oMin + f10Ato1030A + oMin + f1030Ato11A + oMin + f11Ato1130A + oMin + f1130Ato12P + oMin + f12Pto1230P + oMin + f1230Pto1P + oMin + f1Pto130P + oMin + f130Pto2P + oMin + f2Pto230P + oMin + f230Pto3P + oMin + f3Pto330P + oMin + f330Pto4P + oMin + f4Pto430P + oMin + f430Pto5P + oMin + f5Pto530P + oMin + f530Pto6P + oMin + f6Pto630P + oMin + f630Pto7P + "</option>");
+            //            break;
+            //        case "Thursday":
+            //            Response.Write("<option>" + select + oMin + f7Ato730A + oMin + f730Ato8A + oMin + f8Ato830A + oMin + f830Ato9A + oMin + f9Ato930A + oMin + f930Ato10AM + oMin + f10Ato1030A + oMin + f1030Ato11A + oMin + f11Ato1130A + oMin + f1130Ato12P + oMin + f12Pto1230P + oMin + f1230Pto1P + oMin + f1Pto130P + oMin + f130Pto2P + oMin + f2Pto230P + oMin + f230Pto3P + oMin + f3Pto330P + oMin + f330Pto4P + oMin + f4Pto430P + oMin + f430Pto5P + oMin + f5Pto530P + oMin + f530Pto6P + oMin + f6Pto630P + oMin + f630Pto7P + "</option>");
+            //            break;
+            //        case "Friday":
+            //            Response.Write("<option>" + select + oMin + f7Ato730A + oMin + f730Ato8A + oMin + f8Ato830A + oMin + f830Ato9A + oMin + f9Ato930A + oMin + f930Ato10AM + oMin + f10Ato1030A + oMin + f1030Ato11A + oMin + f11Ato1130A + oMin + f1130Ato12P + oMin + f12Pto1230P + oMin + f1230Pto1P + oMin + f1Pto130P + oMin + f130Pto2P + oMin + f2Pto230P + oMin + f230Pto3P + oMin + f3Pto330P + oMin + f330Pto4P + oMin + f4Pto430P + oMin + f430Pto5P + oMin + f5Pto530P + oMin + f530Pto6P + oMin + f6Pto630P + oMin + f630Pto7P + "</option>");
+            //            break;
+            //        case "Saturday":
+            //            Response.Write("<option>" + closedSaturday + "</option>");
+            //            break;
+            //    }
+            //    break;
+            #endregion Hawaii Times Original
+
+            #region Hawaii Times
+            case "Hawaii Time":
+                switch (timeFrameSelection)
+                {
+                    case "Sunday":
+                        Response.Write("<option>" + closedSunday + "</option>");
+                        break;
+                    case "Monday":
+                        Response.Write(from_6AM_to_1PM);
+                        break;
+                    case "Tuesday":
+                        Response.Write(from_6AM_to_8AM + oMin + from_noon_to_4PM);
+                        break;
+                    case "Wednesday":
+                        Response.Write(from_6AM_to_8AM + oMin + from_noon_to_4PM);
+                        break;
+                    case "Thursday":
+                        Response.Write(from_6AM_to_8AM + oMin + from_noon_to_4PM);
+                        break;
+                    case "Friday":
+                        Response.Write(from_6AM_to_1PM);
+                        break;
+                    case "Saturday":
+                        Response.Write(from_6AM_to_9AM);
+                        break;
+                }
+                break;
+            #endregion Hawaii Times
+
+            #region Pacific Times
+            case "Pacific Time":
+                switch (timeFrameSelection)
+                {
+                    case "Sunday":
+                        Response.Write("<option>" + closedSunday + "</option>");
+                        break;
+                    case "Monday":
+                        Response.Write(from_9AM_to_4PM);
+                        break;
+                    case "Tuesday":
+                        Response.Write(from_9AM_to_11AM + oMin + from_3PM_to_7PM);
+                        break;
+                    case "Wednesday":
+                        Response.Write(from_9AM_to_11AM + oMin + from_3PM_to_7PM);
+                        break;
+                    case "Thursday":
+                        Response.Write(from_9AM_to_11AM + oMin + from_3PM_to_7PM);
+                        break;
+                    case "Friday":
+                        Response.Write(from_9AM_to_4PM);
+                        break;
+                    case "Saturday":
+                        Response.Write(from_9AM_to_noon);
+                        break;
+                }
+                break;
+            #endregion Pacific Times
+
+            #region Mountain Times
+            case "Mountain Time":
+                switch (timeFrameSelection)
+                {
+                    case "Sunday":
+                        Response.Write("<option>" + closedSunday + "</option>");
+                        break;
+                    case "Monday":
+                        Response.Write(from_10AM_to_5PM);
+                        break;
+                    case "Tuesday":
+                        Response.Write(from_10AM_to_noon + oMin + from_4PM_to_8PM);
+                        break;
+                    case "Wednesday":
+                        Response.Write(from_10AM_to_noon + oMin + from_4PM_to_8PM);
+                        break;
+                    case "Thursday":
+                        Response.Write(from_10AM_to_noon + oMin + from_4PM_to_8PM);
+                        break;
+                    case "Friday":
+                        Response.Write(from_10AM_to_5PM);
+                        break;
+                    case "Saturday":
+                        Response.Write(from_10AM_to_1PM);
+                        break;
+                }
+                break;
+            #endregion Pacific Times
+
+            #region Central Times
+            case "Central Time":
+                switch (timeFrameSelection)
+                {
+                    case "Sunday":
+                        Response.Write("<option>" + closedSunday + "</option>");
+                        break;
+                    case "Monday":
+                        Response.Write(from_11AM_to_6PM);
+                        break;
+                    case "Tuesday":
+                        Response.Write(from_11AM_to_1PM + oMin + from_5PM_to_9PM);
+                        break;
+                    case "Wednesday":
+                        Response.Write(from_11AM_to_1PM + oMin + from_5PM_to_9PM);
+                        break;
+                    case "Thursday":
+                        Response.Write(from_11AM_to_1PM + oMin + from_5PM_to_9PM);
+                        break;
+                    case "Friday":
+                        Response.Write(from_11AM_to_6PM);
+                        break;
+                    case "Saturday":
+                        Response.Write(from_11AM_to_2PM);
+                        break;
+                }
+                break;
+            #endregion Pacific Times
+
+            #region Eastern Times
+            case "Eastern Time":
+                switch (timeFrameSelection)
+                {
+                    case "Sunday":
+                        Response.Write("<option>" + closedSunday + "</option>");
+                        break;
+                    case "Monday":
+                        Response.Write(from_12PM_to_7PM);
+                        break;
+                    case "Tuesday":
+                        Response.Write(from_12PM_to_2PM + oMin + from_6PM_to_10PM);
+                        break;
+                    case "Wednesday":
+                        Response.Write(from_12PM_to_2PM + oMin + from_6PM_to_10PM);
+                        break;
+                    case "Thursday":
+                        Response.Write(from_12PM_to_2PM + oMin + from_6PM_to_10PM);
+                        break;
+                    case "Friday":
+                        Response.Write(from_12PM_to_7PM);
+                        break;
+                    case "Saturday":
+                        Response.Write(from_12AM_to_3PM);
+                        break;
+                }
+                break;
+            #endregion Eastern Times
+        }
+        #endregion Method for switching Time Zones
+
+        Response.End();
+
+        #endregion
+    }
+
+    public void CreateACookie()
+    {
+        try
+        {
+            HttpCookie userCookie = new HttpCookie("userCookie");
+            userCookie.Expires = DateTime.Now.AddDays(1);
+
+            string timeFrame = Request.Form["timeFrameSelected"];
+            if (timeFrame != null)
+            {
+                userCookie.Values.Add("AppointmentTime", timeFrame);
+
+                Response.Cookies.Add(userCookie);
+            }
+        }
+        catch
+        {
+            // ErrorString = "Your request could not be completed.  If you continue to receive this error, please contact support";
+        }
+    }
+    public string theCookie
+    {
+        get
+        {
+            string appointmentTimeFromCookie = Request.Cookies["userCookie"].Values["AppointmentTime"];
+
+            return appointmentTimeFromCookie;
+        }
+    }
     #endregion
 
     #region Properties
@@ -329,6 +631,7 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
     public string CurrentUser_LastName { get; set; }
     public string CurrentUser_Email { get; set; }
     public string CurrentUser_Phone { get; set; }
+    public string CurrentUser_WebAlias { get; set; }
 
     private string FirstName
     {
@@ -356,26 +659,533 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
         set { txtEmail.Text = value; }
     }
 
-    public string LikelyAvailable
+    public string NetWorth
     {
-        get { return lstAvailableTime.SelectedValue; }
-        set { lstAvailableTime.SelectedValue = value; }
+        get { return netWorth.SelectedValue; }
+        set { netWorth.SelectedValue = value; }
     }
+
     public string TimeZone
     {
-        get { return timeZones.SelectedValue; }
-        set { timeZones.SelectedValue = value; }
+        get { return drdlTimeZone.SelectedValue; }
+        set { drdlTimeZone.SelectedValue = value; }
     }
     public string AppointmentDate
     {
         get { return Date1.Text; }
         set { Date1.Text = value; }
     }
-
-    public string NetWorth
+    public string AppointmentTimeSelectedByTheProspect
     {
-        get { return netWorth.SelectedValue; }
-        set { netWorth.SelectedValue = value; }
+        get
+        {
+            return theCookie;
+        }
+    }
+    public string AppointmentTimeInCorporateTimeZone
+    {
+        get
+        {
+            #region Properties
+            string timeZone = Request.Form["timeZone"];
+            string timeFrameSelection = Request.Form["timeFrame"];
+            #endregion Properties
+
+            string theTimeAdjustedForTheCallCenter = "";
+
+            #region Method for switching Time Zones
+            switch (TimeZone)
+            {
+                #region Hawaii Times
+                case "Hawaii Time":
+                    switch (theCookie)
+                    {
+                        case "Closed Sundays":
+                            theTimeAdjustedForTheCallCenter = "Closed Sundays";
+                            break;
+                        case "from 6:00AM to 6:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
+                            break;
+                        case "from 6:30AM to 7:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
+                            break;
+                        case "from 7:00AM to 7:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
+                            break;
+                        case "from 7:30AM to 8:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
+                            break;
+                        case "from 8:00AM to 8:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
+                            break;
+                        case "from 8:30AM to 9:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
+                            break;
+                        case "from 9:00AM to 9:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
+                            break;
+                        case "from 9:30AM to 10:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
+                            break;
+                        case "from 10:00AM to 10:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
+                            break;
+                        case "from 10:30AM to 11:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
+                            break;
+                        case "from 11:00AM to 11:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
+                            break;
+                        case "from 11:30AM to 12:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
+                            break;
+                        case "from 12:00PM to 12:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
+                            break;
+                        case "from 12:30PM to 1:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
+                            break;
+                    }
+                    break;
+                #endregion Hawaii Times
+
+                #region Pacific Times
+                case "Pacific Time":
+                    switch (theCookie)
+                    {
+                        case "Closed Sundays":
+                            theTimeAdjustedForTheCallCenter = "Closed Sundays";
+                            break;
+                        case "from 6:00AM to 6:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
+                            break;
+                        case "from 6:30AM to 7:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
+                            break;
+                        case "from 7:00AM to 7:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
+                            break;
+                        case "from 7:30AM to 8:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
+                            break;
+                        case "from 8:00AM to 8:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
+                            break;
+                        case "from 8:30AM to 9:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
+                            break;
+                        case "from 9:00AM to 9:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
+                            break;
+                        case "from 9:30AM to 10:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
+                            break;
+                        case "from 10:00AM to 10:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
+                            break;
+                        case "from 10:30AM to 11:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
+                            break;
+                        case "from 11:00AM to 11:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
+                            break;
+                        case "from 11:30AM to 12:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
+                            break;
+                        case "from 12:00PM to 12:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
+                            break;
+                        case "from 12:30PM to 1:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
+                            break;
+                        case "from 1:00PM to 1:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
+                            break;
+                        case "from 1:30PM to 2:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
+                            break;
+                        case "from 2:00PM to 2:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
+                            break;
+                        case "from 2:30PM to 3:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
+                            break;
+                        case "from 3:00PM to 3:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
+                            break;
+                        case "from 3:30PM to 4:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
+                            break;
+                        case "from 4:00PM to 4:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
+                            break;
+                        case "from 4:30PM to 5:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
+                            break;
+                        case "from 5:00PM to 5:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
+                            break;
+                        case "from 5:30PM to 6:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
+                            break;
+                        case "from 6:00PM to 6:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
+                            break;
+                        case "from 6:30PM to 7:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
+                            break;
+                        case "from 7:00PM to 7:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 8:00PM to 8:30PM";
+                            break;
+                        case "from 7:30PM to 8:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 8:30PM to 9:00PM";
+                            break;
+                        case "from 8:00PM to 8:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 9:00PM to 9:30PM";
+                            break;
+                        case "from 8:30PM to 9:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 9:30PM to 10:00PM";
+                            break;
+                        case "from 9:00PM to 9:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 10:00PM to 10:30PM";
+                            break;
+                        case "from 9:30PM to 10:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 10:30PM to 11:00PM";
+                            break;
+                    }
+                    break;
+                #endregion Pacific Times
+
+                #region Mountain Times
+                case "Mountain Time":
+                    switch (theCookie)
+                    {
+                        case "Closed Sundays":
+                            theTimeAdjustedForTheCallCenter = "Closed Sundays";
+                            break;
+                        case "from 6:00AM to 6:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 6:00AM to 6:30AM";
+                            break;
+                        case "from 6:30AM to 7:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 6:30AM to 7:00AM";
+                            break;
+                        case "from 7:00AM to 7:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
+                            break;
+                        case "from 7:30AM to 8:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
+                            break;
+                        case "from 8:00AM to 8:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
+                            break;
+                        case "from 8:30AM to 9:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
+                            break;
+                        case "from 9:00AM to 9:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
+                            break;
+                        case "from 9:30AM to 10:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
+                            break;
+                        case "from 10:00AM to 10:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
+                            break;
+                        case "from 10:30AM to 11:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
+                            break;
+                        case "from 11:00AM to 11:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
+                            break;
+                        case "from 11:30AM to 12:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
+                            break;
+                        case "from 12:00PM to 12:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
+                            break;
+                        case "from 12:30PM to 1:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
+                            break;
+                        case "from 1:00PM to 1:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
+                            break;
+                        case "from 1:30PM to 2:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
+                            break;
+                        case "from 2:00PM to 2:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
+                            break;
+                        case "from 2:30PM to 3:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
+                            break;
+                        case "from 3:00PM to 3:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
+                            break;
+                        case "from 3:30PM to 4:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
+                            break;
+                        case "from 4:00PM to 4:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
+                            break;
+                        case "from 4:30PM to 5:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
+                            break;
+                        case "from 5:00PM to 5:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
+                            break;
+                        case "from 5:30PM to 6:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
+                            break;
+                        case "from 6:00PM to 6:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
+                            break;
+                        case "from 6:30PM to 7:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
+                            break;
+                        case "from 7:00PM to 7:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
+                            break;
+                        case "from 7:30PM to 8:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
+                            break;
+                        case "from 8:00PM to 8:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 8:00PM to 8:30PM";
+                            break;
+                        case "from 8:30PM to 9:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 8:30PM to 9:00PM";
+                            break;
+                        case "from 9:00PM to 9:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 9:00PM to 9:30PM";
+                            break;
+                        case "from 9:30PM to 10:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 9:30PM to 10:00PM";
+                            break;
+                    }
+                    break;
+                #endregion Mountain Times
+
+                #region Central Times
+                case "Central Time":
+                    switch (theCookie)
+                    {
+                        case "Closed Sundays":
+                            theTimeAdjustedForTheCallCenter = "Closed Sundays";
+                            break;
+                        case "from 6:00AM to 6:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 5:00AM to 5:30AM";
+                            break;
+                        case "from 6:30AM to 7:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 5:30AM to 6:00AM";
+                            break;
+                        case "from 7:00AM to 7:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 6:00AM to 6:30AM";
+                            break;
+                        case "from 7:30AM to 8:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 6:30AM to 7:00AM";
+                            break;
+                        case "from 8:00AM to 8:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
+                            break;
+                        case "from 8:30AM to 9:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
+                            break;
+                        case "from 9:00AM to 9:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
+                            break;
+                        case "from 9:30AM to 10:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
+                            break;
+                        case "from 10:00AM to 10:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
+                            break;
+                        case "from 10:30AM to 11:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
+                            break;
+                        case "from 11:00AM to 11:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
+                            break;
+                        case "from 11:30AM to 12:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
+                            break;
+                        case "from 12:00PM to 12:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
+                            break;
+                        case "from 12:30PM to 1:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
+                            break;
+                        case "from 1:00PM to 1:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
+                            break;
+                        case "from 1:30PM to 2:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
+                            break;
+                        case "from 2:00PM to 2:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
+                            break;
+                        case "from 2:30PM to 3:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
+                            break;
+                        case "from 3:00PM to 3:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
+                            break;
+                        case "from 3:30PM to 4:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
+                            break;
+                        case "from 4:00PM to 4:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
+                            break;
+                        case "from 4:30PM to 5:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
+                            break;
+                        case "from 5:00PM to 5:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
+                            break;
+                        case "from 5:30PM to 6:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
+                            break;
+                        case "from 6:00PM to 6:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
+                            break;
+                        case "from 6:30PM to 7:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
+                            break;
+                        case "from 7:00PM to 7:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
+                            break;
+                        case "from 7:30PM to 8:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
+                            break;
+                        case "from 8:00PM to 8:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
+                            break;
+                        case "from 8:30PM to 9:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
+                            break;
+                        case "from 9:00PM to 9:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 8:00PM to 8:30PM";
+                            break;
+                        case "from 9:30PM to 10:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 8:30PM to 9:00PM";
+                            break;
+                    }
+                    break;                                   
+                #endregion Central Times
+
+                #region Eastern Times
+                case "Eastern Time":
+                    switch (theCookie)
+                    {                                        
+                        case "Closed Sundays":
+                            theTimeAdjustedForTheCallCenter = "Closed Sundays";
+                            break;                           
+                        case "from 6:00AM to 6:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 4:00AM to 4:30AM";
+                            break;                           
+                        case "from 6:30AM to 7:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 4:30AM to 5:00AM";
+                            break;                           
+                        case "from 7:00AM to 7:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 5:00AM to 5:30AM";
+                            break;
+                        case "from 7:30AM to 8:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 5:30AM to 6:00AM";
+                            break;
+                        case "from 8:00AM to 8:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 6:00AM to 6:30AM";
+                            break;
+                        case "from 8:30AM to 9:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 6:30AM to 7:00AM";
+                            break;
+                        case "from 9:00AM to 9:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
+                            break;
+                        case "from 9:30AM to 10:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
+                            break;
+                        case "from 10:00AM to 10:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
+                            break;
+                        case "from 10:30AM to 11:00AM":
+                            theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
+                            break;
+                        case "from 11:00AM to 11:30AM":
+                            theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
+                            break;
+                        case "from 11:30AM to 12:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
+                            break;
+                        case "from 12:00PM to 12:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
+                            break;
+                        case "from 12:30PM to 1:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
+                            break;
+                        case "from 1:00PM to 1:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
+                            break;
+                        case "from 1:30PM to 2:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
+                            break;
+                        case "from 2:00PM to 2:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
+                            break;
+                        case "from 2:30PM to 3:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
+                            break;
+                        case "from 3:00PM to 3:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
+                            break;
+                        case "from 3:30PM to 4:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
+                            break;
+                        case "from 4:00PM to 4:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
+                            break;
+                        case "from 4:30PM to 5:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
+                            break;
+                        case "from 5:00PM to 5:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
+                            break;
+                        case "from 5:30PM to 6:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
+                            break;
+                        case "from 6:00PM to 6:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
+                            break;
+                        case "from 6:30PM to 7:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
+                            break;
+                        case "from 7:00PM to 7:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
+                            break;
+                        case "from 7:30PM to 8:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
+                            break;
+                        case "from 8:00PM to 8:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
+                            break;
+                        case "from 8:30PM to 9:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
+                            break;
+                        case "from 9:00PM to 9:30PM":
+                            theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
+                            break;
+                        case "from 9:30PM to 10:00PM":
+                            theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
+                            break;
+                    }
+                    break;
+                #endregion Eastern Times
+            }
+            #endregion Method for switching Time Zones
+
+            return theTimeAdjustedForTheCallCenter;
+        }
+    }
+    public string LikelyAvailable
+    {
+        get { return firstAvailableTime.SelectedValue; }
+        set { firstAvailableTime.SelectedValue = value; }
     }
 
     private string Comments
@@ -386,47 +1196,82 @@ public partial class GamePlanSubmissionForm : System.Web.UI.Page
 
     public bool isValid { get; set; }
     public bool emailSent { get; set; }
-    #endregion
+    #endregion Properties
 
-    #region Email Sender
-    private bool SendEmail()
+    #region Email Senders
+    private bool SendEmailToProspect()
     {
         emailSent = false;
 
-        //First Create the Address Info
+        #region Email Header Properties
+        ////First Create the Address Info
         MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
-        MailAddress to = new MailAddress("GamePlanRequest@strongbrook.com", "GPR Group");
-        MailAddress cc = new MailAddress(Email);
-        MailAddress bcc = new MailAddress(CurrentUser_Email, CurrentUser_FirstName + " " + CurrentUser_LastName);
+        MailAddress to = new MailAddress(Email, FirstName + " " + LastName);
+        //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
+        //MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
 
-        //Construct the email - just simple text email
+        ////Construct the email - just simple text email
         MailMessage message = new MailMessage(from, to);
-        message.CC.Add(cc);
-        message.Bcc.Add("Chris.Ferguson@strongbrook.com");
-        message.Bcc.Add("Tyler.Bennett@strongbrook.com");
-        message.Bcc.Add(bcc);
+        //message.CC.Add(cc);
+        //message.Bcc.Add(bcc);
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
+        message.IsBodyHtml = true;
+        #endregion Email Header Properties
+
         #region Email Message Body
-        message.Body = string.Format(@"
-A request for a Game Plan Report has been submitted for the following individual:
 
-Name: {0} {1}
-Main Phone: {2}
-Secondary Phone: {3}
-Email Address: {4}
-Likely Available: {5}
-TimeZone: {6}
-Date Requested if any: {7}
-Estimated Net Worth: {8}
+        var formattedMessage = new StringBuilder();
 
-Comments: 
-{9}
-
-
-Enroller Information:
-{10}
-{11}
-{12}
+        formattedMessage.AppendFormat(@"
+        <h1>Congratulations {0}!</h1>
+        <p>
+            By requesting your customized Game Plan Report you've taken your first step to creating positive cash-flow for life!
+        </p>
+        <p>
+            A Game Plan Counselor will be contacting you at your selected appointment time. He or she will spend a few minutes asking you questions that will be used to generate your customized Game Plan Report, which will then be immediately emailed to you.
+        </p>
+        <p>
+            <strong>The date and time you requested to be contacted for your Game Plan Report is:</strong><br />
+            {5}<br />
+            {6}<br />
+            {7}<br />
+            <strong>Make sure to mark your calendar for this conversation.</strong>
+        </p>
+        <p>
+            If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
+        </p>
+        <p>
+            In the meantime, feel free to visit {14}.Strongbrook.com/irc for more information: On this site you will be able to download our book, The Strait Path To Real Estate Wealth, for free if you enter the code, “FREE”. You will also be able to access several of our most recent completed real estate deals, reports, and what people all over the country are saying about Strongbrook.
+        </p>
+        <p>
+            We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
+        </p>
+        <br />
+        <br />
+        <strong><u>The information you provided</u>     </strong>
+        <p>     Name: {0} {1}                  </p>
+        <p>     Main Phone: {2}                         </p>
+        <p>     Secondary Phone: {3}                    </p>
+        <p>     Email Address: {4}                      </p>
+        <p>     Likely Available: {5}                   </p>
+        <p>     Your TimeZone: {6}                      </p>
+        <p>     Date Requested if any: {7}              </p>
+        <p>     Time Requested if any: {8}              </p>
+        <p>     Estimated Net Worth: {9}                </p>
+        <br />
+        <p><u>  Comments:                               </u>  
+        <br />  {10}
+        <br />
+        <p><u>  Enroller Information:                   </u>
+        <br />  {11}
+        <br />  {12}
+        <br />  {13}
+        </p>
+        <br />
+        <p>
+        <strong>To Your Success,                        </strong>
+        <br />  The Strongbrook Team
+        </p>
         ", FirstName // 0
          , LastName // 1
          , Phone1 // 2
@@ -435,27 +1280,40 @@ Enroller Information:
          , LikelyAvailable // 5
          , TimeZone // 6
          , AppointmentDate // 7
-         , NetWorth // 8
-         , Comments  // 9
-         , CurrentUser_FirstName + " " + CurrentUser_LastName // 10
-         , CurrentUser_Email // 11
-         , CurrentUser_Phone  // 12
+         , AppointmentTimeSelectedByTheProspect // 8
+         , NetWorth // 9
+         , Comments  // 10
+         , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
+         , CurrentUser_Email // 12
+         , CurrentUser_Phone  // 13
+         , CurrentUser_WebAlias // 14
          );
+
+        message.Body = formattedMessage.ToString();
         #endregion Email Message Body
 
+        #region Main Mail server connection properties
         //Email SMTP Settings
         Int16 port = 25;
-        SmtpClient client = new SmtpClient("smtp.gmail.com", port); // ("smtpout.secureserver.net", port);
+        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
 
-        //// Use these properties for a un-secure SMTP connection.
-        //client.UseDefaultCredentials = false;
+        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        client.UseDefaultCredentials = false;
 
-        // Use these properties for a secure SMTP connection.
-        client.UseDefaultCredentials = true;
-        client.EnableSsl = true;
-        
-        client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123"); // ("support@strongbrookdirect.com", "Reic2012");
+        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        #endregion Main Mail server connection properties
 
+        #region Secondary Mail server connection properties. Use this as a backup if necessary!
+        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+
+        //// Use these properties for a secure SMTP connection.
+        //client.UseDefaultCredentials = true;
+        //client.EnableSsl = true;
+
+        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+
+        #region Attempt to send the message
         try
         {
             client.Send(message);
@@ -468,10 +1326,210 @@ Enroller Information:
             Response.Write(ex);
             writer.Write("We're sorry, your request could not be completed.  If this problem persists, please contact customer support " + ex.ToString());
         }
+        #endregion Attempt to send the message
 
         return emailSent;
     }
-    #endregion
+    private bool SendEmailToProspectsUpline()
+    {
+        emailSent = false;
+
+        #region Email Header Properties
+        ////First Create the Address Info
+        MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
+        MailAddress to = new MailAddress("aaronbaker315@me.com"); // (CurrentUser_Email, CurrentUser_FirstName + " " + CurrentUser_LastName);
+        //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
+        //MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
+
+        ////Construct the email - just simple text email
+        MailMessage message = new MailMessage(from, to);
+        //message.CC.Add(cc);
+        //message.Bcc.Add(bcc);
+        message.Subject = string.Format("New Game Plan requested submitted by {0} {1}", FirstName, LastName);
+        message.IsBodyHtml = true;
+        #endregion Email Header Properties
+
+        #region Email Message Body
+
+        var formattedMessage = new StringBuilder();
+
+        formattedMessage.AppendFormat(@"
+        <h1>Congratulations, {0} {1} has just requested a Game Plan!</h1>
+        <p>
+            <strong>Requested Contact Time (If the prospect requested a specific date and time to be contacted.)</strong><br />
+            {7}<br />
+            {8} - Mountain Time Zone<br />
+            <strong>If possible, you may want to do a follow up call with them to see how it went.</strong>
+        </p>
+        <br />
+        <p>
+        <strong><u>The prospects information</u>        </strong>
+        <p>     Prospect Name: {0} {1}                  </p>
+        <p>     Main Phone: {2}                         </p>
+        <p>     Secondary Phone: {3}                    </p>
+        <p>     Email Address: {4}                      </p>
+        <p>     Prospects TimeZone: {6}                 </p>
+        <p>     Comments: {9}                           </p>
+        <br />
+        <p>
+        <strong>To Your Success,                        </strong>
+        <br />  The Strongbrook Team
+        </p>
+        ", FirstName // 0
+         , LastName // 1
+         , Phone1 // 2
+         , Phone2 // 3
+         , Email // 4
+         , LikelyAvailable // 5
+         , TimeZone // 6
+         , AppointmentDate // 7
+         , AppointmentTimeInCorporateTimeZone // 8
+         , Comments  // 9
+         );
+
+        message.Body = formattedMessage.ToString();
+        #endregion Email Message Body
+
+        #region Main Mail server connection properties
+        //Email SMTP Settings
+        Int16 port = 25;
+        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
+
+        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        client.UseDefaultCredentials = false;
+
+        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        #endregion Main Mail server connection properties
+
+        #region Secondary Mail server connection properties. Use this as a backup if necessary!
+        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+
+        //// Use these properties for a secure SMTP connection.
+        //client.UseDefaultCredentials = true;
+        //client.EnableSsl = true;
+
+        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+
+        #region Attempt to send the message
+        try
+        {
+            client.Send(message);
+            emailSent = true;
+        }
+        catch (Exception ex)
+        {
+            emailSent = false;
+            HtmlTextWriter writer = new HtmlTextWriter(Response.Output);
+            Response.Write(ex);
+            writer.Write("We're sorry, your request could not be completed.  If this problem persists, please contact customer support " + ex.ToString());
+        }
+        #endregion Attempt to send the message
+
+        return emailSent;
+    }
+    private bool SendEmailToCorporate()
+    {
+        emailSent = false;
+
+        #region Email Header Properties
+        ////First Create the Address Info
+        MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
+        MailAddress to = new MailAddress("aaron.baker@strongbrook.com"); // ("GamePlanRequest@strongbrook.com", "GPR Group");
+        //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
+        //MailAddress bcc = new MailAddress("aaron.baker@strongbrook.com");
+
+        ////Construct the email - just simple text email
+        MailMessage message = new MailMessage(from, to);
+        //message.CC.Add(cc);
+        //message.Bcc.Add(bcc);
+        message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
+        message.IsBodyHtml = true;
+        #endregion Email Header Properties
+
+        #region Email Message Body
+
+        var formattedMessage = new StringBuilder();
+
+        formattedMessage.AppendFormat(@"
+        <h1>    New Game Plan Request for: {0} {1}      </h1>
+        <br />
+        <p>     Prospect Name: {0} {1}                  </p>
+        <p>     Main Phone: {2}                         </p>
+        <p>     Secondary Phone: {3}                    </p>
+        <p>     Email Address: {4}                      </p>
+        <p>     Likely Available: {5}                   </p>
+        <p>     Prospects TimeZone: {6}                 </p>
+        <p>     Date Requested if any: {7}              </p>
+        <p>     Time Requested if any: {8}              </p>
+        <p>     Estimated Net Worth: {9}                </p>
+        <br />
+        <p><u>  Comments:                                </u>  
+        <br />  {10}
+        <br />
+        <p><u>  Enroller Information:                   </u>
+        <br />  {11}
+        <br />  {12}
+        <br />  {13}
+        </p>
+        ", FirstName // 0
+         , LastName // 1
+         , Phone1 // 2
+         , Phone2 // 3
+         , Email // 4
+         , LikelyAvailable // 5
+         , TimeZone // 6
+         , AppointmentDate // 7
+         , AppointmentTimeInCorporateTimeZone // 8
+         , NetWorth // 9
+         , Comments  // 10
+         , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
+         , CurrentUser_Email // 12
+         , CurrentUser_Phone  // 13
+         );
+
+        message.Body = formattedMessage.ToString();
+        #endregion Email Message Body
+
+        #region Main Mail server connection properties
+        //Email SMTP Settings
+        Int16 port = 25;
+        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
+
+        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        client.UseDefaultCredentials = false;
+
+        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        #endregion Main Mail server connection properties
+
+        #region Secondary Mail server connection properties. Use this as a backup if necessary!
+        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+
+        //// Use these properties for a secure SMTP connection.
+        //client.UseDefaultCredentials = true;
+        //client.EnableSsl = true;
+
+        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+
+        #region Attempt to send the message
+        try
+        {
+            client.Send(message);
+            emailSent = true;
+        }
+        catch (Exception ex)
+        {
+            emailSent = false;
+            HtmlTextWriter writer = new HtmlTextWriter(Response.Output);
+            Response.Write(ex);
+            writer.Write("We're sorry, your request could not be completed.  If this problem persists, please contact customer support " + ex.ToString());
+        }
+        #endregion Attempt to send the message
+
+        return emailSent;
+    }
+    #endregion Email Senders
 
     #region Button
     protected void Click_Submit()
@@ -498,7 +1556,7 @@ Enroller Information:
         set
         {
             _message += value;
-            ShowMessage.Value = "True";
+            //ShowMessage.Value = "True";
         }
     }
     private string _message;
@@ -506,76 +1564,8 @@ Enroller Information:
     private void ClearMessage()
     {
         Message = string.Empty;
-        ShowMessage.Value = "";
+        //ShowMessage.Value = "";
     }
 
     #endregion
-
-
-
-    public string theDateParsedToGetTheDayOfTheWeek(string theDateSelected)
-    {
-        string foo = theDateSelected;
-
-        switch (foo)
-        { 
-            case "Monday":
-                FetchScheduleHours(DayOfWeek.Monday);
-                break;
-            case "Tuesday":
-                FetchScheduleHours(DayOfWeek.Tuesday);
-                break;
-        }
-        return foo;
-    }
-
-
-    #region Schedule Lists
-
-    public void FetchScheduleHours(DayOfWeek day)
-    {
-        switch(day)
-        {
-            case DayOfWeek.Monday:
-                PopulateMondayList();
-                break;
-            case DayOfWeek.Tuesday:
-                PopulateTuesdayList();
-                break;
-
-        }
-    }
-    
-
-
-    public void PopulateMondayList()
-    {
-        time2.Items.Clear();
-
-        time2.Items.Add(new ListItem("Monday"));
-        time2.Items.Add(new ListItem("9 - 10"));
-        time2.Items.Add(new ListItem("10 - 11"));
-    }
-
-    public void PopulateTuesdayList()
-    {
-        time2.Items.Clear();
-
-        time2.Items.Add(new ListItem("Tuesday"));
-        time2.Items.Add(new ListItem("9 - 10"));
-        time2.Items.Add(new ListItem("10 - 11"));
-    }
-
-
-
-
-
-
-    #endregion
-
-
-
-
-
-
 }

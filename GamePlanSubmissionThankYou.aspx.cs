@@ -30,7 +30,7 @@ public partial class GamePlanSubmissionThankYou : System.Web.UI.Page
                      <tbody>
                          <tr class=""gridrow first last"">
                              <td class=""col0 gridcell first"">
-                                 <div class=""notes panel"">
+                                 <div class=""notes panel"" style=""color:black;"">
                                     <p>Congratulations on taking your first step towards receiving your one-on-one custom Game Plan Report. This Game Plan Report will outline your financial options for moving you closer to achieving your retirement goals and dreams.</p>
                                                                          <p>A Game Plan Counselor will attempt to call you at your requested appointment time, or within the next 2 business days. Your Game Plan Counselor will spend a few minutes asking questions to generate your custom Game Plan Report.</p> 
                                     <p>Check your email for confirmation of your Game Plan request.                                       <p>We look forward to showing you options that will help create, manage, protect and grow your wealth.                                      <p>                                         Successfully,                                         <br />                                         Strongbrook Team

@@ -19,8 +19,8 @@ public partial class Other : System.Web.UI.Page
 
     public string Link()
     {
-        string foo = "GPR_FORM_FOR_TESTING.aspx" + "?id=22434"; // +Request.QueryString["id"];
-        return foo;
+        string mystring = "GamePlanSubmissionForm.aspx" + "?id=22434"; // +Request.QueryString["id"];
+        return mystring;
     }
 
     #region Error Handling

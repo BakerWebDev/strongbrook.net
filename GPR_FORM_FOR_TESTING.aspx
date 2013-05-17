@@ -1,4 +1,4 @@
-﻿<%@ Page EnableEventValidation="false" Language="C#" AutoEventWireup="true" CodeFile="GPR_FORM_FOR_TESTING.aspx.cs" Inherits="GPRform" %>
+﻿<%@ Page EnableEventValidation="false" Language="C#" AutoEventWireup="true" CodeFile="GPR_FORM_FOR_TESTING.aspx.cs" Inherits="GPRTestform" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 

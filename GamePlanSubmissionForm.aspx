@@ -1,182 +1,119 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPages/PopUp.Master" AutoEventWireup="true"
-    CodeFile="GamePlanSubmissionForm.aspx.cs" Inherits="GamePlanSubmissionForm" %>
+﻿<%@ Page EnableEventValidation="false" Language="C#" AutoEventWireup="true" CodeFile="GamePlanSubmissionForm.aspx.cs" Inherits="GPRform" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
 
+<!DOCTYPE html>
 
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
 
-
-
-
-<asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
-    <link rel="stylesheet" type="text/css" href="Assets/Styles/schedule.css" />
     <link href="Assets/Styles/datepicker.css" rel="stylesheet" />
 
 
-<script src="//ajax.microsoft.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+    <link href="Assets/Styles/site.min.css" rel="stylesheet" type="text/css" />
+    <link href="Assets/Styles/schedule.css" rel="stylesheet" type="text/css"  />
+
+    <link href="Assets/Styles/themes.min.css" rel="stylesheet" />
+    <link href="Assets/Plugins/twitter.bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="Assets/Icons/glyphicons/glyphicons.css" rel="stylesheet" />
+
+    <script src="Assets/Plugins/twitter.bootstrap/js/bootstrap.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 
 
-
-
-    <script>
+    <script type="text/javascript">
 
         $(function () {
+            $('#RadioButtons').hide();
             $('#Date').hide();
             $('#Time').hide();
-            $('#Time2').hide();
+            $('#LikelyAvailable').hide();
         });
 
-        function update() {
-
-
-
-
-
-
+        function showSchedule() {
             $('#Date').show();
             $('#Time').show();
+            $('#LikelyAvailable').hide();
         }
 
-       
+        function showRequest() {
+            $('#LikelyAvailable').show();
+            $('#Date').hide();
+            $('#Time').hide();
+        }
 
-        function Save() {
-            $('DIV#saving').show(); //Show saving indicator
-            var counter = 1,
-                saveString = "";
+        function showRadioButtons() {
 
-            while (counter <= 3) {
-                var currentColumn = "#column-" + counter; //Get the current column to work on
-
-                $(currentColumn).children('div').each(function () { //for each child div in column, get the row and contents
-                    var row = $(this).attr('class').split('-');
-
-                    $(this).children('div').each(function () {
-                        var obj = $(this).attr('id').split('-');
-
-                        saveString += obj[1] + ',' + counter + ',' + row[2] + '|'; //Append the string with current object
-                    });
-                });
-
-                counter++;
-            }
-            saveString = saveString.substring(0, saveString.length - 1); //Remove the last '|'
-            var extID = $('INPUT[id*="detailid"]').val();
-
-            var args = '"cid": "' + 11309 + '", "extID": "' + extID + '", "s": "' + saveString + '"';
-
-            $.ajax({
-                url: 'GamePlanSubmissionForm.aspx/SaveDashboard',
-                data: '{' + args + '}',
-                type: 'POST',
-                dataType: 'JSON',
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    alert("save");
-                    $('DIV#saving').children().fadeOut('200');
-                    setTimeout(function () {
-                        $('DIV#saving').children('div').fadeIn('600');
-                    }, 600);
-                },
-                errror: function (result) {
-                    alert(result.status + ' ' + resut.statusText);
-                }
-            });
+            $('#RadioButtons').show();
 
         }
 
-    </script>
-
-    <script type="text/javascript">
-        function getdata() {
-
-            var countryId = $("#drdcountry").val();
-
-            alert(countryId);
-        }
-    </script>
-
-</asp:Content>
-<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="Content">
-    <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            if ($('INPUT[type="hidden"][id*="ShowMessage"]').val() != '') {
-                $(function () {
-                    $('DIV#Message').children('p').hide();
-                    $('DIV#Message DIV.Close').children('p').hide();
-                    $('DIV#Message').show();
-                    $('DIV#Message').animate({ width: '400px' }, 400, function () {
-                        $('DIV#Message DIV.Close').children('p').fadeIn('fast');
-                    });
-                    $('DIV#Message').children('p').fadeIn('slow');
-                    setTimeout(function () {
-                        $('DIV#Message DIV.Close').children('p').fadeOut("fast", function () {
-                            $('DIV#Message').children('p').fadeOut("fast");
-                            $('DIV#Message').animate({ width: '0px' }, 400);
-                            $('DIV#Message').fadeOut("fast");
-                        });
-                    }, 5000);
-                });
-            }
-
-            $('DIV#Message DIV.Close').hover(function () {
-                $(this).css('background-color', '#315885');
-            }).click(function () {
-                $(this).css('background-color', '#5aa1f3');
-                $(this).delay(200).fadeOut("fast", function () {
-                    $('DIV#Message').children('p').fadeOut("fast");
-                    $('DIV#Message').animate({ width: '0px' }, 400);
-                    $('DIV#Message').fadeOut("fast");
-                });
-
-            });
-        });
-    </script>
-
-
-    <script type="text/javascript">
         function checkDate(sender, args) {
+
             if (sender._selectedDate < new Date()) {
-                alert("Please select a date after tomorrows date.");
+                alert("Please select a day no earlier than tomorrow.");
                 sender._selectedDate = new Date();
                 // set the date back to the current date
                 sender._textbox.set_Value(sender._selectedDate.format(sender._format))
             }
+            
+            var dateTextbox = $('#Date1').val();            
+            var theDayOfTheWeek;
+
+            if (dateTextbox.indexOf("Sunday") >= 0) {
+                theDayOfTheWeek = "Sunday";
+            }
+            if (dateTextbox.indexOf("Monday") >= 0) {
+                theDayOfTheWeek = "Monday";
+            }
+            if (dateTextbox.indexOf("Tuesday") >= 0) {
+                theDayOfTheWeek = "Tuesday";
+            }
+            if (dateTextbox.indexOf("Wednesday") >= 0) {
+                theDayOfTheWeek = "Wednesday";
+            }
+            if (dateTextbox.indexOf("Thursday") >= 0) {
+                theDayOfTheWeek = "Thursday";
+            }
+            if (dateTextbox.indexOf("Friday") >= 0) {
+                theDayOfTheWeek = "Friday";
+            }
+            if (dateTextbox.indexOf("Saturday") >= 0) {
+                theDayOfTheWeek = "Saturday";
+            }
+
+            var selectedTimeZone = $("#drdlTimeZone").val();
+
+            $.post("GPR_FORM_FOR_TESTING.aspx", { timeZone: selectedTimeZone, timeFrame: theDayOfTheWeek }, function (data1) {
+                $("#drdlAppTime").html(data1);
+
+            });
         }
+
+        function sendTimeFrame(sender, args) {
+
+
+            var selectedTimeFrame = $("#drdlAppTime").val();
+            $.post("GPR_FORM_FOR_TESTING.aspx", { timeFrameSelected: selectedTimeFrame }, function (data2) {
+                $("#txtSelectedTimeFrame").html(data2);
+
+            });
+        }
+
     </script>
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <asp:HiddenField ID="ShowMessage" runat="server" />
+</head>
+<body>
+    <form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
     <div class="main-wrapper">
         <div class="scheduler panel">
             <div id="Main_Content" class="panels" id="panels" style="position: relative;">
@@ -207,194 +144,101 @@
                                     <table class="record">
                                         <tbody enableviewstate="False">
                                             <tr id="FirstName" class="recordrow">
-                                                <td class="recordlabel">
-                                                    <div class="fieldlabel">
-                                                        First Name
-                                                    </div>
-                                                </td>
                                                 <td class="recordvalue">
                                                     <div class="fieldvalue">
-                                                        <asp:TextBox CssClass="input textfield" ID="txtFirstName" name="FirstName"
+                                                        <asp:TextBox CssClass="input textfield" ID="txtFirstName" name="FirstName" Placeholder="First Name"
                                                             runat="server" Data="First Name" />
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr id="LastName" class="recordrow">
-                                                <td class="recordlabel">
-                                                    <div class="fieldlabel">
-                                                        Last Name
-                                                    </div>
-                                                </td>
                                                 <td class="recordvalue">
                                                     <div class="fieldvalue">
-                                                        <asp:TextBox CssClass="input textfield" ID="txtLastName" name="LastName"
+                                                        <asp:TextBox CssClass="input textfield" ID="txtLastName" name="LastName" Placeholder="Last Name"
                                                             runat="server" Data="Last Name" />
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr id="Phone1" class="recordrow">
-                                                <td class="recordlabel">
-                                                    <div class="fieldlabel">
-                                                        Phone 1
-                                                    </div>
-                                                </td>
                                                 <td class="recordvalue full">
                                                     <div class="fieldvalue">
-                                                        <asp:TextBox CssClass="input textfield" ID="txtPhone1" name="homephone" runat="server"
+                                                        <asp:TextBox CssClass="input textfield" ID="txtPhone1" name="homephone" runat="server" Placeholder="Home Phone"
                                                             Data="Phone" />
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr id="Phone2" class="recordrow">
-                                                <td class="recordlabel">
-                                                    <div class="fieldlabel">
-                                                        Phone 2
-                                                    </div>
-                                                </td>
                                                 <td class="recordvalue">
                                                     <div class="fieldvalue">
-                                                        <asp:TextBox CssClass="input textfield" ID="txtPhone2" name="cellphone" runat="server"
+                                                        <asp:TextBox CssClass="input textfield" ID="txtPhone2" name="cellphone" runat="server" Placeholder="Cell Phone"
                                                             Data="Phone" />
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr id="Email" class="recordrow">
-                                                <td class="recordlabel">
-                                                    <div class="fieldlabel">
-                                                        Email
-                                                    </div>
-                                                </td>
                                                 <td class="recordvalue">
                                                     <div class="fieldvalue">
-                                                        <asp:TextBox CssClass="input textfield" ID="txtEmail"
+                                                        <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="email"
                                                             name="email" runat="server" Data="email" />
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr id="NetWorth" class="recordrow">
-                                                <td class="recordlabel">
-                                                    <div class="fieldlabel">
-                                                        Approximate Net Worth:
-                                                    </div>
-                                                </td>
                                                 <td class="dropdowns">
-                                                    <div class="fieldvalue">
+                                                    <div class="fieldlabel">
                                                         <asp:DropDownList ID="netWorth" ClientIDMode="Static" runat="server" />
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr id="Likely_Available" class="recordrow">
-                                                <td class="recordlabel">
-                                                    <div class="fieldlabel">
-                                                        Likely Available
+                                            <tr id="TimeZone" class="recordrow">
+                                                <td class="recordvalue">
+                                                    <div>
+                                                        <asp:DropDownList ID="drdlTimeZone" runat="server" onchange="showRadioButtons();" />
                                                     </div>
-                                                </td>
-                                                <td class="dropdowns">
-                                                    <div class="time">
-                                                        <asp:DropDownList ID="lstAvailableTime" ClientIDMode="Static" runat="server" />
-                                                    </div>
-
-
-
-
-
-
-                                                    <div class="zone">
-                                                        <asp:DropDownList ID="timeZones" runat="server" onchange="update();" />
-                                                    </div>
-
-
-
-
-
                                                 </td>
                                             </tr>
                                             <tr id="Date_Request" class ="recordrow">
-                                                <td class="recordlabel">
-                                                    <div class="fieldvalue">
-                                                        Date:
-                                                    </div>
-                                                </td>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                <td id="DatePicker" class="dropdowns">
-
-
-
-                                                    <div id="Date" class="time">
+                                                <td id="DatePicker" class="recordvalue">
+                                                    <div id="Date">
                                                         <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
-<%--                                                        <asp:CalendarExtender ID="CalendarExtender1" runat="server" 
+                                                        <asp:CalendarExtender ID="CalendarExtender1" runat="server" 
                                                             TargetControlID="Date1" 
                                                             CssClass="calendar"
-                                                            Format="MMMM d, yyyy"
+                                                            Format="dddd -- MMMM, dd yyyy"
                                                             OnClientDateSelectionChanged="checkDate"
                                                             Animated="true">
-                                                        </asp:CalendarExtender>--%>
-                                                    </div>
-                                                    <div id="Time" class="zone">
-
-                                                        <asp:DropDownList ID="time2" runat="server" />
-
-                                                    </div>
-                                                    <div id="Time2" class="zone">
-
-                                                        <asp:DropDownList ID="DropDownList1" runat="server" />
-
-
+                                                        </asp:CalendarExtender>
                                                     </div>
                                                 </td>
 
-
-
-
-
-
-
-
-
-
                                             </tr>
-
-                                            <tr>
+                                            <tr id="Time_Request" class ="recordrow">
+                                                <td id="TimePicker" class="recordvalue">
+                                                    <div id="Time">
+                                                        <asp:DropDownList ID="drdlAppTime" runat="server" onchange="sendTimeFrame();" ></asp:DropDownList>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr id="Select_Options" class="recordrow">
                                                 <td>
-                                                    <asp:DropDownList ID="drdlTimeZone" runat="server">
-                                                        <asp:ListItem>Eastern</asp:ListItem>
-                                                        <asp:ListItem>Central</asp:ListItem>
-                                                        <asp:ListItem>Mountain</asp:ListItem>
-                                                        <asp:ListItem>Pacific</asp:ListItem>
-                                                        <asp:ListItem>Hawaii</asp:ListItem>
-                                                    </asp:DropDownList>
+                                                    <div id="RadioButtons">
 
-                                                    <asp:DropDownList ID="drdlAppTime" runat="server"></asp:DropDownList>
+                                                        <input type="radio" title="Schedule" onclick="showSchedule()" name="choice" /> Schedule an Appointment
+                                                        <br />
+                                                        <input type="radio" title="Request" onclick="showRequest()" name="choice" /> Request to be Contacted
+
+                                                    </div>
                                                 </td>
                                             </tr>
-
-
-
-
-
+                                            <tr id="LikelyAvailable" class="recordrow">
+                                                <td class="recordvalue">
+                                                    <asp:DropdownList ID="firstAvailableTime" runat="server"></asp:DropdownList>
+                                                </td>
+                                            </tr>
 
                                             <tr id="Comments" class="recordrow">
-                                                <td class="recordlabel">
-                                                    <div class="fieldlabel">
-                                                        Comments
-                                                    </div>
-                                                </td>
                                                 <td class="recordvalue">
+                                                    Comments
                                                     <div class="fieldvalue">
                                                         <div class="border line" id="commentsborder" style="display: inline-block;">
                                                             <div class="textareabounds" id="commentsbody" style="width: 200px; min-height: 50px;">
@@ -414,37 +258,15 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td>
+                                                    <div id="loginButton" class="login-button">
+                                                        <asp:Button ID="submitButton" runat="server" Text="Submit" CausesValidation="true" />
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-
-
-
-
-
-
-                    <input class="input hidden" name="ibdemail" id="ibdemail" value="" type="hidden">
-                    <input class="input hidden" name="ibdphone" id="ibdphone" value="" type="hidden">
-                    <input class="input hidden" name="ibdname" id="ibdname" value=" " type="hidden">
-                    <input class="input hidden" name="ibd" id="ibd" value="" type="hidden">
-                </div>
-            </div>
-            <div class="panelRight" id="button">
-                <div class="schedulerbuttons panel">
-                    <table class="toolbar">
-                        <tbody>
-                            <tr>
-                                <td class="toolbar-expand"></td>
-                                <td class="toolbar-cell toolbar-right toolbar-last">
-                                    <div id="loginButton" class="login-button">
-                                        <asp:Button ID="nextButton1" runat="server" CausesValidation="true" />
-                                        <asp:Button ID="submitButton" runat="server" Text="Submit" CausesValidation="true"
-                                            OnClientClick="foop();" />
-                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -453,4 +275,6 @@
             </div>
         </div>
     </div>
-</asp:Content>
+    </form>
+</body>
+</html>

@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Web.Services;
 
-public partial class GPRform : System.Web.UI.Page
+public partial class GPRTestform : System.Web.UI.Page
 {
     #region Page Load
 
