@@ -48,7 +48,8 @@ public partial class GPRform : System.Web.UI.Page
         if (IsPostBack)
         {
 
-            SetCurrentUser();
+            SetCurrentUserUsingOData();
+            SetCurrentUserUsingWebService();
             Click_Submit();
 
         }
@@ -281,7 +282,7 @@ public partial class GPRform : System.Web.UI.Page
     #endregion Do Stuff
 
     #region Helpers
-    public void SetCurrentUser()
+    public void SetCurrentUserUsingOData()
     {
         try
         {
@@ -302,6 +303,25 @@ public partial class GPRform : System.Web.UI.Page
             CurrentUser_LastName = customer.LastName;
             CurrentUser_Email = customer.Email;
             CurrentUser_Phone = customer.Phone;
+        }
+        catch
+        {
+            Response.Write("An invalid customer ID has been supplied. <br />");
+        }
+    }
+    public void SetCurrentUserUsingWebService()
+    {
+        try
+        {
+            //var tasks = new List<Task>();
+            var customerID = Convert.ToInt32(Request.QueryString["ID"]);
+
+            var data = ExigoApiContext.CreateWebServiceContext().GetCustomerSite(new GetCustomerSiteRequest
+            {
+                CustomerID = customerID
+            });
+
+            this.CurrentUser_WebAlias = data.WebAlias;
         }
         catch
         {
@@ -611,6 +631,7 @@ public partial class GPRform : System.Web.UI.Page
     public string CurrentUser_LastName { get; set; }
     public string CurrentUser_Email { get; set; }
     public string CurrentUser_Phone { get; set; }
+    public string CurrentUser_WebAlias { get; set; }
 
     private string FirstName
     {
@@ -1177,21 +1198,6 @@ public partial class GPRform : System.Web.UI.Page
     public bool emailSent { get; set; }
     #endregion Properties
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     #region Email Senders
     private bool SendEmailToProspect()
     {
@@ -1235,7 +1241,7 @@ public partial class GPRform : System.Web.UI.Page
             If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
         </p>
         <p>
-            In the meantime, feel free to visit UserName.Strongbrook.com/irc for more information: On this site you will be able to download our book, The Strait Path To Real Estate Wealth, for free if you enter the code, “FREE”. You will also be able to access several of our most recent completed real estate deals, reports, and what people all over the country are saying about Strongbrook.
+            In the meantime, feel free to visit {14}.Strongbrook.com/irc for more information: On this site you will be able to download our book, The Strait Path To Real Estate Wealth, for free if you enter the code, “FREE”. You will also be able to access several of our most recent completed real estate deals, reports, and what people all over the country are saying about Strongbrook.
         </p>
         <p>
             We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
@@ -1280,6 +1286,7 @@ public partial class GPRform : System.Web.UI.Page
          , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
          , CurrentUser_Email // 12
          , CurrentUser_Phone  // 13
+         , CurrentUser_WebAlias // 14
          );
 
         message.Body = formattedMessage.ToString();
@@ -1323,13 +1330,6 @@ public partial class GPRform : System.Web.UI.Page
 
         return emailSent;
     }
-
-
-
-
-
-
-
     private bool SendEmailToProspectsUpline()
     {
         emailSent = false;
@@ -1428,14 +1428,6 @@ public partial class GPRform : System.Web.UI.Page
 
         return emailSent;
     }
-
-
-
-
-
-
-
-
     private bool SendEmailToCorporate()
     {
         emailSent = false;
@@ -1538,29 +1530,6 @@ public partial class GPRform : System.Web.UI.Page
         return emailSent;
     }
     #endregion Email Senders
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     #region Button
     protected void Click_Submit()
