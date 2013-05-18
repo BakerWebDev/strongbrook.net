@@ -55,9 +55,9 @@
 			margin  : 20,
 
 			width     : 800,
-			height    : 585, // This must match with the min-height and also the height on jquery.fancybox.css!
+			height    : 660, // This must match with the min-height and also the height on jquery.fancybox.css!
 			minWidth  : 800,
-			minHeight : 585, // This must match with the height and also the height on jquery.fancybox.css!
+			minHeight : 660, // This must match with the height and also the height on jquery.fancybox.css!
 			maxWidth  : 9999,
 			maxHeight : 9999,
 

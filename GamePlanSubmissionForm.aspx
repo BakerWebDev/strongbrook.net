@@ -8,21 +8,15 @@
 <head runat="server">
     <title></title>
 
-    <link href="Assets/Styles/datepicker.css" rel="stylesheet" />
-
-
+    <link href="Assets/Styles/calendarExtender.css" rel="stylesheet" />
     <link href="Assets/Styles/site.min.css" rel="stylesheet" type="text/css" />
     <link href="Assets/Styles/schedule.css" rel="stylesheet" type="text/css"  />
-
-    <link href="Assets/Styles/themes.min.css" rel="stylesheet" />
     <link href="Assets/Plugins/twitter.bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="Assets/Icons/glyphicons/glyphicons.css" rel="stylesheet" />
 
     <script src="Assets/Plugins/twitter.bootstrap/js/bootstrap.js"></script>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
-
 
     <script type="text/javascript">
 
@@ -65,6 +59,7 @@
 
             if (dateTextbox.indexOf("Sunday") >= 0) {
                 theDayOfTheWeek = "Sunday";
+                //CalendarExtender1.Enabled = false;
             }
             if (dateTextbox.indexOf("Monday") >= 0) {
                 theDayOfTheWeek = "Monday";
@@ -84,6 +79,12 @@
             if (dateTextbox.indexOf("Saturday") >= 0) {
                 theDayOfTheWeek = "Saturday";
             }
+
+
+            if (theDayOfTheWeek == "Sunday") {
+                alert("Closed Sundays, please select a day Monday thru Saturday.");
+            }
+
 
             var selectedTimeZone = $("#drdlTimeZone").val();
 
@@ -105,10 +106,6 @@
 
     </script>
 
-
-
-
-
 </head>
 <body>
     <form id="form1" runat="server">
@@ -116,27 +113,34 @@
     <div class="main-wrapper">
         <div class="scheduler panel">
             <div id="Main_Content" class="panels" id="panels" style="position: relative;">
-                <div class="j" id="introduction" style="display: block; position: absolute; width: 100%;">
+                <div id="introduction" style="display: block; position: absolute; width: 100%;">
                     <h1 class="heading">Request Your Free Personalized Game Plan Report</h1>
                     <table id="grid1">
                         <tbody>
                             <tr style="margin-top: 0px; vertical-align: top;">
                                 <td id="ExplanationOfPage" colspan="2" class="leftSide">
-                                    <div class="notes panel">
-                                        Congratulations on taking your first step to requesting a one-on-one custom Game
-                                        Plan Report. Your Game Plan Report will show all of your financial options moving
-                                        you closer to achieving your retirement goals and dreams. Receiving this free report
-                                        only takes a few minutes after we get a hold of you.
+                                    <div id="LeftText">
+
+                                        <h3>
+                                            Discover How Strongbrook's Power Team Can Build Your Wealth and Turbo-Charge Your Retirement Cash-Flow Through Real Estate!
+                                        </h3>
+
+                                        Your Personalized Game Plan Report Will:<br />
+                                        • Develop a custom 5 to 10 year plan to true financial freedom<br />
+                                        • Reveal how easily you can create positive cash-flow for life<br />
+                                        • Uncover 'Hidden Assets' you may not know you already have<br />
+                                        • Accurately predict whether your money will outlast you or not<br />
+                                        • Offer 3 actionable 'right-now' options to secure your retirement<br />
+
+                                        <br />
+                                        Schedule your FREE game plan report today! There is absolutely no commitment. Nobody will come to your home, the Game Plan Report interview is done 100% over the telephone, and at a time that is convenient for you.* 
                                         <br />
                                         <br />
-                                        Please complete the information to the right to make your request and we will attempt
-                                        to contact you in the next business day.
-                                        <br />
-                                        <br />
-                                        <i style="font-size: 80%">NOTICE: The time you select for your Game Plan is simply a
-                                            request. We will do our best to accommodate your requested time, but we cannot guarantee
-                                            the availability of a Strongbrook Representative at that exact time. Thank you for
-                                            your understanding and we look forward to speaking with you!</i>
+                                        <i style="font-size: 80%">
+                                            * We will do our very best to accommodate your requested date & time, 
+                                            but we cannot guarantee availability of a Strongbrook Game Plan Assistant at your exact desired time. 
+                                            Thank you for your understanding and we look forward to speaking with you!
+                                        </i>
                                     </div>
                                 </td>
                                 <td id="FormFields" class="rightSide">
@@ -161,7 +165,7 @@
                                             <tr id="Phone1" class="recordrow">
                                                 <td class="recordvalue full">
                                                     <div class="fieldvalue">
-                                                        <asp:TextBox CssClass="input textfield" ID="txtPhone1" name="homephone" runat="server" Placeholder="Home Phone"
+                                                        <asp:TextBox CssClass="input textfield" ID="txtPhone1" name="homephone" runat="server" Placeholder="Phone 1"
                                                             Data="Phone" />
                                                     </div>
                                                 </td>
@@ -169,7 +173,7 @@
                                             <tr id="Phone2" class="recordrow">
                                                 <td class="recordvalue">
                                                     <div class="fieldvalue">
-                                                        <asp:TextBox CssClass="input textfield" ID="txtPhone2" name="cellphone" runat="server" Placeholder="Cell Phone"
+                                                        <asp:TextBox CssClass="input textfield" ID="txtPhone2" name="cellphone" runat="server" Placeholder="Phone 2"
                                                             Data="Phone" />
                                                     </div>
                                                 </td>
@@ -200,7 +204,7 @@
                                                 <td id="DatePicker" class="recordvalue">
                                                     <div id="Date">
                                                         <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
-                                                        <asp:CalendarExtender ID="CalendarExtender1" runat="server" 
+                                                        <asp:CalendarExtender ID="CalendarExtender1" runat="server"
                                                             TargetControlID="Date1" 
                                                             CssClass="calendar"
                                                             Format="dddd -- MMMM, dd yyyy"
@@ -222,9 +226,9 @@
                                                 <td>
                                                     <div id="RadioButtons">
 
-                                                        <input type="radio" title="Schedule" onclick="showSchedule()" name="choice" /> Schedule an Appointment
+                                                        <input id="RadioButtonSchedule" runat="server" type="radio" title="Schedule" onclick="showSchedule()" name="choice" /> Schedule an Appointment
                                                         <br />
-                                                        <input type="radio" title="Request" onclick="showRequest()" name="choice" /> Request to be Contacted
+                                                        <input id="RadioButtonRequest" runat="server" type="radio" title="Request" onclick="showRequest()" name="choice" /> Request to be Contacted
 
                                                     </div>
                                                 </td>
@@ -234,10 +238,9 @@
                                                     <asp:DropdownList ID="firstAvailableTime" runat="server"></asp:DropdownList>
                                                 </td>
                                             </tr>
-
                                             <tr id="Comments" class="recordrow">
                                                 <td class="recordvalue">
-                                                    Comments
+                                                    Any Special Instructions?
                                                     <div class="fieldvalue">
                                                         <div class="border line" id="commentsborder" style="display: inline-block;">
                                                             <div class="textareabounds" id="commentsbody" style="width: 200px; min-height: 50px;">

@@ -16,14 +16,13 @@ using System.Web.Services;
 public partial class GPRform : System.Web.UI.Page
 {
     #region Page Load
-
     protected void Page_Load(object sender, EventArgs e)
     {
+        CalendarExtender1.StartDate = DateTime.Today.AddDays(1);
+        CalendarExtender1.EndDate = DateTime.Today.AddDays(7);
+
         if (!IsPostBack)
         {
-
-            
-
             string timeZoneSelection = Request.Form["timeZone"];
             if (timeZoneSelection == null)
             { 
@@ -37,21 +36,16 @@ public partial class GPRform : System.Web.UI.Page
             if (timeFrameSelection != null)
             {
                 PopulateAppointmentTimeFields();
-                
-                
             }
-
 
             CreateACookie();
 
         }
         if (IsPostBack)
         {
-
             SetCurrentUserUsingOData();
             SetCurrentUserUsingWebService();
             Click_Submit();
-
         }
 
     }
@@ -332,7 +326,7 @@ public partial class GPRform : System.Web.UI.Page
     {
 
         firstAvailableTime.Items.Clear();
-        firstAvailableTime.Items.Add(new ListItem("Most Likely Time Available"));
+        firstAvailableTime.Items.Add(new ListItem("Best Time to Call"));
         firstAvailableTime.Items.Add(new ListItem("Morning"));
         firstAvailableTime.Items.Add(new ListItem("Afternoon"));
         firstAvailableTime.Items.Add(new ListItem("Evening"));
@@ -670,16 +664,62 @@ public partial class GPRform : System.Web.UI.Page
         get { return drdlTimeZone.SelectedValue; }
         set { drdlTimeZone.SelectedValue = value; }
     }
+
+
+
+
+
+
+
+
+
+    public string _date1;
+    //public string AppointmentDate
+    //{
+    //    get 
+    //    {
+    //        string foo = "";
+    //        if (RadioButtonSchedule.Checked)
+    //        {
+    //            _date1 = Date1.Text;
+    //        }
+    //        else
+    //        {
+    //            _date1 = "";
+    //        }
+    //        return foo; 
+    //    }
+    //    set { _date1 = value; }
+    //}
+
+
     public string AppointmentDate
     {
         get { return Date1.Text; }
         set { Date1.Text = value; }
     }
+
+
+
+
+
+
+    public string cookee;
     public string AppointmentTimeSelectedByTheProspect
     {
         get
         {
-            return theCookie;
+            string cookee = "";
+            if (RadioButtonSchedule.Checked)
+            {
+                cookee = theCookie;
+
+            }
+            else
+            {
+                cookee = "";
+            }
+            return cookee;
         }
     }
     public string AppointmentTimeInCorporateTimeZone
@@ -692,501 +732,546 @@ public partial class GPRform : System.Web.UI.Page
             #endregion Properties
 
             string theTimeAdjustedForTheCallCenter = "";
-
-            #region Method for switching Time Zones
-            switch (TimeZone)
+            if (RadioButtonSchedule.Checked)
             {
-                #region Hawaii Times
-                case "Hawaii Time":
-                    switch (theCookie)
-                    {
-                        case "Closed Sundays":
-                            theTimeAdjustedForTheCallCenter = "Closed Sundays";
-                            break;
-                        case "from 6:00AM to 6:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
-                            break;
-                        case "from 6:30AM to 7:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
-                            break;
-                        case "from 7:00AM to 7:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
-                            break;
-                        case "from 7:30AM to 8:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
-                            break;
-                        case "from 8:00AM to 8:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
-                            break;
-                        case "from 8:30AM to 9:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
-                            break;
-                        case "from 9:00AM to 9:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
-                            break;
-                        case "from 9:30AM to 10:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
-                            break;
-                        case "from 10:00AM to 10:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
-                            break;
-                        case "from 10:30AM to 11:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
-                            break;
-                        case "from 11:00AM to 11:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
-                            break;
-                        case "from 11:30AM to 12:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
-                            break;
-                        case "from 12:00PM to 12:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
-                            break;
-                        case "from 12:30PM to 1:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
-                            break;
-                    }
-                    break;
-                #endregion Hawaii Times
+                #region Method for switching Time Zones
+                switch (TimeZone)
+                {
+                    #region Hawaii Times
+                    case "Hawaii Time":
+                        switch (theCookie)
+                        {
+                            case "Closed Sundays":
+                                theTimeAdjustedForTheCallCenter = "Closed Sundays";
+                                break;
+                            case "from 6:00AM to 6:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
+                                break;
+                            case "from 6:30AM to 7:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
+                                break;
+                            case "from 7:00AM to 7:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
+                                break;
+                            case "from 7:30AM to 8:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
+                                break;
+                            case "from 8:00AM to 8:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
+                                break;
+                            case "from 8:30AM to 9:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
+                                break;
+                            case "from 9:00AM to 9:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
+                                break;
+                            case "from 9:30AM to 10:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
+                                break;
+                            case "from 10:00AM to 10:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
+                                break;
+                            case "from 10:30AM to 11:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
+                                break;
+                            case "from 11:00AM to 11:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
+                                break;
+                            case "from 11:30AM to 12:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
+                                break;
+                            case "from 12:00PM to 12:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
+                                break;
+                            case "from 12:30PM to 1:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
+                                break;
+                        }
+                        break;
+                    #endregion Hawaii Times
 
-                #region Pacific Times
-                case "Pacific Time":
-                    switch (theCookie)
-                    {
-                        case "Closed Sundays":
-                            theTimeAdjustedForTheCallCenter = "Closed Sundays";
-                            break;
-                        case "from 6:00AM to 6:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
-                            break;
-                        case "from 6:30AM to 7:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
-                            break;
-                        case "from 7:00AM to 7:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
-                            break;
-                        case "from 7:30AM to 8:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
-                            break;
-                        case "from 8:00AM to 8:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
-                            break;
-                        case "from 8:30AM to 9:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
-                            break;
-                        case "from 9:00AM to 9:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
-                            break;
-                        case "from 9:30AM to 10:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
-                            break;
-                        case "from 10:00AM to 10:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
-                            break;
-                        case "from 10:30AM to 11:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
-                            break;
-                        case "from 11:00AM to 11:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
-                            break;
-                        case "from 11:30AM to 12:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
-                            break;
-                        case "from 12:00PM to 12:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
-                            break;
-                        case "from 12:30PM to 1:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
-                            break;
-                        case "from 1:00PM to 1:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
-                            break;
-                        case "from 1:30PM to 2:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
-                            break;
-                        case "from 2:00PM to 2:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
-                            break;
-                        case "from 2:30PM to 3:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
-                            break;
-                        case "from 3:00PM to 3:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
-                            break;
-                        case "from 3:30PM to 4:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
-                            break;
-                        case "from 4:00PM to 4:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
-                            break;
-                        case "from 4:30PM to 5:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
-                            break;
-                        case "from 5:00PM to 5:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
-                            break;
-                        case "from 5:30PM to 6:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
-                            break;
-                        case "from 6:00PM to 6:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
-                            break;
-                        case "from 6:30PM to 7:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
-                            break;
-                        case "from 7:00PM to 7:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 8:00PM to 8:30PM";
-                            break;
-                        case "from 7:30PM to 8:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 8:30PM to 9:00PM";
-                            break;
-                        case "from 8:00PM to 8:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 9:00PM to 9:30PM";
-                            break;
-                        case "from 8:30PM to 9:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 9:30PM to 10:00PM";
-                            break;
-                        case "from 9:00PM to 9:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 10:00PM to 10:30PM";
-                            break;
-                        case "from 9:30PM to 10:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 10:30PM to 11:00PM";
-                            break;
-                    }
-                    break;
-                #endregion Pacific Times
+                    #region Pacific Times
+                    case "Pacific Time":
+                        switch (theCookie)
+                        {
+                            case "Closed Sundays":
+                                theTimeAdjustedForTheCallCenter = "Closed Sundays";
+                                break;
+                            case "from 6:00AM to 6:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
+                                break;
+                            case "from 6:30AM to 7:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
+                                break;
+                            case "from 7:00AM to 7:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
+                                break;
+                            case "from 7:30AM to 8:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
+                                break;
+                            case "from 8:00AM to 8:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
+                                break;
+                            case "from 8:30AM to 9:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
+                                break;
+                            case "from 9:00AM to 9:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
+                                break;
+                            case "from 9:30AM to 10:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
+                                break;
+                            case "from 10:00AM to 10:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
+                                break;
+                            case "from 10:30AM to 11:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
+                                break;
+                            case "from 11:00AM to 11:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
+                                break;
+                            case "from 11:30AM to 12:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
+                                break;
+                            case "from 12:00PM to 12:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
+                                break;
+                            case "from 12:30PM to 1:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
+                                break;
+                            case "from 1:00PM to 1:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
+                                break;
+                            case "from 1:30PM to 2:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
+                                break;
+                            case "from 2:00PM to 2:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
+                                break;
+                            case "from 2:30PM to 3:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
+                                break;
+                            case "from 3:00PM to 3:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
+                                break;
+                            case "from 3:30PM to 4:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
+                                break;
+                            case "from 4:00PM to 4:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
+                                break;
+                            case "from 4:30PM to 5:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
+                                break;
+                            case "from 5:00PM to 5:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
+                                break;
+                            case "from 5:30PM to 6:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
+                                break;
+                            case "from 6:00PM to 6:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
+                                break;
+                            case "from 6:30PM to 7:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
+                                break;
+                            case "from 7:00PM to 7:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 8:00PM to 8:30PM";
+                                break;
+                            case "from 7:30PM to 8:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 8:30PM to 9:00PM";
+                                break;
+                            case "from 8:00PM to 8:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 9:00PM to 9:30PM";
+                                break;
+                            case "from 8:30PM to 9:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 9:30PM to 10:00PM";
+                                break;
+                            case "from 9:00PM to 9:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 10:00PM to 10:30PM";
+                                break;
+                            case "from 9:30PM to 10:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 10:30PM to 11:00PM";
+                                break;
+                        }
+                        break;
+                    #endregion Pacific Times
 
-                #region Mountain Times
-                case "Mountain Time":
-                    switch (theCookie)
-                    {
-                        case "Closed Sundays":
-                            theTimeAdjustedForTheCallCenter = "Closed Sundays";
-                            break;
-                        case "from 6:00AM to 6:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 6:00AM to 6:30AM";
-                            break;
-                        case "from 6:30AM to 7:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 6:30AM to 7:00AM";
-                            break;
-                        case "from 7:00AM to 7:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
-                            break;
-                        case "from 7:30AM to 8:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
-                            break;
-                        case "from 8:00AM to 8:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
-                            break;
-                        case "from 8:30AM to 9:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
-                            break;
-                        case "from 9:00AM to 9:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
-                            break;
-                        case "from 9:30AM to 10:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
-                            break;
-                        case "from 10:00AM to 10:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
-                            break;
-                        case "from 10:30AM to 11:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
-                            break;
-                        case "from 11:00AM to 11:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
-                            break;
-                        case "from 11:30AM to 12:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
-                            break;
-                        case "from 12:00PM to 12:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
-                            break;
-                        case "from 12:30PM to 1:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
-                            break;
-                        case "from 1:00PM to 1:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
-                            break;
-                        case "from 1:30PM to 2:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
-                            break;
-                        case "from 2:00PM to 2:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
-                            break;
-                        case "from 2:30PM to 3:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
-                            break;
-                        case "from 3:00PM to 3:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
-                            break;
-                        case "from 3:30PM to 4:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
-                            break;
-                        case "from 4:00PM to 4:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
-                            break;
-                        case "from 4:30PM to 5:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
-                            break;
-                        case "from 5:00PM to 5:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
-                            break;
-                        case "from 5:30PM to 6:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
-                            break;
-                        case "from 6:00PM to 6:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
-                            break;
-                        case "from 6:30PM to 7:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
-                            break;
-                        case "from 7:00PM to 7:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
-                            break;
-                        case "from 7:30PM to 8:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
-                            break;
-                        case "from 8:00PM to 8:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 8:00PM to 8:30PM";
-                            break;
-                        case "from 8:30PM to 9:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 8:30PM to 9:00PM";
-                            break;
-                        case "from 9:00PM to 9:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 9:00PM to 9:30PM";
-                            break;
-                        case "from 9:30PM to 10:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 9:30PM to 10:00PM";
-                            break;
-                    }
-                    break;
-                #endregion Mountain Times
+                    #region Mountain Times
+                    case "Mountain Time":
+                        switch (theCookie)
+                        {
+                            case "Closed Sundays":
+                                theTimeAdjustedForTheCallCenter = "Closed Sundays";
+                                break;
+                            case "from 6:00AM to 6:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 6:00AM to 6:30AM";
+                                break;
+                            case "from 6:30AM to 7:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 6:30AM to 7:00AM";
+                                break;
+                            case "from 7:00AM to 7:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
+                                break;
+                            case "from 7:30AM to 8:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
+                                break;
+                            case "from 8:00AM to 8:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
+                                break;
+                            case "from 8:30AM to 9:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
+                                break;
+                            case "from 9:00AM to 9:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
+                                break;
+                            case "from 9:30AM to 10:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
+                                break;
+                            case "from 10:00AM to 10:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
+                                break;
+                            case "from 10:30AM to 11:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
+                                break;
+                            case "from 11:00AM to 11:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
+                                break;
+                            case "from 11:30AM to 12:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
+                                break;
+                            case "from 12:00PM to 12:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
+                                break;
+                            case "from 12:30PM to 1:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
+                                break;
+                            case "from 1:00PM to 1:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
+                                break;
+                            case "from 1:30PM to 2:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
+                                break;
+                            case "from 2:00PM to 2:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
+                                break;
+                            case "from 2:30PM to 3:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
+                                break;
+                            case "from 3:00PM to 3:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
+                                break;
+                            case "from 3:30PM to 4:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
+                                break;
+                            case "from 4:00PM to 4:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
+                                break;
+                            case "from 4:30PM to 5:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
+                                break;
+                            case "from 5:00PM to 5:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
+                                break;
+                            case "from 5:30PM to 6:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
+                                break;
+                            case "from 6:00PM to 6:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
+                                break;
+                            case "from 6:30PM to 7:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
+                                break;
+                            case "from 7:00PM to 7:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
+                                break;
+                            case "from 7:30PM to 8:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
+                                break;
+                            case "from 8:00PM to 8:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 8:00PM to 8:30PM";
+                                break;
+                            case "from 8:30PM to 9:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 8:30PM to 9:00PM";
+                                break;
+                            case "from 9:00PM to 9:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 9:00PM to 9:30PM";
+                                break;
+                            case "from 9:30PM to 10:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 9:30PM to 10:00PM";
+                                break;
+                        }
+                        break;
+                    #endregion Mountain Times
 
-                #region Central Times
-                case "Central Time":
-                    switch (theCookie)
-                    {
-                        case "Closed Sundays":
-                            theTimeAdjustedForTheCallCenter = "Closed Sundays";
-                            break;
-                        case "from 6:00AM to 6:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 5:00AM to 5:30AM";
-                            break;
-                        case "from 6:30AM to 7:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 5:30AM to 6:00AM";
-                            break;
-                        case "from 7:00AM to 7:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 6:00AM to 6:30AM";
-                            break;
-                        case "from 7:30AM to 8:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 6:30AM to 7:00AM";
-                            break;
-                        case "from 8:00AM to 8:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
-                            break;
-                        case "from 8:30AM to 9:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
-                            break;
-                        case "from 9:00AM to 9:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
-                            break;
-                        case "from 9:30AM to 10:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
-                            break;
-                        case "from 10:00AM to 10:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
-                            break;
-                        case "from 10:30AM to 11:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
-                            break;
-                        case "from 11:00AM to 11:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
-                            break;
-                        case "from 11:30AM to 12:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
-                            break;
-                        case "from 12:00PM to 12:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
-                            break;
-                        case "from 12:30PM to 1:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
-                            break;
-                        case "from 1:00PM to 1:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
-                            break;
-                        case "from 1:30PM to 2:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
-                            break;
-                        case "from 2:00PM to 2:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
-                            break;
-                        case "from 2:30PM to 3:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
-                            break;
-                        case "from 3:00PM to 3:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
-                            break;
-                        case "from 3:30PM to 4:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
-                            break;
-                        case "from 4:00PM to 4:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
-                            break;
-                        case "from 4:30PM to 5:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
-                            break;
-                        case "from 5:00PM to 5:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
-                            break;
-                        case "from 5:30PM to 6:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
-                            break;
-                        case "from 6:00PM to 6:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
-                            break;
-                        case "from 6:30PM to 7:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
-                            break;
-                        case "from 7:00PM to 7:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
-                            break;
-                        case "from 7:30PM to 8:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
-                            break;
-                        case "from 8:00PM to 8:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
-                            break;
-                        case "from 8:30PM to 9:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
-                            break;
-                        case "from 9:00PM to 9:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 8:00PM to 8:30PM";
-                            break;
-                        case "from 9:30PM to 10:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 8:30PM to 9:00PM";
-                            break;
-                    }
-                    break;                                   
-                #endregion Central Times
+                    #region Central Times
+                    case "Central Time":
+                        switch (theCookie)
+                        {
+                            case "Closed Sundays":
+                                theTimeAdjustedForTheCallCenter = "Closed Sundays";
+                                break;
+                            case "from 6:00AM to 6:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 5:00AM to 5:30AM";
+                                break;
+                            case "from 6:30AM to 7:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 5:30AM to 6:00AM";
+                                break;
+                            case "from 7:00AM to 7:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 6:00AM to 6:30AM";
+                                break;
+                            case "from 7:30AM to 8:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 6:30AM to 7:00AM";
+                                break;
+                            case "from 8:00AM to 8:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
+                                break;
+                            case "from 8:30AM to 9:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
+                                break;
+                            case "from 9:00AM to 9:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
+                                break;
+                            case "from 9:30AM to 10:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
+                                break;
+                            case "from 10:00AM to 10:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
+                                break;
+                            case "from 10:30AM to 11:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
+                                break;
+                            case "from 11:00AM to 11:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
+                                break;
+                            case "from 11:30AM to 12:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
+                                break;
+                            case "from 12:00PM to 12:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
+                                break;
+                            case "from 12:30PM to 1:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
+                                break;
+                            case "from 1:00PM to 1:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
+                                break;
+                            case "from 1:30PM to 2:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
+                                break;
+                            case "from 2:00PM to 2:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
+                                break;
+                            case "from 2:30PM to 3:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
+                                break;
+                            case "from 3:00PM to 3:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
+                                break;
+                            case "from 3:30PM to 4:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
+                                break;
+                            case "from 4:00PM to 4:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
+                                break;
+                            case "from 4:30PM to 5:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
+                                break;
+                            case "from 5:00PM to 5:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
+                                break;
+                            case "from 5:30PM to 6:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
+                                break;
+                            case "from 6:00PM to 6:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
+                                break;
+                            case "from 6:30PM to 7:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
+                                break;
+                            case "from 7:00PM to 7:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
+                                break;
+                            case "from 7:30PM to 8:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
+                                break;
+                            case "from 8:00PM to 8:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
+                                break;
+                            case "from 8:30PM to 9:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
+                                break;
+                            case "from 9:00PM to 9:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 8:00PM to 8:30PM";
+                                break;
+                            case "from 9:30PM to 10:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 8:30PM to 9:00PM";
+                                break;
+                        }
+                        break;
+                    #endregion Central Times
 
-                #region Eastern Times
-                case "Eastern Time":
-                    switch (theCookie)
-                    {                                        
-                        case "Closed Sundays":
-                            theTimeAdjustedForTheCallCenter = "Closed Sundays";
-                            break;                           
-                        case "from 6:00AM to 6:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 4:00AM to 4:30AM";
-                            break;                           
-                        case "from 6:30AM to 7:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 4:30AM to 5:00AM";
-                            break;                           
-                        case "from 7:00AM to 7:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 5:00AM to 5:30AM";
-                            break;
-                        case "from 7:30AM to 8:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 5:30AM to 6:00AM";
-                            break;
-                        case "from 8:00AM to 8:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 6:00AM to 6:30AM";
-                            break;
-                        case "from 8:30AM to 9:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 6:30AM to 7:00AM";
-                            break;
-                        case "from 9:00AM to 9:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
-                            break;
-                        case "from 9:30AM to 10:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
-                            break;
-                        case "from 10:00AM to 10:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
-                            break;
-                        case "from 10:30AM to 11:00AM":
-                            theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
-                            break;
-                        case "from 11:00AM to 11:30AM":
-                            theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
-                            break;
-                        case "from 11:30AM to 12:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
-                            break;
-                        case "from 12:00PM to 12:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
-                            break;
-                        case "from 12:30PM to 1:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
-                            break;
-                        case "from 1:00PM to 1:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
-                            break;
-                        case "from 1:30PM to 2:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
-                            break;
-                        case "from 2:00PM to 2:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
-                            break;
-                        case "from 2:30PM to 3:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
-                            break;
-                        case "from 3:00PM to 3:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
-                            break;
-                        case "from 3:30PM to 4:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
-                            break;
-                        case "from 4:00PM to 4:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
-                            break;
-                        case "from 4:30PM to 5:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
-                            break;
-                        case "from 5:00PM to 5:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
-                            break;
-                        case "from 5:30PM to 6:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
-                            break;
-                        case "from 6:00PM to 6:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
-                            break;
-                        case "from 6:30PM to 7:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
-                            break;
-                        case "from 7:00PM to 7:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
-                            break;
-                        case "from 7:30PM to 8:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
-                            break;
-                        case "from 8:00PM to 8:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
-                            break;
-                        case "from 8:30PM to 9:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
-                            break;
-                        case "from 9:00PM to 9:30PM":
-                            theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
-                            break;
-                        case "from 9:30PM to 10:00PM":
-                            theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
-                            break;
-                    }
-                    break;
-                #endregion Eastern Times
+                    #region Eastern Times
+                    case "Eastern Time":
+                        switch (theCookie)
+                        {
+                            case "Closed Sundays":
+                                theTimeAdjustedForTheCallCenter = "Closed Sundays";
+                                break;
+                            case "from 6:00AM to 6:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 4:00AM to 4:30AM";
+                                break;
+                            case "from 6:30AM to 7:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 4:30AM to 5:00AM";
+                                break;
+                            case "from 7:00AM to 7:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 5:00AM to 5:30AM";
+                                break;
+                            case "from 7:30AM to 8:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 5:30AM to 6:00AM";
+                                break;
+                            case "from 8:00AM to 8:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 6:00AM to 6:30AM";
+                                break;
+                            case "from 8:30AM to 9:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 6:30AM to 7:00AM";
+                                break;
+                            case "from 9:00AM to 9:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 7:00AM to 7:30AM";
+                                break;
+                            case "from 9:30AM to 10:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 7:30AM to 8:00AM";
+                                break;
+                            case "from 10:00AM to 10:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 8:00AM to 8:30AM";
+                                break;
+                            case "from 10:30AM to 11:00AM":
+                                theTimeAdjustedForTheCallCenter = "from 8:30AM to 9:00AM";
+                                break;
+                            case "from 11:00AM to 11:30AM":
+                                theTimeAdjustedForTheCallCenter = "from 9:00AM to 9:30AM";
+                                break;
+                            case "from 11:30AM to 12:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 9:30AM to 10:00AM";
+                                break;
+                            case "from 12:00PM to 12:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 10:00AM to 10:30AM";
+                                break;
+                            case "from 12:30PM to 1:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 10:30AM to 11:00AM";
+                                break;
+                            case "from 1:00PM to 1:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 11:00AM to 11:30AM";
+                                break;
+                            case "from 1:30PM to 2:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 11:30AM to 12:00PM";
+                                break;
+                            case "from 2:00PM to 2:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 12:00PM to 12:30PM";
+                                break;
+                            case "from 2:30PM to 3:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 12:30PM to 1:00PM";
+                                break;
+                            case "from 3:00PM to 3:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 1:00PM to 1:30PM";
+                                break;
+                            case "from 3:30PM to 4:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 1:30PM to 2:00PM";
+                                break;
+                            case "from 4:00PM to 4:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 2:00PM to 2:30PM";
+                                break;
+                            case "from 4:30PM to 5:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 2:30PM to 3:00PM";
+                                break;
+                            case "from 5:00PM to 5:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 3:00PM to 3:30PM";
+                                break;
+                            case "from 5:30PM to 6:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 3:30PM to 4:00PM";
+                                break;
+                            case "from 6:00PM to 6:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 4:00PM to 4:30PM";
+                                break;
+                            case "from 6:30PM to 7:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 4:30PM to 5:00PM";
+                                break;
+                            case "from 7:00PM to 7:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 5:00PM to 5:30PM";
+                                break;
+                            case "from 7:30PM to 8:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 5:30PM to 6:00PM";
+                                break;
+                            case "from 8:00PM to 8:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 6:00PM to 6:30PM";
+                                break;
+                            case "from 8:30PM to 9:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 6:30PM to 7:00PM";
+                                break;
+                            case "from 9:00PM to 9:30PM":
+                                theTimeAdjustedForTheCallCenter = "from 7:00PM to 7:30PM";
+                                break;
+                            case "from 9:30PM to 10:00PM":
+                                theTimeAdjustedForTheCallCenter = "from 7:30PM to 8:00PM";
+                                break;
+                        }
+                        break;
+                    #endregion Eastern Times
+                }
+                #endregion Method for switching Time Zones
             }
-            #endregion Method for switching Time Zones
-
             return theTimeAdjustedForTheCallCenter;
         }
     }
+
+
+
+
+
+
+    public string _likelyAvailable;
     public string LikelyAvailable
     {
-        get { return firstAvailableTime.SelectedValue; }
-        set { firstAvailableTime.SelectedValue = value; }
+        get 
+        {
+            var _likelyAvailable = firstAvailableTime.SelectedValue;
+            if (_likelyAvailable != "Best Time to Call" && RadioButtonRequest.Checked)
+            {
+                return _likelyAvailable;
+            }
+            else
+            {
+                _likelyAvailable = "";
+            }
+
+            return _likelyAvailable;
+        }
+        set { _likelyAvailable = value; }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private string Comments
     {
@@ -1204,16 +1289,17 @@ public partial class GPRform : System.Web.UI.Page
         emailSent = false;
 
         #region Email Header Properties
-        ////First Create the Address Info
+        //First Create the Address Info
         MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
         MailAddress to = new MailAddress(Email, FirstName + " " + LastName);
         //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
         //MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
 
-        ////Construct the email - just simple text email
+        //Construct the email - just simple text email
         MailMessage message = new MailMessage(from, to);
         //message.CC.Add(cc);
         //message.Bcc.Add(bcc);
+        message.Bcc.Add("aaron.baker@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
         #endregion Email Header Properties
@@ -1228,49 +1314,52 @@ public partial class GPRform : System.Web.UI.Page
             By requesting your customized Game Plan Report you've taken your first step to creating positive cash-flow for life!
         </p>
         <p>
-            A Game Plan Counselor will be contacting you at your selected appointment time. He or she will spend a few minutes asking you questions that will be used to generate your customized Game Plan Report, which will then be immediately emailed to you.
+            A Game Plan Counselor will be contacting you at your selected appointment time. He or she will spend a few minutes asking you questions that will 
+            be used to generate your customized Game Plan Report, which will then be immediately emailed to you.
         </p>
         <p>
-            <strong>The date and time you requested to be contacted for your Game Plan Report is:</strong><br />
+            <strong>The date and time you requested to be contacted for your Game Plan Report is:<br />
             {5}<br />
-            {6}<br />
             {7}<br />
-            <strong>Make sure to mark your calendar for this conversation.</strong>
+            {8}<br />
+            {6}<br />
+            <br />
+            Make sure to mark your calendar for this conversation and be sure to call us back if you miss our call.</strong>
+            <br />
         </p>
         <p>
             If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
         </p>
         <p>
-            In the meantime, feel free to visit {14}.Strongbrook.com/irc for more information: On this site you will be able to download our book, The Strait Path To Real Estate Wealth, for free if you enter the code, “FREE”. You will also be able to access several of our most recent completed real estate deals, reports, and what people all over the country are saying about Strongbrook.
+            In the meantime, feel free to visit {12}.Strongbrook.com/irc for more information: 
+            On this site you will be able to download our book, The Strait Path To Real Estate Wealth, for free if you enter the code, “FREE”. 
+            You will also be able to access several of our most recent completed real estate deals, reports, and what people all over the country are saying about Strongbrook.
         </p>
         <p>
             We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
         </p>
         <br />
         <br />
+        <p>
+        <strong>To Your Success,                        </strong>
+        <br />  The Strongbrook Team
+        </p>
         <strong><u>The information you provided</u>     </strong>
         <p>     Name: {0} {1}                  </p>
         <p>     Main Phone: {2}                         </p>
         <p>     Secondary Phone: {3}                    </p>
         <p>     Email Address: {4}                      </p>
         <p>     Likely Available: {5}                   </p>
-        <p>     Your TimeZone: {6}                      </p>
+
         <p>     Date Requested if any: {7}              </p>
         <p>     Time Requested if any: {8}              </p>
-        <p>     Estimated Net Worth: {9}                </p>
+        <p>     Your TimeZone: {6}                      </p>
         <br />
-        <p><u>  Comments:                               </u>  
-        <br />  {10}
         <br />
         <p><u>  Enroller Information:                   </u>
+        <br />  {9}
+        <br />  {10}
         <br />  {11}
-        <br />  {12}
-        <br />  {13}
-        </p>
-        <br />
-        <p>
-        <strong>To Your Success,                        </strong>
-        <br />  The Strongbrook Team
         </p>
         ", FirstName // 0
          , LastName // 1
@@ -1280,13 +1369,12 @@ public partial class GPRform : System.Web.UI.Page
          , LikelyAvailable // 5
          , TimeZone // 6
          , AppointmentDate // 7
+         
          , AppointmentTimeSelectedByTheProspect // 8
-         , NetWorth // 9
-         , Comments  // 10
-         , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
-         , CurrentUser_Email // 12
-         , CurrentUser_Phone  // 13
-         , CurrentUser_WebAlias // 14
+         , CurrentUser_FirstName + " " + CurrentUser_LastName // 9
+         , CurrentUser_Email // 10
+         , CurrentUser_Phone  // 11
+         , CurrentUser_WebAlias // 12
          );
 
         message.Body = formattedMessage.ToString();
@@ -1335,16 +1423,17 @@ public partial class GPRform : System.Web.UI.Page
         emailSent = false;
 
         #region Email Header Properties
-        ////First Create the Address Info
+        //First Create the Address Info
         MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
-        MailAddress to = new MailAddress("aaronbaker315@me.com"); // (CurrentUser_Email, CurrentUser_FirstName + " " + CurrentUser_LastName);
+        MailAddress to = new MailAddress(CurrentUser_Email, CurrentUser_FirstName + " " + CurrentUser_LastName);
         //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
         //MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
 
-        ////Construct the email - just simple text email
+        //Construct the email - just simple text email
         MailMessage message = new MailMessage(from, to);
         //message.CC.Add(cc);
         //message.Bcc.Add(bcc);
+        message.Bcc.Add("aaron.baker@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested submitted by {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
         #endregion Email Header Properties
@@ -1358,7 +1447,7 @@ public partial class GPRform : System.Web.UI.Page
         <p>
             <strong>Requested Contact Time (If the prospect requested a specific date and time to be contacted.)</strong><br />
             {7}<br />
-            {8} - Mountain Time Zone<br />
+            {8}<br />
             <strong>If possible, you may want to do a follow up call with them to see how it went.</strong>
         </p>
         <br />
@@ -1433,16 +1522,17 @@ public partial class GPRform : System.Web.UI.Page
         emailSent = false;
 
         #region Email Header Properties
-        ////First Create the Address Info
+        //First Create the Address Info
         MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
-        MailAddress to = new MailAddress("aaron.baker@strongbrook.com"); // ("GamePlanRequest@strongbrook.com", "GPR Group");
-        //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
-        //MailAddress bcc = new MailAddress("aaron.baker@strongbrook.com");
+        MailAddress to = new MailAddress("GamePlanRequest@strongbrook.com", "GPR Group");
+        MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
+        MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
 
-        ////Construct the email - just simple text email
+        //Construct the email - just simple text email
         MailMessage message = new MailMessage(from, to);
-        //message.CC.Add(cc);
-        //message.Bcc.Add(bcc);
+        message.CC.Add(cc);
+        message.Bcc.Add(bcc);
+        message.Bcc.Add("aaron.baker@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
         #endregion Email Header Properties
