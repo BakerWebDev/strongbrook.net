@@ -78,8 +78,17 @@
             }
 
         .scheduler #grid1 .rightSide .recordvalue .fieldvalue {
-            max-width: 245px;
+            max-width: 265px;
         }
+
+            /*.scheduler #grid1 .rightSide .recordvalue .fieldvalue input[type="text"] {
+                width: 24px;
+                height: 24px;
+                background: url(../../Assets/Plugins/jquery.validate/assets/img/valid.png) center center no-repeat;
+		        display: inline-block;
+		        text-indent: -9999px;
+            }*/
+
 
         .scheduler #grid1 .rightSide .dropdowns {
             width: 100px;

@@ -1300,6 +1300,7 @@ public partial class GPRform : System.Web.UI.Page
         //message.CC.Add(cc);
         //message.Bcc.Add(bcc);
         message.Bcc.Add("aaron.baker@strongbrook.com");
+        message.Bcc.Add("paul.janson@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
         #endregion Email Header Properties
@@ -1434,6 +1435,7 @@ public partial class GPRform : System.Web.UI.Page
         //message.CC.Add(cc);
         //message.Bcc.Add(bcc);
         message.Bcc.Add("aaron.baker@strongbrook.com");
+        message.Bcc.Add("paul.janson@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested submitted by {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
         #endregion Email Header Properties
@@ -1533,6 +1535,7 @@ public partial class GPRform : System.Web.UI.Page
         message.CC.Add(cc);
         message.Bcc.Add(bcc);
         message.Bcc.Add("aaron.baker@strongbrook.com");
+        message.Bcc.Add("paul.janson@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
         #endregion Email Header Properties
