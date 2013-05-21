@@ -30,7 +30,6 @@
 
         function showSchedule() {
             $('#Date').show();
-            $('#Time').show();
             $('#LikelyAvailable').hide();
         }
 
@@ -60,6 +59,7 @@
 
             if (dateTextbox.indexOf("Sunday") >= 0) {
                 theDayOfTheWeek = "Sunday";
+                //CalendarExtender1.Enabled = false;
             }
             if (dateTextbox.indexOf("Monday") >= 0) {
                 theDayOfTheWeek = "Monday";
@@ -85,7 +85,11 @@
                 alert("Closed Sundays, please select a day Monday thru Saturday.");
             }
 
+<<<<<<< HEAD
             //$('#Time').show();
+=======
+            $('#Time').show();
+>>>>>>> 98084518016792ccf8083207b84d8508fed5aed3
 
             var selectedTimeZone = $("#drdlTimeZone").val();
 
@@ -230,6 +234,7 @@
                                                             Request to be Contacted
 
                                                         </div>
+<<<<<<< HEAD
 
 
 
@@ -247,6 +252,8 @@
 
 
 
+=======
+>>>>>>> 98084518016792ccf8083207b84d8508fed5aed3
                                                     </td>
                                                 </tr>
                                                 <tr id="LikelyAvailable" class="recordrow">
