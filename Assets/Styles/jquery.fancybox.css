@@ -16,7 +16,7 @@
 	outline: none;
 	vertical-align: top;
     width:800px;
-    height:585px;
+    height:660px; /*This must match with the height on jquery.fancybox.js*/
 }
 
 .fancybox-wrap {
