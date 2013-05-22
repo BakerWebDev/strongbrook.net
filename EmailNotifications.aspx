@@ -7,6 +7,16 @@
             activenavigation: 'myaccount'
         };
     </script>
+
+
+
+<script type ="text/javascript">
+    $( function () {
+        alert( '!!! jQuery is Working !!!');
+    });
+</script>
+
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <h1>My Account</h1>

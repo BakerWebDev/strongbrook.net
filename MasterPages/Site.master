@@ -13,6 +13,8 @@
     <link href="../Assets/Plugins/twitter.bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="../Assets/Icons/glyphicons/glyphicons.css" rel="stylesheet" />
 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
     <script src="Assets/Plugins/twitter.bootstrap/js/bootstrap.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
     <script src="Assets/Plugins/jquery-ui/js/jquery-ui.custom.min.js"></script>

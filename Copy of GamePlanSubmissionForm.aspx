@@ -1,4 +1,4 @@
-﻿<%@ Page EnableEventValidation="false" Language="C#" AutoEventWireup="true" CodeFile="GamePlanSubmissionForm.aspx.cs" Inherits="GPRform" %>
+﻿<%@ Page EnableEventValidation="false" Language="C#" AutoEventWireup="true" CodeFile="Copy of GamePlanSubmissionForm.aspx.cs" Inherits="GPRform" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -23,19 +23,19 @@
 
         $(function () {
             $('#RadioButtons').hide();
-            $('#DatePicker').hide();
+            $('#Date').hide();
             $('#Time').hide();
             $('#LikelyAvailable').hide();
         });
 
         function showSchedule() {
-            $('#DatePicker').show();
+            $('#Date').show();
             $('#LikelyAvailable').hide();
         }
 
         function showRequest() {
             $('#LikelyAvailable').show();
-            $('#DatePicker').hide();
+            $('#Date').hide();
             $('#Time').hide();
         }
 
@@ -112,7 +112,7 @@
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <div class="main-wrapper">
             <div class="scheduler panel">
-                <div id="Main_Content" class="panels" style="position: relative;">
+                <div id="Main_Content" class="panels" id="panels" style="position: relative;">
                     <div id="introduction" style="display: block; position: absolute; width: 100%;">
                         <h1 class="heading">Request Your Free Personalized Game Plan Report</h1>
                         <table id="grid1">
@@ -150,6 +150,8 @@
                                                             <asp:TextBox CssClass="input textfield" ID="txtFirstName" name="FirstName" Placeholder="First Name" runat="server" Data="First Name" />
                                                         </div>
                                                     </td>
+                                                </tr>
+                                                <tr id="LastName" class="recordrow">
                                                     <td class="recordvalue">
                                                         <div class="fieldvalue">
                                                             <asp:TextBox ID="txtLastName" name="LastName" Placeholder="Last Name"
@@ -157,7 +159,6 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-
                                                 <tr id="Phone1" class="recordrow">
                                                     <td class="recordvalue full">
                                                         <div class="fieldvalue">
@@ -165,34 +166,39 @@
                                                                 Data="Phone" />
                                                         </div>
                                                     </td>
+                                                </tr>
+                                                <tr id="Phone2" class="recordrow">
                                                     <td class="recordvalue">
                                                         <div class="fieldvalue">
-                                                            <asp:TextBox CssClass="input textfield" ID="txtPhone2" name="cellphone" runat="server" Placeholder="Phone 2 (optional)"
+                                                            <asp:TextBox CssClass="input textfield" ID="txtPhone2" name="cellphone" runat="server" Placeholder="Phone 2"
                                                                 Data="Phone" />
                                                         </div>
                                                     </td>
                                                 </tr>
-
                                                 <tr id="Email" class="recordrow">
                                                     <td class="recordvalue">
                                                         <div class="fieldvalue">
                                                             <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="email" name="email" runat="server" Data="email" />
                                                         </div>
                                                     </td>
+                                                </tr>
+                                                <tr id="NetWorth" class="recordrow">
                                                     <td class="recordvalue">
                                                         <div class="fieldvalue">
                                                             <asp:DropDownList ID="netWorth" ClientIDMode="Static" runat="server" />
                                                         </div>
                                                     </td>
                                                 </tr>
-
                                                 <tr id="TimeZone" class="recordrow">
                                                     <td class="recordvalue">
-                                                        <div id="TimeZoneDropDown">
+                                                        <div>
                                                             <asp:DropDownList ID="drdlTimeZone" runat="server" onchange="showRadioButtons();" />
                                                         </div>
-
-                                                        <div id="DatePicker">
+                                                    </td>
+                                                </tr>
+                                                <tr id="Date_Request" class="recordrow">
+                                                    <td id="DatePicker" class="recordvalue">
+                                                        <div id="Date">
                                                             <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
                                                             <asp:CalendarExtender ID="CalendarExtender1" runat="server"
                                                                 TargetControlID="Date1"
@@ -202,15 +208,18 @@
                                                                 Animated="true">
                                                             </asp:CalendarExtender>
                                                         </div>
+                                                    </td>
 
+                                                </tr>
+                                                <tr id="Time_Request" class="recordrow">
+                                                    <td id="TimePicker" class="recordvalue">
                                                         <div id="Time">
                                                             <asp:DropDownList ID="drdlAppTime" runat="server" onchange="sendTimeFrame();"></asp:DropDownList>
                                                         </div>
-
-                                                        <div id="LikelyAvailable" class="recordvalue">
-                                                            <asp:DropDownList ID="firstAvailableTime" runat="server"></asp:DropDownList>
-                                                        </div>
-
+                                                    </td>
+                                                </tr>
+                                                <tr id="Select_Options" class="recordrow">
+                                                    <td>
                                                         <div id="RadioButtons">
 
                                                             <input id="RadioButtonSchedule" runat="server" type="radio" title="Schedule" onclick="showSchedule()" name="choice" validate="required:true" />
@@ -221,11 +230,18 @@
 
                                                         </div>
                                                     </td>
-                                                    <td class="recordvalue" style="vertical-align:top;">
+                                                </tr>
+                                                <tr id="LikelyAvailable" class="recordrow">
+                                                    <td class="recordvalue">
+                                                        <asp:DropDownList ID="firstAvailableTime" runat="server"></asp:DropDownList>
+                                                    </td>
+                                                </tr>
+                                                <tr id="Comments" class="recordrow">
+                                                    <td class="recordvalue">Any Special Instructions?
                                                     <div class="fieldvalue">
                                                         <div class="border line" id="commentsborder" style="display: inline-block;">
                                                             <div class="textareabounds" id="commentsbody" style="width: 200px; min-height: 50px;">
-                                                                <textarea id="txtComments" class="input textfield" cols="20" rows="5" runat="server"></textarea>Any Special Instructions?
+                                                                <textarea id="txtComments" class="input textfield" cols="20" rows="5" runat="server"></textarea>
                                                             </div>
                                                             <div class="border-resize" id="commentsresize">
                                                             </div>
@@ -242,9 +258,9 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="2">
-                                                        <div style="width:100%; float:right; margin-top:20px; ">
-                                                            <asp:Button ID="submitButton" runat="server" Text="Submit" CausesValidation="true" style="float:right; "/>
+                                                    <td>
+                                                        <div id="loginButton" class="login-button">
+                                                            <asp:Button ID="submitButton" runat="server" Text="Submit" CausesValidation="true" />
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -255,8 +271,8 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
             </div>
-        </div>
         </div>
     </form>
 
