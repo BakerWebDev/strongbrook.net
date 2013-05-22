@@ -1,10 +1,12 @@
 ﻿
+
 #LeftText h3 {
     font-size: 15px;
     margin-top: 0px;
 }
 
 .scheduler {
+    background-color:red;
     min-height: 545px;
     min-width: 799px;
     max-width: 800px;
@@ -43,10 +45,12 @@
     }
 
     .scheduler TABLE #grid1 {
+    background-color:red;
     }
 
     .scheduler #grid1 .leftSide {
         max-width: 465px;
+    background-color:red;
     }
 
 
@@ -62,7 +66,6 @@
             .scheduler #grid1 .rightSide table input[type="radio"] {
                 margin-bottom: 7px;
             }
-
 
         .scheduler #grid1 .rightSide .recordlabel {
             width: 95px;

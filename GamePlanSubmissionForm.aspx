@@ -110,153 +110,147 @@
 <body>
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-        <div class="main-wrapper">
-            <div class="scheduler panel">
-                <div id="Main_Content" class="panels" style="position: relative;">
-                    <div id="introduction" style="display: block; position: absolute; width: 100%;">
-                        <h1 class="heading">Request Your Free Personalized Game Plan Report</h1>
-                        <table id="grid1">
-                            <tbody>
-                                <tr style="margin-top: 0px; vertical-align: top;">
-                                    <td id="ExplanationOfPage" colspan="2" class="leftSide">
-                                        <div id="LeftText">
+        <div class="scheduler">
+            <h1 class="heading">Request Your Free Personalized Game Plan Report</h1>
+            <table id="grid1">
+                <tbody>
+                    <tr style="margin-top: 0px; vertical-align: top;">
+                        <td id="ExplanationOfPage" colspan="2" class="leftSide">
+                            <div id="LeftText">
 
-                                            <h3>Discover How Strongbrook's Power Team Can Build Your Wealth and Turbo-Charge Your Retirement Cash-Flow Through Real Estate!
-                                            </h3>
+                                <h3>Discover How Strongbrook's Power Team Can Build Your Wealth and Turbo-Charge Your Retirement Cash-Flow Through Real Estate!
+                                </h3>
 
-                                            Your Personalized Game Plan Report Will:<br />
-                                            • Develop a custom 5 to 10 year plan to true financial freedom<br />
-                                            • Reveal how easily you can create positive cash-flow for life<br />
-                                            • Uncover 'Hidden Assets' you may not know you already have<br />
-                                            • Accurately predict whether your money will outlast you or not<br />
-                                            • Offer 3 actionable 'right-now' options to secure your retirement<br />
+                                Your Personalized Game Plan Report Will:<br />
+                                • Develop a custom 5 to 10 year plan to true financial freedom<br />
+                                • Reveal how easily you can create positive cash-flow for life<br />
+                                • Uncover 'Hidden Assets' you may not know you already have<br />
+                                • Accurately predict whether your money will outlast you or not<br />
+                                • Offer 3 actionable 'right-now' options to secure your retirement<br />
 
-                                            <br />
-                                            Schedule your FREE game plan report today! There is absolutely no commitment. Nobody will come to your home, the Game Plan Report interview is done 100% over the telephone, and at a time that is convenient for you.* 
+                                <br />
+                                Schedule your FREE game plan report today! There is absolutely no commitment. Nobody will come to your home, the Game Plan Report interview is done 100% over the telephone, and at a time that is convenient for you.* 
                                         <br />
-                                            <br />
-                                            <i style="font-size: 80%">* We will do our very best to accommodate your requested date & time, 
+                                <br />
+                                <i style="font-size: 80%">* We will do our very best to accommodate your requested date & time, 
                                             but we cannot guarantee availability of a Strongbrook Game Plan Assistant at your exact desired time. 
                                             Thank you for your understanding and we look forward to speaking with you!
-                                            </i>
-                                        </div>
-                                    </td>
-                                    <td id="FormFields" class="rightSide">
-                                        <table class="record">
-                                            <tbody enableviewstate="False">
-                                                <tr id="FirstName" class="recordrow">
-                                                    <td class="recordvalue">
-                                                        <div class="fieldvalue">
-                                                            <asp:TextBox CssClass="input textfield" ID="txtFirstName" name="FirstName" Placeholder="First Name" runat="server" Data="First Name" />
-                                                        </div>
-                                                    </td>
-                                                    <td class="recordvalue">
-                                                        <div class="fieldvalue">
-                                                            <asp:TextBox ID="txtLastName" name="LastName" Placeholder="Last Name"
-                                                                runat="server" Data="Last Name" CssClass="validate[required,custom[email]] text-input" />
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                </i>
+                            </div>
+                        </td>
+                        <td id="FormFields" class="rightSide">
+                            <table class="record">
+                                <tbody enableviewstate="False">
+                                    <tr id="FirstName" class="recordrow">
+                                        <td class="recordvalue">
+                                            <div class="fieldvalue">
+                                                <asp:TextBox CssClass="input textfield" ID="txtFirstName" name="FirstName" Placeholder="First Name" runat="server" Data="First Name" />
+                                            </div>
+                                        </td>
+                                        <td class="recordvalue">
+                                            <div class="fieldvalue">
+                                                <asp:TextBox ID="txtLastName" name="LastName" Placeholder="Last Name"
+                                                    runat="server" Data="Last Name" CssClass="validate[required,custom[email]] text-input" />
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                                                <tr id="Phone1" class="recordrow">
-                                                    <td class="recordvalue full">
-                                                        <div class="fieldvalue">
-                                                            <asp:TextBox CssClass="input textfield" ID="txtPhone1" name="homephone" runat="server" Placeholder="Phone 1"
-                                                                Data="Phone" />
-                                                        </div>
-                                                    </td>
-                                                    <td class="recordvalue">
-                                                        <div class="fieldvalue">
-                                                            <asp:TextBox CssClass="input textfield" ID="txtPhone2" name="cellphone" runat="server" Placeholder="Phone 2 (optional)"
-                                                                Data="Phone" />
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                    <tr id="Phone1" class="recordrow">
+                                        <td class="recordvalue full">
+                                            <div class="fieldvalue">
+                                                <asp:TextBox CssClass="input textfield" ID="txtPhone1" name="homephone" runat="server" Placeholder="Phone 1"
+                                                    Data="Phone" />
+                                            </div>
+                                        </td>
+                                        <td class="recordvalue">
+                                            <div class="fieldvalue">
+                                                <asp:TextBox CssClass="input textfield" ID="txtPhone2" name="cellphone" runat="server" Placeholder="Phone 2 (optional)"
+                                                    Data="Phone" />
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                                                <tr id="Email" class="recordrow">
-                                                    <td class="recordvalue">
-                                                        <div class="fieldvalue">
-                                                            <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="email" name="email" runat="server" Data="email" />
-                                                        </div>
-                                                    </td>
-                                                    <td class="recordvalue">
-                                                        <div class="fieldvalue">
-                                                            <asp:DropDownList ID="netWorth" ClientIDMode="Static" runat="server" />
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                    <tr id="Email" class="recordrow">
+                                        <td class="recordvalue">
+                                            <div class="fieldvalue">
+                                                <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="email" name="email" runat="server" Data="email" />
+                                            </div>
+                                        </td>
+                                        <td class="recordvalue">
+                                            <div class="fieldvalue">
+                                                <asp:DropDownList ID="netWorth" ClientIDMode="Static" runat="server" />
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                                                <tr id="TimeZone" class="recordrow">
-                                                    <td class="recordvalue">
-                                                        <div id="TimeZoneDropDown">
-                                                            <asp:DropDownList ID="drdlTimeZone" runat="server" onchange="showRadioButtons();" />
-                                                        </div>
+                                    <tr id="TimeZone" class="recordrow">
+                                        <td class="recordvalue">
+                                            <div id="TimeZoneDropDown">
+                                                <asp:DropDownList ID="drdlTimeZone" runat="server" onchange="showRadioButtons();" />
+                                            </div>
 
-                                                        <div id="DatePicker">
-                                                            <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
-                                                            <asp:CalendarExtender ID="CalendarExtender1" runat="server"
-                                                                TargetControlID="Date1"
-                                                                CssClass="calendar"
-                                                                Format="dddd -- MMMM, dd yyyy"
-                                                                OnClientDateSelectionChanged="checkDate"
-                                                                Animated="true">
-                                                            </asp:CalendarExtender>
-                                                        </div>
+                                            <div id="DatePicker">
+                                                <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
+                                                <asp:CalendarExtender ID="CalendarExtender1" runat="server"
+                                                    TargetControlID="Date1"
+                                                    CssClass="calendar"
+                                                    Format="dddd -- MMMM, dd yyyy"
+                                                    OnClientDateSelectionChanged="checkDate"
+                                                    Animated="true">
+                                                </asp:CalendarExtender>
+                                            </div>
 
-                                                        <div id="Time">
-                                                            <asp:DropDownList ID="drdlAppTime" runat="server" onchange="sendTimeFrame();"></asp:DropDownList>
-                                                        </div>
+                                            <div id="Time">
+                                                <asp:DropDownList ID="drdlAppTime" runat="server" onchange="sendTimeFrame();"></asp:DropDownList>
+                                            </div>
 
-                                                        <div id="LikelyAvailable" class="recordvalue">
-                                                            <asp:DropDownList ID="firstAvailableTime" runat="server"></asp:DropDownList>
-                                                        </div>
+                                            <div id="LikelyAvailable" class="recordvalue">
+                                                <asp:DropDownList ID="firstAvailableTime" runat="server"></asp:DropDownList>
+                                            </div>
 
-                                                        <div id="RadioButtons">
+                                            <div id="RadioButtons">
 
-                                                            <input id="RadioButtonSchedule" runat="server" type="radio" title="Schedule" onclick="showSchedule()" name="choice" validate="required:true" />
-                                                            Schedule an Appointment
+                                                <input id="RadioButtonSchedule" runat="server" type="radio" title="Schedule" onclick="showSchedule()" name="choice" validate="required:true" />
+                                                Schedule an Appointment
                                                         <br />
-                                                            <input id="RadioButtonRequest" runat="server" type="radio" title="Request" onclick="showRequest()" name="choice" />
-                                                            Request to be Contacted
+                                                <input id="RadioButtonRequest" runat="server" type="radio" title="Request" onclick="showRequest()" name="choice" />
+                                                Request to be Contacted
 
-                                                        </div>
-                                                    </td>
-                                                    <td class="recordvalue" style="vertical-align:top;">
-                                                    <div class="fieldvalue">
-                                                        <div class="border line" id="commentsborder" style="display: inline-block;">
-                                                            <div class="textareabounds" id="commentsbody" style="width: 200px; min-height: 50px;">
-                                                                <textarea id="txtComments" class="input textfield" cols="20" rows="5" runat="server"></textarea>Any Special Instructions?
-                                                            </div>
-                                                            <div class="border-resize" id="commentsresize">
-                                                            </div>
-                                                            <div class="topleft">
-                                                            </div>
-                                                            <div class="topright">
-                                                            </div>
-                                                            <div class="bottomleft">
-                                                            </div>
-                                                            <div class="bottomright">
-                                                            </div>
-                                                        </div>
+                                            </div>
+                                        </td>
+                                        <td class="recordvalue" style="vertical-align: top;">
+                                            <div class="fieldvalue">
+                                                <div class="border line" id="commentsborder" style="display: inline-block;">
+                                                    <div class="textareabounds" id="commentsbody" style="width: 200px; min-height: 50px;">
+                                                        <textarea id="txtComments" class="input textfield" cols="20" rows="5" runat="server"></textarea>Any Special Instructions?
                                                     </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">
-                                                        <div style="width:100%; float:right; margin-top:20px; ">
-                                                            <asp:Button ID="submitButton" runat="server" Text="Submit" CausesValidation="true" style="float:right; "/>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-            </div>
-        </div>
+                                                    <div class="border-resize" id="commentsresize">
+                                                    </div>
+                                                    <div class="topleft">
+                                                    </div>
+                                                    <div class="topright">
+                                                    </div>
+                                                    <div class="bottomleft">
+                                                    </div>
+                                                    <div class="bottomright">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div style="width: 100%; float: right; margin-top: 20px;">
+                                                <asp:Button ID="submitButton" runat="server" Text="Submit" CausesValidation="true" Style="float: right;" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </form>
 
