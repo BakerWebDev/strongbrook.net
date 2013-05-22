@@ -173,7 +173,7 @@
                                     <tr id="Email" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
-                                                <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="email" name="email" runat="server" Data="email" />
+                                                <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="Email" name="email" runat="server" Data="email" />
                                             </div>
                                         </td>
                                         <td class="recordvalue">
@@ -185,37 +185,39 @@
 
                                     <tr id="TimeZone" class="recordrow">
                                         <td class="recordvalue">
-                                            <div id="TimeZoneDropDown">
-                                                <asp:DropDownList ID="drdlTimeZone" runat="server" onchange="showRadioButtons();" />
-                                            </div>
+                                            <div class="fieldvalueTimeSelection">
+                                                <div id="TimeZoneDropDown">
+                                                    <asp:DropDownList ID="drdlTimeZone" runat="server" onchange="showRadioButtons();" />
+                                                </div>
 
-                                            <div id="DatePicker">
-                                                <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
-                                                <asp:CalendarExtender ID="CalendarExtender1" runat="server"
-                                                    TargetControlID="Date1"
-                                                    CssClass="calendar"
-                                                    Format="dddd -- MMMM, dd yyyy"
-                                                    OnClientDateSelectionChanged="checkDate"
-                                                    Animated="true">
-                                                </asp:CalendarExtender>
-                                            </div>
+                                                <div id="DatePicker">
+                                                    <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
+                                                    <asp:CalendarExtender ID="CalendarExtender1" runat="server"
+                                                        TargetControlID="Date1"
+                                                        CssClass="calendar"
+                                                        Format="dddd -- MMMM, dd yyyy"
+                                                        OnClientDateSelectionChanged="checkDate"
+                                                        Animated="true">
+                                                    </asp:CalendarExtender>
+                                                </div>
 
-                                            <div id="Time">
-                                                <asp:DropDownList ID="drdlAppTime" runat="server" onchange="sendTimeFrame();"></asp:DropDownList>
-                                            </div>
+                                                <div id="Time">
+                                                    <asp:DropDownList ID="drdlAppTime" runat="server" onchange="sendTimeFrame();"></asp:DropDownList>
+                                                </div>
 
-                                            <div id="LikelyAvailable" class="recordvalue">
-                                                <asp:DropDownList ID="firstAvailableTime" runat="server"></asp:DropDownList>
-                                            </div>
+                                                <div id="LikelyAvailable" class="recordvalue">
+                                                    <asp:DropDownList ID="firstAvailableTime" runat="server"></asp:DropDownList>
+                                                </div>
 
-                                            <div id="RadioButtons">
+                                                <div id="RadioButtons">
 
-                                                <input id="RadioButtonSchedule" runat="server" type="radio" title="Schedule" onclick="showSchedule()" name="choice" validate="required:true" />
-                                                Schedule an Appointment
-                                                        <br />
-                                                <input id="RadioButtonRequest" runat="server" type="radio" title="Request" onclick="showRequest()" name="choice" />
-                                                Request to be Contacted
+                                                    <input id="RadioButtonSchedule" runat="server" type="radio" title="Schedule" onclick="showSchedule()" name="choice" validate="required:true" />
+                                                    Schedule an Appointment
+                                                            <br />
+                                                    <input id="RadioButtonRequest" runat="server" type="radio" title="Request" onclick="showRequest()" name="choice" />
+                                                    Request to be Contacted
 
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="recordvalue" style="vertical-align: top;">
@@ -238,10 +240,14 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <tr id="spacer">
+                                        <td id="spanner" colspan="2"></td>
+                                    </tr>
                                     <tr>
                                         <td colspan="2">
-                                            <div style="width: 100%; float: right; margin-top: 20px;">
-                                                <asp:Button ID="submitButton" runat="server" Text="Submit" CausesValidation="true" Style="float: right;" />
+                                            <div style="width: 400px; margin-top: 20px;">
+                                                <asp:Button ID="submitButton" runat="server" Text="Submit" 
+                                                    CausesValidation="true" Style="float: right;" />
                                             </div>
                                         </td>
                                     </tr>

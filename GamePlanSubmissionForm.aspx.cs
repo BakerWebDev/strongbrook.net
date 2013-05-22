@@ -169,6 +169,7 @@ public partial class GPRform : System.Web.UI.Page
 
         return request;
     }
+    public int orderID { get; set; }
     private CreateOrderRequest Request_PlaceGPRRorder()
     {
         var NotesInLongForm = new StringBuilder();
@@ -227,6 +228,10 @@ public partial class GPRform : System.Web.UI.Page
             request.Details = details.ToArray();
 
             isValid = true;
+
+            CreateOrderResponse response = new CreateOrderResponse();
+            orderID = response.OrderID;
+
         }
         catch
         {
@@ -1304,7 +1309,7 @@ public partial class GPRform : System.Web.UI.Page
         MailMessage message = new MailMessage(from, to);
         //message.CC.Add(cc);
         //message.Bcc.Add(bcc);
-        message.Bcc.Add("aaron.baker@strongbrook.com");
+        message.Bcc.Add("aaronbaker315@me.com");
         message.Bcc.Add("paul.janson@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
@@ -1337,7 +1342,7 @@ public partial class GPRform : System.Web.UI.Page
             If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
         </p>
         <p>
-            In the meantime, feel free to visit {12}.Strongbrook.com/irc for more information: 
+            In the meantime, feel free to visit <strong>{12}.Strongbrook.com/irc</strong> for more information: 
             On this site you will be able to download our book, The Strait Path To Real Estate Wealth, for free if you enter the code, “FREE”. 
             You will also be able to access several of our most recent completed real estate deals, reports, and what people all over the country are saying about Strongbrook.
         </p>
@@ -1345,11 +1350,14 @@ public partial class GPRform : System.Web.UI.Page
             We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
         </p>
         <br />
-        <br />
         <p>
         <strong>To Your Success,                        </strong>
         <br />  The Strongbrook Team
         </p>
+        <br />
+        <br />
+        <br />
+        <br />
         <strong><u>The information you provided</u>     </strong>
         <p>     Name: {0} {1}                  </p>
         <p>     Main Phone: {2}                         </p>
@@ -1359,7 +1367,7 @@ public partial class GPRform : System.Web.UI.Page
 
         <p>     Date Requested if any: {7}              </p>
         <p>     Time Requested if any: {8}              </p>
-        <p>     Your TimeZone: {6}                      </p>
+        <p>     Your Time Zone: {6}                     </p>
         <br />
         <br />
         <p><u>  Enroller Information:                   </u>
@@ -1439,7 +1447,7 @@ public partial class GPRform : System.Web.UI.Page
         MailMessage message = new MailMessage(from, to);
         //message.CC.Add(cc);
         //message.Bcc.Add(bcc);
-        message.Bcc.Add("aaron.baker@strongbrook.com");
+        message.Bcc.Add("aaronbaker315@me.com");
         message.Bcc.Add("paul.janson@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested submitted by {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
@@ -1459,18 +1467,19 @@ public partial class GPRform : System.Web.UI.Page
         </p>
         <br />
         <p>
-        <strong><u>The prospects information</u>        </strong>
+        <strong>To Your Success,                        </strong>
+        <br />  The Strongbrook Team
+        </p>
+        <br />
+        <br />
+        <p>
+        <strong><u>The prospect's information</u>       </strong>
         <p>     Prospect Name: {0} {1}                  </p>
         <p>     Main Phone: {2}                         </p>
         <p>     Secondary Phone: {3}                    </p>
         <p>     Email Address: {4}                      </p>
-        <p>     Prospects TimeZone: {6}                 </p>
+        <p>     Prospects Time Zone: {6}                </p>
         <p>     Comments: {9}                           </p>
-        <br />
-        <p>
-        <strong>To Your Success,                        </strong>
-        <br />  The Strongbrook Team
-        </p>
         ", FirstName // 0
          , LastName // 1
          , Phone1 // 2
@@ -1539,7 +1548,7 @@ public partial class GPRform : System.Web.UI.Page
         MailMessage message = new MailMessage(from, to);
         message.CC.Add(cc);
         message.Bcc.Add(bcc);
-        message.Bcc.Add("aaron.baker@strongbrook.com");
+        message.Bcc.Add("aaronbaker315@me.com");
         message.Bcc.Add("paul.janson@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
@@ -1552,17 +1561,17 @@ public partial class GPRform : System.Web.UI.Page
         formattedMessage.AppendFormat(@"
         <h1>    New Game Plan Request for: {0} {1}      </h1>
         <br />
+        <p>     Order ID: {14}                          </p>
         <p>     Prospect Name: {0} {1}                  </p>
         <p>     Main Phone: {2}                         </p>
         <p>     Secondary Phone: {3}                    </p>
         <p>     Email Address: {4}                      </p>
         <p>     Likely Available: {5}                   </p>
-        <p>     Prospects TimeZone: {6}                 </p>
+        <p>     Prospects Time Zone: {6}                </p>
         <p>     Date Requested if any: {7}              </p>
         <p>     Time Requested if any: {8}              </p>
         <p>     Estimated Net Worth: {9}                </p>
-        <br />
-        <p><u>  Comments:                                </u>  
+        <p><u>  Comments:                               </u>  
         <br />  {10}
         <br />
         <p><u>  Enroller Information:                   </u>
@@ -1584,6 +1593,7 @@ public partial class GPRform : System.Web.UI.Page
          , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
          , CurrentUser_Email // 12
          , CurrentUser_Phone  // 13
+         , orderID // 14
          );
 
         message.Body = formattedMessage.ToString();
