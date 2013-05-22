@@ -372,6 +372,7 @@ public partial class GPRform : System.Web.UI.Page
         string from_6AM_to_8AM = "<option>" + "Select a Time" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + "</option>";
         string from_noon_to_4PM = "<option>" + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + "</option>";
         string from_6AM_to_9AM = "<option>" + "Select a Time" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + oMin + "from 8:00AM to 8:30AM" + oMin + "from 8:30AM to 9:00AM" + "</option>";
+        string from_9AM_to_4PM = "<option>" + "Select a Time" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + "</option>";        
         #endregion Hawaii Hours
 
         #region Pacific Hours
@@ -399,7 +400,7 @@ public partial class GPRform : System.Web.UI.Page
         string from_12PM_to_7PM = "<option>" + "Select a Time" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + "</option>";
         string from_12PM_to_2PM = "<option>" + "Select a Time" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + "</option>";
         string from_6PM_to_10PM = "<option>" + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + oMin + "from 9:00PM to 9:30PM" + oMin + "from 9:30PM to 10:00PM";
-        string from_12AM_to_3PM = "<option>" + "Select a Time" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + "</option>";
+        string from_12PM_to_3PM = "<option>" + "Select a Time" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + "</option>";
         #endregion Eastern Hours
 
         #endregion Properties
@@ -534,13 +535,13 @@ public partial class GPRform : System.Web.UI.Page
                         Response.Write(from_11AM_to_6PM);
                         break;
                     case "Tuesday":
-                        Response.Write(from_11AM_to_1PM + oMin + from_5PM_to_9PM);
+                        Response.Write(from_2PM_to_10PM);
                         break;
                     case "Wednesday":
-                        Response.Write(from_11AM_to_1PM + oMin + from_5PM_to_9PM);
+                        Response.Write(from_2PM_to_10PM);
                         break;
                     case "Thursday":
-                        Response.Write(from_11AM_to_1PM + oMin + from_5PM_to_9PM);
+                        Response.Write(from_2PM_to_10PM);
                         break;
                     case "Friday":
                         Response.Write(from_11AM_to_6PM);
@@ -563,19 +564,19 @@ public partial class GPRform : System.Web.UI.Page
                         Response.Write(from_12PM_to_7PM);
                         break;
                     case "Tuesday":
-                        Response.Write(from_12PM_to_2PM + oMin + from_6PM_to_10PM);
+                        Response.Write(from_3PM_to_11PM);
                         break;
                     case "Wednesday":
-                        Response.Write(from_12PM_to_2PM + oMin + from_6PM_to_10PM);
+                        Response.Write(from_3PM_to_11PM);
                         break;
                     case "Thursday":
-                        Response.Write(from_12PM_to_2PM + oMin + from_6PM_to_10PM);
+                        Response.Write(from_3PM_to_11PM);
                         break;
                     case "Friday":
                         Response.Write(from_12PM_to_7PM);
                         break;
                     case "Saturday":
-                        Response.Write(from_12AM_to_3PM);
+                        Response.Write(from_12PM_to_3PM);
                         break;
                 }
                 break;
