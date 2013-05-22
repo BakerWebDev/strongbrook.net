@@ -505,13 +505,13 @@ public partial class GPRform : System.Web.UI.Page
                         Response.Write(from_10AM_to_5PM);
                         break;
                     case "Tuesday":
-                        Response.Write(from_10AM_to_noon + oMin + from_4PM_to_8PM);
+                        Response.Write(from_1PM_to_9PM);
                         break;
                     case "Wednesday":
-                        Response.Write(from_10AM_to_noon + oMin + from_4PM_to_8PM);
+                        Response.Write(from_1PM_to_9PM);
                         break;
                     case "Thursday":
-                        Response.Write(from_10AM_to_noon + oMin + from_4PM_to_8PM);
+                        Response.Write(from_1PM_to_9PM);
                         break;
                     case "Friday":
                         Response.Write(from_10AM_to_5PM);
