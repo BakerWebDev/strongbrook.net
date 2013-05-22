@@ -44,13 +44,58 @@
         padding: 15px;
     }
 
-    .scheduler TABLE #grid1 {
+    .scheduler .thankYouBody .spacedText1 {
+        color: black;
+        font-size: 15px;
+        margin-bottom: 0px;
     }
+
+    .scheduler .thankYouBody .spacedText2 {
+        color: black;
+        font-size: 15px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+    }
+
+    .scheduler .thankYouBody .spacedText3 {
+        color: black;
+        font-size: 15px;
+        margin-bottom: -12px;
+        margin-top: 0px;
+    }
+
+    .scheduler .thankYouBody .spacedText4 {
+        color: black;
+        font-size: 15px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+    }
+
+    .scheduler .thankYouBody .spacedText5 {
+        color: black;
+        font-size: 15px;
+        padding-bottom: 0px;
+        padding-top: 0px;
+        text-indent: -5px;
+        margin-top: 20px;
+        margin-bottom: 0px;
+    }
+
+    .scheduler .thankYouBody .spacedText6 {
+        color: black;
+        font-size: 15px;
+        padding-bottom: 0px;
+        padding-top: 0px;
+        text-indent: -1px;
+        margin-top: 0px;
+    }
+
 
 
     .scheduler #grid1 .leftSide {
         max-width: 465px;
     }
+
 
 
     .scheduler #grid1 .rightSide {
@@ -63,7 +108,11 @@
         }
 
         .scheduler #grid1 .rightSide #spanner {
-            min-width: 450px;
+            min-width: 430px;
+        }
+
+        .scheduler #grid1 .rightSide table input[type="radio"] {
+            margin-bottom: 7px;
         }
 
         .scheduler #grid1 .rightSide .recordlabel {
@@ -73,15 +122,13 @@
             padding-bottom: 6px;
         }
 
-        .scheduler #grid1 .rightSide table input[type="radio"] {
-            margin-bottom: 7px;
-        }
-
             .scheduler #grid1 .rightSide .recordlabel .fieldlabel {
                 font-size: 12px;
                 font-family: Helvetica, Verdana, Arial, sans-serif;
                 max-width: 90px;
             }
+
+
 
         .scheduler #grid1 .rightSide .recordvalue {
             vertical-align: top;
@@ -99,6 +146,11 @@
                     max-width: 184px;
                 }
 
+                .scheduler #grid1 .rightSide .recordvalue .fieldvalue textarea {
+                    max-width: 170px;
+                }
+
+
             .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection select {
                 max-width: 184px;
             }
@@ -107,9 +159,7 @@
                 max-width: 170px;
             }
 
-            .scheduler #grid1 .rightSide .recordvalue .fieldvalue textarea {
-                max-width: 170px;
-            }
+
 
         .scheduler #grid1 .rightSide .dropdowns {
             width: 100px;

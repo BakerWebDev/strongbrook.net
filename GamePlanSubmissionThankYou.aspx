@@ -40,10 +40,8 @@
     </script>
     <asp:HiddenField ID="ShowMessage" runat="server" />
 
-
-    <div class="main-wrapper">
-        <div class="scheduler panel">
-            <%ShowThisMessage(); %>
-        </div>
+    <div class="scheduler">
+        <%ShowThisMessage(); %>
     </div>
+
 </asp:Content>

@@ -229,9 +229,6 @@ public partial class GPRform : System.Web.UI.Page
 
             isValid = true;
 
-            CreateOrderResponse response = new CreateOrderResponse();
-            orderID = response.OrderID;
-
         }
         catch
         {
@@ -242,7 +239,7 @@ public partial class GPRform : System.Web.UI.Page
         var context = ExigoApiContext.CreateWebServiceContext();
         CreateOrderResponse res = context.CreateOrder(request);
 
-        Response.Write(res.OrderID);
+        orderID = res.OrderID;
 
         return request;
     }
@@ -1342,19 +1339,17 @@ public partial class GPRform : System.Web.UI.Page
             If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
         </p>
         <p>
-            In the meantime, feel free to visit <strong>{12}.Strongbrook.com/irc</strong> for more information: 
+            In the meantime, feel free to visit <strong>http://{12}.Strongbrook.com/irc</strong> for more information: 
             On this site you will be able to download our book, The Strait Path To Real Estate Wealth, for free if you enter the code, “FREE”. 
             You will also be able to access several of our most recent completed real estate deals, reports, and what people all over the country are saying about Strongbrook.
         </p>
         <p>
             We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
         </p>
-        <br />
         <p>
         <strong>To Your Success,                        </strong>
         <br />  The Strongbrook Team
         </p>
-        <br />
         <br />
         <br />
         <br />
@@ -1368,7 +1363,6 @@ public partial class GPRform : System.Web.UI.Page
         <p>     Date Requested if any: {7}              </p>
         <p>     Time Requested if any: {8}              </p>
         <p>     Your Time Zone: {6}                     </p>
-        <br />
         <br />
         <p><u>  Enroller Information:                   </u>
         <br />  {9}
@@ -1463,9 +1457,9 @@ public partial class GPRform : System.Web.UI.Page
             <strong>Requested Contact Time (If the prospect requested a specific date and time to be contacted.)</strong><br />
             {7}<br />
             {8}<br />
+            {6}<br />
             <strong>If possible, you may want to do a follow up call with them to see how it went.</strong>
         </p>
-        <br />
         <p>
         <strong>To Your Success,                        </strong>
         <br />  The Strongbrook Team
