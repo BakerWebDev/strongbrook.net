@@ -211,9 +211,10 @@ public partial class GPRform : System.Web.UI.Page
             // Using the Other fields for misc data
             request.Other16 = AppointmentDate;
             request.Other17 = NetWorth;
+            request.Other18 = AppointmentTimeInCorporateTimeZone;
 
             // Add Notes and the Date of the Order
-            request.Notes = NotesInLongForm.ToString();
+            request.Notes = Comments; // NotesInLongForm.ToString();
             request.OrderDate = DateTime.Now;
 
             //Add Details
