@@ -1351,19 +1351,15 @@ public partial class GPRform : System.Web.UI.Page
         <br />  The Strongbrook Team
         </p>
         <br />
-        <br />
-        <br />
         <strong><u>The information you provided</u>     </strong>
         <p>     Name: {0} {1}                  </p>
         <p>     Main Phone: {2}                         </p>
         <p>     Secondary Phone: {3}                    </p>
         <p>     Email Address: {4}                      </p>
         <p>     Likely Available: {5}                   </p>
-
         <p>     Date Requested if any: {7}              </p>
         <p>     Time Requested if any: {8}              </p>
         <p>     Your Time Zone: {6}                     </p>
-        <br />
         <p><u>  Enroller Information:                   </u>
         <br />  {9}
         <br />  {10}
