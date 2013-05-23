@@ -1340,9 +1340,9 @@ public partial class GPRform : System.Web.UI.Page
             If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
         </p>
         <p>
-            In the meantime, feel free to visit <strong>http://{12}.Strongbrook.com/irc</strong> for more information: 
-            On this site you will be able to download our book, The Strait Path To Real Estate Wealth, for free if you enter the code, “FREE”. 
-            You will also be able to access several of our most recent completed real estate deals, reports, and what people all over the country are saying about Strongbrook.
+            In the meantime, feel free to visit <strong>http://{9}.strongbrook.com</strong> for more information: 
+            On this site you will be able to download a free digital copy of our 233 page hard cover book, <i>The Strait Path To Real Estate Wealth.</i> Simply enter the code, “FREE”.
+            You will also be able to access reports of our most recent completed real estate transactions and learn what people all over the country are saying about Strongbrook.
         </p>
         <p>
             We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
@@ -1361,11 +1361,6 @@ public partial class GPRform : System.Web.UI.Page
         <p>     Date Requested if any: {7}              </p>
         <p>     Time Requested if any: {8}              </p>
         <p>     Your Time Zone: {6}                     </p>
-        <p><u>  Enroller Information:                   </u>
-        <br />  {9}
-        <br />  {10}
-        <br />  {11}
-        </p>
         ", FirstName // 0
          , LastName // 1
          , Phone1 // 2
@@ -1374,36 +1369,33 @@ public partial class GPRform : System.Web.UI.Page
          , LikelyAvailable // 5
          , TimeZone // 6
          , AppointmentDate // 7
-         
          , AppointmentTimeSelectedByTheProspect // 8
-         , CurrentUser_FirstName + " " + CurrentUser_LastName // 9
-         , CurrentUser_Email // 10
-         , CurrentUser_Phone  // 11
-         , CurrentUser_WebAlias // 12
+         , CurrentUser_WebAlias // 9
          );
 
         message.Body = formattedMessage.ToString();
         #endregion Email Message Body
 
-        #region Main Mail server connection properties
-        //Email SMTP Settings
-        Int16 port = 25;
-        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
+        //#region Main Mail server connection properties
+        ////Email SMTP Settings
+        //Int16 port = 25;
+        //SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
 
-        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
-        client.UseDefaultCredentials = false;
+        //// Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        //client.UseDefaultCredentials = false;
 
-        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
-        #endregion Main Mail server connection properties
+        //client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        //#endregion Main Mail server connection properties
 
         #region Secondary Mail server connection properties. Use this as a backup if necessary!
-        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+        Int16 port = 25;
+        SmtpClient client = new SmtpClient("smtp.gmail.com", port);
 
-        //// Use these properties for a secure SMTP connection.
-        //client.UseDefaultCredentials = true;
-        //client.EnableSsl = true;
+        // Use these properties for a secure SMTP connection.
+        client.UseDefaultCredentials = true;
+        client.EnableSsl = true;
 
-        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
         #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
 
         #region Attempt to send the message
@@ -1486,25 +1478,26 @@ public partial class GPRform : System.Web.UI.Page
         message.Body = formattedMessage.ToString();
         #endregion Email Message Body
 
-        #region Main Mail server connection properties
-        //Email SMTP Settings
-        Int16 port = 25;
-        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
+        //#region Main Mail server connection properties
+        ////Email SMTP Settings
+        //Int16 port = 25;
+        //SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
 
-        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
-        client.UseDefaultCredentials = false;
+        //// Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        //client.UseDefaultCredentials = false;
 
-        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
-        #endregion Main Mail server connection properties
+        //client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        //#endregion Main Mail server connection properties
 
         #region Secondary Mail server connection properties. Use this as a backup if necessary!
-        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+        Int16 port = 25;
+        SmtpClient client = new SmtpClient("smtp.gmail.com", port);
 
-        //// Use these properties for a secure SMTP connection.
-        //client.UseDefaultCredentials = true;
-        //client.EnableSsl = true;
+        // Use these properties for a secure SMTP connection.
+        client.UseDefaultCredentials = true;
+        client.EnableSsl = true;
 
-        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
         #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
 
         #region Attempt to send the message
@@ -1590,25 +1583,26 @@ public partial class GPRform : System.Web.UI.Page
         message.Body = formattedMessage.ToString();
         #endregion Email Message Body
 
-        #region Main Mail server connection properties
-        //Email SMTP Settings
-        Int16 port = 25;
-        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
+        //#region Main Mail server connection properties
+        ////Email SMTP Settings
+        //Int16 port = 25;
+        //SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
 
-        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
-        client.UseDefaultCredentials = false;
+        //// Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        //client.UseDefaultCredentials = false;
 
-        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
-        #endregion Main Mail server connection properties
+        //client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        //#endregion Main Mail server connection properties
 
         #region Secondary Mail server connection properties. Use this as a backup if necessary!
-        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+        Int16 port = 25;
+        SmtpClient client = new SmtpClient("smtp.gmail.com", port);
 
-        //// Use these properties for a secure SMTP connection.
-        //client.UseDefaultCredentials = true;
-        //client.EnableSsl = true;
+        // Use these properties for a secure SMTP connection.
+        client.UseDefaultCredentials = true;
+        client.EnableSsl = true;
 
-        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
         #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
 
         #region Attempt to send the message

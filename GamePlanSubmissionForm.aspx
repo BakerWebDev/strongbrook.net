@@ -195,7 +195,7 @@
                                                     <asp:CalendarExtender ID="CalendarExtender1" runat="server"
                                                         TargetControlID="Date1"
                                                         CssClass="calendar"
-                                                        Format="dddd -- MMMM, dd yyyy"
+                                                        Format="dddd, MMMM dd, yyyy"
                                                         OnClientDateSelectionChanged="checkDate"
                                                         Animated="true">
                                                     </asp:CalendarExtender>
