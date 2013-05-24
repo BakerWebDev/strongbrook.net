@@ -29,14 +29,13 @@ $(document).ready(function () {
                 email: true
             },
 
+            drdlTimeZone: {
+                required: true
+            },
 
-
-            RadioButtonSchedule: {
-                required: true,
-
+            'choice': {
+                required: true
             }
-
-
         },
         highlight: function (element) {
             $(element).closest('.control-group').removeClass('success').addClass('error');
@@ -45,6 +44,9 @@ $(document).ready(function () {
             element
             .text('OK!').addClass('valid')
             .closest('.control-group').removeClass('error').addClass('success');
+        },
+        messages: {
+            'choice': {required: "Please make a selection."}
         }
     });
 

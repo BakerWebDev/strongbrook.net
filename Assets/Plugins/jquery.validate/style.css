@@ -10,16 +10,32 @@
 /* New styles below */
 
 		label.valid {
-		  width: 24px;
-		  height: 24px;
+		  width: 1px;
+		  height: 20px;
 		  background: url(assets/img/valid.png) center center no-repeat;
 		  display: inline-block;
 		  text-indent: -9999px;
           position:relative;
-          bottom:6px;
+          bottom:4px;
+          left:1px;
 		}
 		label.error {
 			font-weight: normal;
 			color: red;
-			padding: 2px 2px;
+			padding: 0px 10px;
+            font-size:12px;
+            margin-bottom:2px;
+            margin-top:-14px;
+		}
+
+		#RadioButtons label.error {
+			font-weight: normal;
+			color: red;
+			padding: 0px 0px;
+            font-size:12px;
+            margin:0px;
+            position:relative;
+            top:0px;
+            left:0px;
+
 		}

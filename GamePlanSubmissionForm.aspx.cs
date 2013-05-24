@@ -252,9 +252,6 @@ public partial class GPRform : System.Web.UI.Page
     #region Do Stuff
     public void SaveDataToExigo()
     {
-
-        //Response.Redirect("http://www.google.com");
-
         // Any time a GPR request Lead is created there will also be one created for the corporate account 24100 first.
         Request_CreateCustomerLeadForCorporate();
         if (isValid)
@@ -341,7 +338,7 @@ public partial class GPRform : System.Web.UI.Page
         firstAvailableTime.Items.Add(new ListItem("Evening"));
 
         drdlTimeZone.Items.Clear();
-        drdlTimeZone.Items.Add(new ListItem("Select Your Time Zone"));
+        drdlTimeZone.Items.Add(new ListItem(""));
         drdlTimeZone.Items.Add(new ListItem("Hawaii Time"));
         drdlTimeZone.Items.Add(new ListItem("Pacific Time"));
         drdlTimeZone.Items.Add(new ListItem("Mountain Time"));

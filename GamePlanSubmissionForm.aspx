@@ -26,6 +26,7 @@
             $('#DatePicker').hide();
             $('#Time').hide();
             $('#LikelyAvailable').hide();
+            $('#TimeZoneDropDownOnload').addClass("timeZoneDropDownOnload");
         });
 
         function showSchedule() {
@@ -40,9 +41,8 @@
         }
 
         function showRadioButtons() {
-
+            $('#TimeZoneDropDownOnload').addClass("timeZoneDropDownLoaded");
             $('#RadioButtons').show();
-
         }
 
         function checkDate(sender, args) {
@@ -78,8 +78,6 @@
             if (dateTextbox.indexOf("Saturday") >= 0) {
                 theDayOfTheWeek = "Saturday";
             }
-
-
             if (theDayOfTheWeek == "Sunday") {
                 alert("Closed Sundays, please select a day Monday thru Saturday.");
             }
@@ -90,7 +88,6 @@
 
             $.post("GamePlanSubmissionForm.aspx", { timeZone: selectedTimeZone, timeFrame: theDayOfTheWeek }, function (data1) {
                 $("#drdlAppTime").html(data1);
-
             });
         }
 
@@ -100,9 +97,14 @@
                 $("#txtSelectedTimeFrame").html(data2);
             });
         }
+    </script>
 
-        
 
+
+
+
+
+    <script type="text/javascript">
         var fname = 0;
         var lname = 0;
         var phone = 0;
@@ -133,13 +135,18 @@
                     this.value = 'Processing...';
                 }
                 else {
-                    alert('Appointment Type and Time must have a value.  Please double check and resubmit.');
+                    alert('Missing required information.\nPlease double check and resubmit.');
                 }
             });
         });
- 
     </script>
 
+
+    <script type="text/javascript">
+        function initialCSS() {
+            CssClass = "dropdown";
+        }
+    </script>
 
 </head>
 <body>
@@ -224,7 +231,7 @@
                                                 <div id="TimeZoneDropDown">
                                                     <asp:DropDownList ID="drdlTimeZone" runat="server" onchange="showRadioButtons();" />
                                                 </div>
-
+                                                <div id="TimeZoneDropDownOnload">Select a Time Zone</div>
                                                 <div id="DatePicker">
                                                     <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
                                                     <asp:CalendarExtender ID="CalendarExtender1" runat="server"
@@ -245,13 +252,11 @@
                                                 </div>
 
                                                 <div id="RadioButtons">
-
+                                                    <label for="RadioButtonSchedule">Schedule an Appointment</label>
                                                     <input id="RadioButtonSchedule" runat="server" type="radio" title="Schedule" onclick="showSchedule()" name="choice" />
-                                                    Schedule an Appointment
-                                                            <br />
+                                                    <br />
+                                                    <label for="RadioButtonRequest">Request to be Contacted</label>
                                                     <input id="RadioButtonRequest" runat="server" type="radio" title="Request" onclick="showRequest()" name="choice" />
-                                                    Request to be Contacted
-
                                                 </div>
                                             </div>
                                         </td>
