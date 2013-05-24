@@ -21,6 +21,8 @@ public partial class GPRform : System.Web.UI.Page
         CalendarExtender1.StartDate = DateTime.Today.AddDays(1);
         CalendarExtender1.EndDate = DateTime.Today.AddDays(7);
 
+        //submitButton.Attributes.Add("onclick", "doStuff()");
+
         if (!IsPostBack)
         {
             string timeZoneSelection = Request.Form["timeZone"];
@@ -196,7 +198,7 @@ public partial class GPRform : System.Web.UI.Page
             request.PriceType = GlobalSettings.Shopping.DefaultPriceTypeID;
             request.WarehouseID = 4;
             request.ShipMethodID = 15;
-            request.City = "Orem";
+            request.City = Phone1;
             request.State = "UT";
             request.Country = "US";
 
@@ -212,6 +214,7 @@ public partial class GPRform : System.Web.UI.Page
             request.Other16 = AppointmentDate;
             request.Other17 = NetWorth;
             request.Other18 = AppointmentTimeInCorporateTimeZone;
+            request.Other19 = Email;
 
             // Add Notes and the Date of the Order
             request.Notes = Comments; // NotesInLongForm.ToString();
@@ -249,6 +252,9 @@ public partial class GPRform : System.Web.UI.Page
     #region Do Stuff
     public void SaveDataToExigo()
     {
+
+        //Response.Redirect("http://www.google.com");
+
         // Any time a GPR request Lead is created there will also be one created for the corporate account 24100 first.
         Request_CreateCustomerLeadForCorporate();
         if (isValid)

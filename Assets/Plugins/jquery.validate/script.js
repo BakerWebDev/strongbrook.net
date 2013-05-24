@@ -27,7 +27,16 @@ $(document).ready(function () {
             txtEmail: {
                 required: true,
                 email: true
+            },
+
+
+
+            RadioButtonSchedule: {
+                required: true,
+
             }
+
+
         },
         highlight: function (element) {
             $(element).closest('.control-group').removeClass('success').addClass('error');

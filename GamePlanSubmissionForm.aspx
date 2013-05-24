@@ -95,16 +95,51 @@
         }
 
         function sendTimeFrame(sender, args) {
-
-
             var selectedTimeFrame = $("#drdlAppTime").val();
-            $.post("GPR_FORM_FOR_TESTING.aspx", { timeFrameSelected: selectedTimeFrame }, function (data2) {
+            $.post("GamePlanSubmissionForm.aspx", { timeFrameSelected: selectedTimeFrame }, function (data2) {
                 $("#txtSelectedTimeFrame").html(data2);
-
             });
         }
 
+        
+
+        var fname = 0;
+        var lname = 0;
+        var phone = 0;
+        var email = 0;
+        var timzn = 0;
+        var chsdt = 0;
+        var seltm = 0;
+        var fstav = 0;
+        var rdosh = 0;
+        var rdorq = 0;
+
+        $(function () {
+            $("#submitButton").click(function () {
+                if ($('#txtFirstName').val() != "") { fname = 1; };
+                if ($('#txtLastName').val() != "") { lname = 1; };
+                if ($('#txtPhone1').val() != "") { phone = 1; };
+                if ($('#txtEmail').val() != "") { email = 1; };
+                if ($('#drdlTimeZone').val() != "Select Your Time Zone") { timzn = 1; };
+                if ($('#Date1').val() != "Choose a Date") { chsdt = 1; };
+                if ($('#drdlAppTime').val() != "Select a Time") { seltm = 1; };
+                if ($('#firstAvailableTime').val() != "Best Time to Call") { fstav = 1; };
+                if ($('#RadioButtonSchedule').is(':checked')) { rdosh = 1; rdorq = 0; };
+                if ($('#RadioButtonRequest').is(':checked')) { rdorq = 1; rdosh = 0 };
+                if (fname == 1 && lname == 1 && phone == 1 && email == 1 && timzn == 1 && chsdt == 1 && seltm == 1 && rdosh == 1) {
+                    this.value = 'Processing...' + $('#Date1').val() + " " + $('#drdlAppTime').val();
+                }
+                else if (fname == 1 && lname == 1 && phone == 1 && email == 1 && fstav == 1 && rdorq == 1) {
+                    this.value = 'Processing...';
+                }
+                else {
+                    alert('Appointment Type and Time must have a value.  Please double check and resubmit.');
+                }
+            });
+        });
+ 
     </script>
+
 
 </head>
 <body>
@@ -211,7 +246,7 @@
 
                                                 <div id="RadioButtons">
 
-                                                    <input id="RadioButtonSchedule" runat="server" type="radio" title="Schedule" onclick="showSchedule()" name="choice" validate="required:true" />
+                                                    <input id="RadioButtonSchedule" runat="server" type="radio" title="Schedule" onclick="showSchedule()" name="choice" />
                                                     Schedule an Appointment
                                                             <br />
                                                     <input id="RadioButtonRequest" runat="server" type="radio" title="Request" onclick="showRequest()" name="choice" />
@@ -246,7 +281,7 @@
                                     <tr>
                                         <td colspan="2">
                                             <div style="width: 400px; margin-top: 20px;">
-                                                <asp:Button ID="submitButton" runat="server" Text="Submit" 
+                                                <asp:Button ID="submitButton" runat="server" Text="Submit"
                                                     CausesValidation="true" Style="float: right;" />
                                             </div>
                                         </td>
@@ -267,6 +302,7 @@
 
     <!-- Scripts specific to this page -->
     <script src="Assets/Plugins/jquery.validate/script.js"></script>
+
 
 </body>
 </html>
