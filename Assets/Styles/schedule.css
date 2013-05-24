@@ -147,11 +147,28 @@
 
                 .scheduler #grid1 .rightSide .recordvalue .fieldvalue textarea {
                     max-width: 170px;
-                    background-image: url(../Images/Icons/16x16/exclamation.png);
-                    background-repeat: no-repeat;
-                    background-position-x: 12px;
-                    background-position-y: 20px;
                 }
+
+                .scheduler #grid1 .rightSide .recordvalue .fieldvalue .txtCommentsOnLoad {
+                    position: relative;
+                    z-index: 9999;
+                    bottom: 111px;
+                    left: 10px;
+                    max-width: 125px;
+                    color: #888;
+                    font-size: 11px;
+                }
+
+                .scheduler #grid1 .rightSide .recordvalue .fieldvalue .txtCommentsLoaded {
+                    position: relative;
+                    z-index: 0;
+                    bottom: 111px;
+                    left: 10px;
+                    max-width: 125px;
+                    color: #ffffff;
+                    visibility:hidden;
+                }
+
 
 
             .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .timeZoneDropDownOnload {
@@ -167,13 +184,11 @@
             .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .timeZoneDropDownLoaded {
                 position: relative;
                 z-index: 0;
-                top: 23px;
-                left: 10px;
-                max-width: 115px;
-                color: #ccc;
+                top: 9999px;
+                left: 9999px;
+                color: #ffffff;
                 display: none;
             }
-
 
             .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection select {
                 max-width: 184px;

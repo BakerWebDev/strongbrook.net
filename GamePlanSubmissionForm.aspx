@@ -27,6 +27,7 @@
             $('#Time').hide();
             $('#LikelyAvailable').hide();
             $('#TimeZoneDropDownOnload').addClass("timeZoneDropDownOnload");
+            $('#txtCommentsLabel').addClass("txtCommentsOnLoad");
         });
 
         function showSchedule() {
@@ -43,6 +44,10 @@
         function showRadioButtons() {
             $('#TimeZoneDropDownOnload').addClass("timeZoneDropDownLoaded");
             $('#RadioButtons').show();
+        }
+
+        function hideCommentsLabel() {
+            $('#txtCommentsLabel').addClass("txtCommentsLoaded");
         }
 
         function checkDate(sender, args) {
@@ -97,11 +102,8 @@
                 $("#txtSelectedTimeFrame").html(data2);
             });
         }
+
     </script>
-
-
-
-
 
 
     <script type="text/javascript">
@@ -264,7 +266,8 @@
                                             <div class="fieldvalue">
                                                 <div class="border line" id="commentsborder" style="display: inline-block;">
                                                     <div class="textareabounds" id="commentsbody" style="width: 200px; min-height: 50px;">
-                                                        <textarea id="txtComments" class="input textfield" cols="20" rows="5" runat="server"></textarea>Any Special Instructions?
+                                                        <textarea id="txtComments" class="input textfield" cols="20" rows="5" runat="server" onclick="hideCommentsLabel();"></textarea>
+                                                        <div id="txtCommentsLabel">Any Special Instructions?</div>
                                                     </div>
                                                     <div class="border-resize" id="commentsresize">
                                                     </div>
@@ -285,7 +288,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            <div style="width: 400px; margin-top: 20px;">
+                                            <div style="width: 400px;">
                                                 <asp:Button ID="submitButton" runat="server" Text="Submit"
                                                     CausesValidation="true" Style="float: right;" />
                                             </div>
