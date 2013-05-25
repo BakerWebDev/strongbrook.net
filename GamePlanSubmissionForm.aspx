@@ -27,18 +27,24 @@
             $('#Time').hide();
             $('#LikelyAvailable').hide();
             $('#TimeZoneDropDownOnload').addClass("timeZoneDropDownOnload");
+            $('#txtDate1Label').hide();
+            $('#drdlAppTimeLabel').hide();
             $('#txtCommentsLabel').addClass("txtCommentsOnLoad");
         });
 
         function showSchedule() {
             $('#DatePicker').show();
             $('#LikelyAvailable').hide();
+            $('#Date1').addClass("txtDate1OnLoad");
+            $('#txtDate1Label').show();
+            $('#txtDate1Label').addClass("txtDate1LabelOnLoad");
         }
 
         function showRequest() {
             $('#LikelyAvailable').show();
             $('#DatePicker').hide();
             $('#Time').hide();
+            $('#txtDate1Label').hide();
         }
 
         function showRadioButtons() {
@@ -87,8 +93,16 @@
                 alert("Closed Sundays, please select a day Monday thru Saturday.");
             }
 
-            $('#Time').show();
 
+            // Adjust what fields are visible
+            $('#txtDate1Label').hide();
+            $('#txtDate1Label').addClass("txtDate1LabelLoaded");
+            $('#Time').show();
+            $('#drdlAppTimeLabel').show();
+            $('#drdlAppTimeLabel').addClass("drdlAppTimeLabelOnLoad");
+
+
+            // Store and send appointment time information to the server
             var selectedTimeZone = $("#drdlTimeZone").val();
 
             $.post("GamePlanSubmissionForm.aspx", { timeZone: selectedTimeZone, timeFrame: theDayOfTheWeek }, function (data1) {
@@ -97,11 +111,30 @@
         }
 
         function sendTimeFrame(sender, args) {
+            // First, hide the div label.
+            $('#drdlAppTimeLabel').hide();
+            $('#drdlAppTimeLabel').addClass("drdlAppTimeLabelLoaded");
+
+            // Store and send appointment time information to the server
             var selectedTimeFrame = $("#drdlAppTime").val();
             $.post("GamePlanSubmissionForm.aspx", { timeFrameSelected: selectedTimeFrame }, function (data2) {
                 $("#txtSelectedTimeFrame").html(data2);
             });
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     </script>
 
@@ -110,27 +143,34 @@
         var fname = 0;
         var lname = 0;
         var phone = 0;
-        var email = 0;
+        var email_ = 0;
         var timzn = 0;
-        var chsdt = 0;
-        var seltm = 0;
+        var date = 0;
+        var time = 0;
         var fstav = 0;
         var rdosh = 0;
         var rdorq = 0;
-
         $(function () {
             $("#submitButton").click(function () {
                 if ($('#txtFirstName').val() != "") { fname = 1; };
                 if ($('#txtLastName').val() != "") { lname = 1; };
                 if ($('#txtPhone1').val() != "") { phone = 1; };
-                if ($('#txtEmail').val() != "") { email = 1; };
-                if ($('#drdlTimeZone').val() != "Select Your Time Zone") { timzn = 1; };
-                if ($('#Date1').val() != "Choose a Date") { chsdt = 1; };
-                if ($('#drdlAppTime').val() != "Select a Time") { seltm = 1; };
+                if ($('#txtEmail').val() != "") { email_ = 1; };
+                if ($('#drdlTimeZone').val() != "") { timzn = 1; };
+
+                var e = document.getElementById("drdlAppTime");
+                var strUser = e.options[e.selectedIndex].value;
+                if (strUser != "") { time = 1; };
+
                 if ($('#firstAvailableTime').val() != "Best Time to Call") { fstav = 1; };
                 if ($('#RadioButtonSchedule').is(':checked')) { rdosh = 1; rdorq = 0; };
                 if ($('#RadioButtonRequest').is(':checked')) { rdorq = 1; rdosh = 0 };
-                if (fname == 1 && lname == 1 && phone == 1 && email == 1 && timzn == 1 && chsdt == 1 && seltm == 1 && rdosh == 1) {
+                if (time == 1) { date = 1 };
+
+                //alert('fname: ' + $('#txtFirstName').val() + '\n' + 'lname: ' + $('#txtLastName').val() + '\n' + 'phone: ' + $('#txtPhone1').val() + '\n' + 'email: ' + $('#txtEmail').val() + '\n' + 'timezone: ' + $('#drdlTimeZone').val() + '\n' + 'time: ' + strUser);
+                //alert('fname: ' + fname + '\n' + 'lname: ' + lname + '\n' + 'phone: ' + phone + '\n' + 'email: ' + email_ + '\n' + 'timezone: ' + timzn + '\n' + 'date: ' + date + '\n' + 'time: ' + time);
+
+                if (fname == 1 && lname == 1 && phone == 1 && email_ == 1 && timzn == 1 && date == 1 && time == 1 && rdosh == 1) {
                     this.value = 'Processing...' + $('#Date1').val() + " " + $('#drdlAppTime').val();
                 }
                 else if (fname == 1 && lname == 1 && phone == 1 && email == 1 && fstav == 1 && rdorq == 1) {
@@ -143,12 +183,6 @@
         });
     </script>
 
-
-    <script type="text/javascript">
-        function initialCSS() {
-            CssClass = "dropdown";
-        }
-    </script>
 
 </head>
 <body>
@@ -235,7 +269,7 @@
                                                 </div>
                                                 <div id="TimeZoneDropDownOnload">Select a Time Zone</div>
                                                 <div id="DatePicker">
-                                                    <asp:TextBox ID="Date1" runat="server" Text="Choose a Date" CssClass="textbox"></asp:TextBox>
+                                                    <asp:TextBox ID="Date1" runat="server"></asp:TextBox>
                                                     <asp:CalendarExtender ID="CalendarExtender1" runat="server"
                                                         TargetControlID="Date1"
                                                         CssClass="calendar"
@@ -244,15 +278,12 @@
                                                         Animated="true">
                                                     </asp:CalendarExtender>
                                                 </div>
-
                                                 <div id="Time">
                                                     <asp:DropDownList ID="drdlAppTime" runat="server" onchange="sendTimeFrame();"></asp:DropDownList>
                                                 </div>
-
                                                 <div id="LikelyAvailable" class="recordvalue">
                                                     <asp:DropDownList ID="firstAvailableTime" runat="server"></asp:DropDownList>
                                                 </div>
-
                                                 <div id="RadioButtons">
                                                     <label for="RadioButtonSchedule">Schedule an Appointment</label>
                                                     <input id="RadioButtonSchedule" runat="server" type="radio" title="Schedule" onclick="showSchedule()" name="choice" />
@@ -260,6 +291,10 @@
                                                     <label for="RadioButtonRequest">Request to be Contacted</label>
                                                     <input id="RadioButtonRequest" runat="server" type="radio" title="Request" onclick="showRequest()" name="choice" />
                                                 </div>
+
+                                                <div id="txtDate1Label">Choose a Date</div>
+                                                <div id="drdlAppTimeLabel">Select a Time</div>
+
                                             </div>
                                         </td>
                                         <td class="recordvalue" style="vertical-align: top;">

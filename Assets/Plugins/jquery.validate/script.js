@@ -14,16 +14,17 @@ $(document).ready(function () {
                 minlength: 2,
                 required: true
             },
+
             txtLastName: {
                 minlength: 2,
                 required: true
             },
+
             txtPhone1: {
                 minlength: 2,
                 required: true
             },
            
-
             txtEmail: {
                 required: true,
                 email: true
@@ -35,7 +36,20 @@ $(document).ready(function () {
 
             'choice': {
                 required: true
+            },
+
+            'Date1': {
+                required: true
+            },
+
+            'drdlAppTime': {
+                required: true
+            },
+
+            'firstAvailableTime': {
+                required: true
             }
+
         },
         highlight: function (element) {
             $(element).closest('.control-group').removeClass('success').addClass('error');
@@ -47,7 +61,25 @@ $(document).ready(function () {
         },
         messages: {
             'choice': {required: "Please make a selection."}
+        },
+
+        invalidHandler: function (event, validator) {
+            var rdosh = 0;
+            var rdorq = 0;
+            if ($('#RadioButtonRequest').is(':checked')) { rdorq = 1; rdosh = 0 };
+            if (rdorq == 1) {
+                $('#form1').validate({ ignore: '#Date1' });
+                $('#form1').validate({ ignore: '#drdlAppTime' });
+            }
+            if ($('#RadioButtonSchedule').is(':checked')) { rdorq = 0; rdosh = 1 };
+            if (rdosh == 1) {
+                $('#form1').validate({ ignore: '#firstAvailableTime' });
+                $('#txtDate1Label').addClass("txtDate1LabelLoaded");
+                $('#drdlAppTimeLabel').addClass("drdlAppTimeLabelLoaded");
+            }
         }
+
+
     });
 
 }); // end document.ready

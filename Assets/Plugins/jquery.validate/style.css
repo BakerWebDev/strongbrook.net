@@ -28,6 +28,8 @@
             margin-top:-14px;
 		}
 
+
+        /* Special formatting for radio button labels */
 		#RadioButtons label.error {
 			font-weight: normal;
 			color: red;
@@ -37,5 +39,14 @@
             position:relative;
             top:0px;
             left:0px;
-
+		}
+		#RadioButtons label.valid {
+		  width: 20px;
+		  height: 27px;
+		  background: url(assets/img/valid.png) center center no-repeat;
+		  display: inline-block;
+		  text-indent: -9999px;
+          position:relative;
+          bottom:4px;
+          vertical-align:top;
 		}

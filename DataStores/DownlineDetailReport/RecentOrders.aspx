@@ -1,1 +1,0 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="RecentOrders.aspx.cs" Inherits="RecentOrdersData" %>
