@@ -1426,16 +1426,12 @@ public partial class GPRform : System.Web.UI.Page
         //First Create the Address Info
         MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
         MailAddress to = new MailAddress(CurrentUser_Email, CurrentUser_FirstName + " " + CurrentUser_LastName);
-        //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
-        //MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
 
         //Construct the email - just simple text email
         MailMessage message = new MailMessage(from, to);
-        //message.CC.Add(cc);
-        //message.Bcc.Add(bcc);
         message.Bcc.Add("aaronbaker315@me.com");
         message.Bcc.Add("paul.janson@strongbrook.com");
-        message.Subject = string.Format("New Game Plan requested submitted by {0} {1}", FirstName, LastName);
+        message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
         #endregion Email Header Properties
 

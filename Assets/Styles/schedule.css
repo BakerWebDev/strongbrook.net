@@ -209,7 +209,7 @@
                 z-index: 1;
                 bottom: 70px;
                 left: 10px;
-                max-width: 71px;
+                max-width: 75px;
                 color: #888;
                 font-size: 11px;
             }
@@ -219,7 +219,7 @@
                 z-index: 0;
                 top: 55px;
                 left: 10px;
-                max-width: 71px;
+                max-width: 75px;
                 color: #ffffff;
                 display: none;
             }
