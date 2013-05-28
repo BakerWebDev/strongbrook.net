@@ -86,21 +86,18 @@
                 theDayOfTheWeek = "Saturday";
             }
 
-            var selectedTimeZone = $("#drdlTimeZone").val();
+            var selectedTimeZone = $("#ddlTimeZone").val();
 
             $.post("GPR_FORM_FOR_TESTING.aspx", { timeZone: selectedTimeZone, timeFrame: theDayOfTheWeek }, function (data1) {
-                $("#drdlAppTime").html(data1);
+                $("#ddlAppTime").html(data1);
 
             });
         }
 
         function sendTimeFrame(sender, args) {
-
-
-            var selectedTimeFrame = $("#drdlAppTime").val();
+            var selectedTimeFrame = $("#ddlAppTime").val();
             $.post("GPR_FORM_FOR_TESTING.aspx", { timeFrameSelected: selectedTimeFrame }, function (data2) {
                 $("#txtSelectedTimeFrame").html(data2);
-
             });
         }
 
@@ -193,7 +190,7 @@
                                             <tr id="TimeZone" class="recordrow">
                                                 <td class="recordvalue">
                                                     <div>
-                                                        <asp:DropDownList ID="drdlTimeZone" runat="server" onchange="showRadioButtons();" />
+                                                        <asp:DropDownList ID="ddlTimeZone" runat="server" onchange="showRadioButtons();" />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -215,7 +212,7 @@
                                             <tr id="Time_Request" class ="recordrow">
                                                 <td id="TimePicker" class="recordvalue">
                                                     <div id="Time">
-                                                        <asp:DropDownList ID="drdlAppTime" runat="server" onchange="sendTimeFrame();" ></asp:DropDownList>
+                                                        <asp:DropDownList ID="ddlAppTime" runat="server" onchange="sendTimeFrame();" ></asp:DropDownList>
                                                     </div>
                                                 </td>
                                             </tr>

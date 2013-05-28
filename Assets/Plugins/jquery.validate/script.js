@@ -30,7 +30,7 @@ $(document).ready(function () {
                 email: true
             },
 
-            drdlTimeZone: {
+            ddlTimeZone: {
                 required: true
             },
 
@@ -42,7 +42,7 @@ $(document).ready(function () {
                 required: true
             },
 
-            'drdlAppTime': {
+            'ddlAppTime': {
                 required: true
             },
 
@@ -69,17 +69,15 @@ $(document).ready(function () {
             if ($('#RadioButtonRequest').is(':checked')) { rdorq = 1; rdosh = 0 };
             if (rdorq == 1) {
                 $('#form1').validate({ ignore: '#Date1' });
-                $('#form1').validate({ ignore: '#drdlAppTime' });
+                $('#form1').validate({ ignore: '#ddlAppTime' });
             }
             if ($('#RadioButtonSchedule').is(':checked')) { rdorq = 0; rdosh = 1 };
             if (rdosh == 1) {
                 $('#form1').validate({ ignore: '#firstAvailableTime' });
                 $('#txtDate1Label').addClass("txtDate1LabelLoaded");
-                $('#drdlAppTimeLabel').addClass("drdlAppTimeLabelLoaded");
+                $('#ddlAppTimeLabel').addClass("ddlAppTimeLabelLoaded");
             }
         }
-
-
     });
 
 }); // end document.ready

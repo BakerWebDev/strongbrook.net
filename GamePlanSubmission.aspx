@@ -1,4 +1,4 @@
-﻿<%@ Page EnableEventValidation="false" Language="C#" AutoEventWireup="true" CodeFile="GamePlanSubmissionForm.aspx.cs" Inherits="GPRform" %>
+﻿<%@ Page EnableEventValidation="false" Language="C#" AutoEventWireup="true" CodeFile="GamePlanSubmission.aspx.cs" Inherits="GamePlanSubmission" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -6,7 +6,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
-    <title></title>
+
+    <title>Game Plan Request</title>
 
     <link href="Assets/Styles/calendarExtender.css" rel="stylesheet" />
     <link href="Assets/Styles/site.min.css" rel="stylesheet" type="text/css" />
@@ -123,7 +124,6 @@
 
     </script>
 
-
     <script type="text/javascript">
         var fname = 0;
         var lname = 0;
@@ -165,7 +165,6 @@
         });
     </script>
 
-
 </head>
 <body>
     <form id="form1" runat="server">
@@ -178,8 +177,7 @@
                         <td id="ExplanationOfPage" colspan="2" class="leftSide">
                             <div id="LeftText">
 
-                                <h3>Discover How Strongbrook's Power Team Can Build Your Wealth and Turbo-Charge Your Retirement Cash-Flow Through Real Estate!
-                                </h3>
+                                <h3>Discover How Strongbrook's Power Team Can Build Your Wealth and Turbo-Charge Your Retirement Cash-Flow Through Real Estate!</h3>
 
                                 Your Personalized Game Plan Report Will:<br />
                                 • Develop a custom 5 to 10 year plan to true financial freedom<br />
@@ -201,7 +199,8 @@
                         <td id="FormFields" class="rightSide">
                             <table class="record">
                                 <tbody enableviewstate="False">
-                                    <tr id="FirstName" class="recordrow">
+
+                                    <tr id="FirstName_LastName" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
                                                 <asp:TextBox CssClass="input textfield" ID="txtFirstName" name="FirstName" Placeholder="First Name" runat="server" Data="First Name" />
@@ -215,7 +214,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr id="Phone1" class="recordrow">
+                                    <tr id="Phone1_Phone2" class="recordrow">
                                         <td class="recordvalue full">
                                             <div class="fieldvalue">
                                                 <asp:TextBox CssClass="input textfield" ID="txtPhone1" name="homephone" runat="server" Placeholder="Phone 1"
@@ -230,7 +229,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr id="Email" class="recordrow">
+                                    <tr id="Email_NetWorth" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
                                                 <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="Email" name="email" runat="server" Data="email" />
@@ -243,13 +242,15 @@
                                         </td>
                                     </tr>
 
-                                    <tr id="TimeZone" class="recordrow">
+                                    <tr id="TimeZone_Comments" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalueTimeSelection">
                                                 <div id="TimeZoneDropDown">
                                                     <asp:DropDownList ID="ddlTimeZone" runat="server" onchange="showRadioButtons();" />
                                                 </div>
-                                                <div id="TimeZoneDropDownOnload">Select a Time Zone</div>
+                                                <div id="TimeZoneDropDownOnload">
+                                                    Select a Time Zone
+                                                </div>
                                                 <div id="DatePicker">
                                                     <asp:TextBox ID="Date1" runat="server"></asp:TextBox>
                                                     <asp:CalendarExtender ID="CalendarExtender1" runat="server"
@@ -274,8 +275,12 @@
                                                     <input id="RadioButtonRequest" runat="server" type="radio" title="Request" onclick="showRequest()" name="choice" />
                                                 </div>
 
-                                                <div id="txtDate1Label">Choose a Date</div>
-                                                <div id="ddlAppTimeLabel">Select a Time</div>
+                                                <div id="txtDate1Label">
+                                                    Choose a Date
+                                                </div>
+                                                <div id="ddlAppTimeLabel">
+                                                    Select a Time
+                                                </div>
 
                                             </div>
                                         </td>
@@ -300,9 +305,11 @@
                                             </div>
                                         </td>
                                     </tr>
+
                                     <tr id="spacer">
                                         <td id="spanner" colspan="2"></td>
                                     </tr>
+
                                     <tr>
                                         <td colspan="2">
                                             <div style="width: 400px;">
@@ -311,6 +318,7 @@
                                             </div>
                                         </td>
                                     </tr>
+
                                 </tbody>
                             </table>
                         </td>
@@ -327,7 +335,6 @@
 
     <!-- Scripts specific to this page -->
     <script src="Assets/Plugins/jquery.validate/script.js"></script>
-
 
 </body>
 </html>

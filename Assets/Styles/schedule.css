@@ -112,6 +112,30 @@
         }
 
 
+        .scheduler #grid1 .rightSide .dropdowns {
+            width: 100px;
+            text-align: right;
+        }
+
+            .scheduler #grid1 .rightSide .dropdowns .time {
+                float: left;
+                width: 100px;
+            }
+
+                .scheduler #grid1 .rightSide .dropdowns .time select {
+                    width: 100px;
+                }
+
+            .scheduler #grid1 .rightSide .dropdowns .zone {
+                float: right;
+                width: 115px;
+            }
+
+                .scheduler #grid1 .rightSide .dropdowns .zone select {
+                    width: 110px;
+                }
+
+
 
         .scheduler #grid1 .rightSide .recordlabel {
             width: 95px;
@@ -170,7 +194,6 @@
                 }
 
 
-
             .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .timeZoneDropDownOnload {
                 position: relative;
                 z-index: 9999;
@@ -224,13 +247,7 @@
                 display: none;
             }
 
-
-
-
-
-
-
-            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .drdlAppTimeLabelOnLoad {
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .ddlAppTimeLabelOnLoad {
                 position: relative;
                 z-index: 1;
                 bottom: 70px;
@@ -240,7 +257,7 @@
                 font-size: 11px;
             }
 
-            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .drdlAppTimeLabelLoaded {
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .ddlAppTimeLabelLoaded {
                 position: relative;
                 z-index: 0;
                 top: 55px;
@@ -250,14 +267,6 @@
                 display: none;
             }
 
-
-
-
-
-
-
-
-
             .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection #RadioButtons label {
                 font-size: 11px;
                 margin: 0px;
@@ -266,26 +275,3 @@
                 top: 12px;
                 left: 16px;
             }
-
-        .scheduler #grid1 .rightSide .dropdowns {
-            width: 100px;
-            text-align: right;
-        }
-
-            .scheduler #grid1 .rightSide .dropdowns .time {
-                float: left;
-                width: 100px;
-            }
-
-                .scheduler #grid1 .rightSide .dropdowns .time select {
-                    width: 100px;
-                }
-
-            .scheduler #grid1 .rightSide .dropdowns .zone {
-                float: right;
-                width: 115px;
-            }
-
-                .scheduler #grid1 .rightSide .dropdowns .zone select {
-                    width: 110px;
-                }

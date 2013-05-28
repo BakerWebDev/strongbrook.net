@@ -21,17 +21,13 @@ public partial class GPRform : System.Web.UI.Page
         CalendarExtender1.StartDate = DateTime.Today.AddDays(1);
         CalendarExtender1.EndDate = DateTime.Today.AddDays(7);
 
-        //submitButton.Attributes.Add("onclick", "doStuff()");
-
         if (!IsPostBack)
         {
             string timeZoneSelection = Request.Form["timeZone"];
             if (timeZoneSelection == null)
             { 
                 PopulateAvailabilityFields();
-
                 PopulateNetWorthFields();
-
             }
 
             string timeFrameSelection = Request.Form["timeFrame"];
@@ -103,7 +99,7 @@ public partial class GPRform : System.Web.UI.Page
             request.BirthDate = DateTime.Now;
             request.Zip = "1";
 
-            CreateCustomerLeadResponse response = ExigoApiContext.CreateWebServiceContext().CreateCustomerLead(request); // api.WebService.CreateCustomerLead(request);
+            CreateCustomerLeadResponse response = ExigoApiContext.CreateWebServiceContext().CreateCustomerLead(request);
 
         }
         catch
@@ -171,7 +167,6 @@ public partial class GPRform : System.Web.UI.Page
 
         return request;
     }
-    public int orderID { get; set; }
     private CreateOrderRequest Request_PlaceGPRRorder()
     {
         var NotesInLongForm = new StringBuilder();
@@ -337,13 +332,13 @@ public partial class GPRform : System.Web.UI.Page
         firstAvailableTime.Items.Add(new ListItem("Afternoon"));
         firstAvailableTime.Items.Add(new ListItem("Evening"));
 
-        drdlTimeZone.Items.Clear();
-        drdlTimeZone.Items.Add(new ListItem(""));
-        drdlTimeZone.Items.Add(new ListItem("Hawaii Time"));
-        drdlTimeZone.Items.Add(new ListItem("Pacific Time"));
-        drdlTimeZone.Items.Add(new ListItem("Mountain Time"));
-        drdlTimeZone.Items.Add(new ListItem("Central Time"));
-        drdlTimeZone.Items.Add(new ListItem("Eastern Time"));
+        ddlTimeZone.Items.Clear();
+        ddlTimeZone.Items.Add(new ListItem(""));
+        ddlTimeZone.Items.Add(new ListItem("Hawaii Time"));
+        ddlTimeZone.Items.Add(new ListItem("Pacific Time"));
+        ddlTimeZone.Items.Add(new ListItem("Mountain Time"));
+        ddlTimeZone.Items.Add(new ListItem("Central Time"));
+        ddlTimeZone.Items.Add(new ListItem("Eastern Time"));
 
     }
     private void PopulateNetWorthFields()
@@ -631,6 +626,7 @@ public partial class GPRform : System.Web.UI.Page
     #endregion
 
     #region Properties
+    public int orderID { get; set; }
     public int CurrentUser_ID { get; set; }
     public string CurrentUser_FirstName { get; set; }
     public string CurrentUser_LastName { get; set; }
@@ -664,57 +660,22 @@ public partial class GPRform : System.Web.UI.Page
         set { txtEmail.Text = value; }
     }
 
-    public string NetWorth
+    private string NetWorth
     {
         get { return netWorth.SelectedValue; }
         set { netWorth.SelectedValue = value; }
     }
 
-    public string TimeZone
+    private string TimeZone
     {
-        get { return drdlTimeZone.SelectedValue; }
-        set { drdlTimeZone.SelectedValue = value; }
+        get { return ddlTimeZone.SelectedValue; }
+        set { ddlTimeZone.SelectedValue = value; }
     }
-
-
-
-
-
-
-
-
-
-    public string _date1;
-    //public string AppointmentDate
-    //{
-    //    get 
-    //    {
-    //        string foo = "";
-    //        if (RadioButtonSchedule.Checked)
-    //        {
-    //            _date1 = Date1.Text;
-    //        }
-    //        else
-    //        {
-    //            _date1 = "";
-    //        }
-    //        return foo; 
-    //    }
-    //    set { _date1 = value; }
-    //}
-
-
-    public string AppointmentDate
+    private string AppointmentDate
     {
         get { return Date1.Text; }
         set { Date1.Text = value; }
     }
-
-
-
-
-
-
     public string cookee;
     public string AppointmentTimeSelectedByTheProspect
     {
@@ -724,7 +685,6 @@ public partial class GPRform : System.Web.UI.Page
             if (RadioButtonSchedule.Checked)
             {
                 cookee = theCookie;
-
             }
             else
             {
@@ -1235,11 +1195,6 @@ public partial class GPRform : System.Web.UI.Page
         }
     }
 
-
-
-
-
-
     public string _likelyAvailable;
     public string LikelyAvailable
     {
@@ -1259,30 +1214,6 @@ public partial class GPRform : System.Web.UI.Page
         }
         set { _likelyAvailable = value; }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private string Comments
     {

@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using System.Web.Services;
 
-public partial class GPRform : System.Web.UI.Page
+public partial class GamePlanSubmission : System.Web.UI.Page
 {
     #region Page Load
     protected void Page_Load(object sender, EventArgs e)
@@ -27,9 +27,7 @@ public partial class GPRform : System.Web.UI.Page
             if (timeZoneSelection == null)
             { 
                 PopulateAvailabilityFields();
-
                 PopulateNetWorthFields();
-
             }
 
             string timeFrameSelection = Request.Form["timeFrame"];
@@ -101,7 +99,7 @@ public partial class GPRform : System.Web.UI.Page
             request.BirthDate = DateTime.Now;
             request.Zip = "1";
 
-            CreateCustomerLeadResponse response = ExigoApiContext.CreateWebServiceContext().CreateCustomerLead(request); // api.WebService.CreateCustomerLead(request);
+            CreateCustomerLeadResponse response = ExigoApiContext.CreateWebServiceContext().CreateCustomerLead(request);
 
         }
         catch
@@ -195,7 +193,7 @@ public partial class GPRform : System.Web.UI.Page
             request.PriceType = GlobalSettings.Shopping.DefaultPriceTypeID;
             request.WarehouseID = 4;
             request.ShipMethodID = 15;
-            request.City = "Orem";
+            request.City = Phone1;
             request.State = "UT";
             request.Country = "US";
 
@@ -210,9 +208,11 @@ public partial class GPRform : System.Web.UI.Page
             // Using the Other fields for misc data
             request.Other16 = AppointmentDate;
             request.Other17 = NetWorth;
+            request.Other18 = AppointmentTimeInCorporateTimeZone;
+            request.Other19 = Email;
 
             // Add Notes and the Date of the Order
-            request.Notes = NotesInLongForm.ToString();
+            request.Notes = Comments; // NotesInLongForm.ToString();
             request.OrderDate = DateTime.Now;
 
             //Add Details
@@ -227,6 +227,7 @@ public partial class GPRform : System.Web.UI.Page
             request.Details = details.ToArray();
 
             isValid = true;
+
         }
         catch
         {
@@ -237,7 +238,7 @@ public partial class GPRform : System.Web.UI.Page
         var context = ExigoApiContext.CreateWebServiceContext();
         CreateOrderResponse res = context.CreateOrder(request);
 
-        Response.Write(res.OrderID);
+        orderID = res.OrderID;
 
         return request;
     }
@@ -259,7 +260,7 @@ public partial class GPRform : System.Web.UI.Page
                 SendEmailToProspectsUpline();
                 if (emailSent)
                 {
-                    Response.Redirect("GamePlanSubmissionThankYou.aspx");
+                    Response.Redirect("GamePlanSubmitted.aspx");
                 }
             }
             catch (Exception ex)
@@ -331,13 +332,13 @@ public partial class GPRform : System.Web.UI.Page
         firstAvailableTime.Items.Add(new ListItem("Afternoon"));
         firstAvailableTime.Items.Add(new ListItem("Evening"));
 
-        drdlTimeZone.Items.Clear();
-        drdlTimeZone.Items.Add(new ListItem("Select Your Time Zone"));
-        drdlTimeZone.Items.Add(new ListItem("Hawaii Time"));
-        drdlTimeZone.Items.Add(new ListItem("Pacific Time"));
-        drdlTimeZone.Items.Add(new ListItem("Mountain Time"));
-        drdlTimeZone.Items.Add(new ListItem("Central Time"));
-        drdlTimeZone.Items.Add(new ListItem("Eastern Time"));
+        ddlTimeZone.Items.Clear();
+        ddlTimeZone.Items.Add(new ListItem(""));
+        ddlTimeZone.Items.Add(new ListItem("Hawaii Time"));
+        ddlTimeZone.Items.Add(new ListItem("Pacific Time"));
+        ddlTimeZone.Items.Add(new ListItem("Mountain Time"));
+        ddlTimeZone.Items.Add(new ListItem("Central Time"));
+        ddlTimeZone.Items.Add(new ListItem("Eastern Time"));
 
     }
     private void PopulateNetWorthFields()
@@ -368,38 +369,43 @@ public partial class GPRform : System.Web.UI.Page
         string closedSunday = "Closed Sunday";
 
         #region Hawaii Hours
-        string from_6AM_to_1PM = "<option>" + "Select a Time" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + oMin + "from 8:00AM to 8:30AM" + oMin + "from 8:30AM to 9:00AM" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + "</option>";
-        string from_6AM_to_8AM = "<option>" + "Select a Time" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + "</option>";
+        string from_6AM_to_1PM = "<option>" + "" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + oMin + "from 8:00AM to 8:30AM" + oMin + "from 8:30AM to 9:00AM" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + "</option>";
+        string from_6AM_to_8AM = "<option>" + "" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + "</option>";
         string from_noon_to_4PM = "<option>" + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + "</option>";
-        string from_6AM_to_9AM = "<option>" + "Select a Time" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + oMin + "from 8:00AM to 8:30AM" + oMin + "from 8:30AM to 9:00AM" + "</option>";
+        string from_6AM_to_9AM = "<option>" + "" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + oMin + "from 8:00AM to 8:30AM" + oMin + "from 8:30AM to 9:00AM" + "</option>";
+        string from_9AM_to_5PM = "<option>" + "" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + "</option>";        
         #endregion Hawaii Hours
 
         #region Pacific Hours
-        string from_9AM_to_4PM = "<option>" + "Select a Time" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + "</option>";
-        string from_9AM_to_11AM = "<option>" + "Select a Time" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "</option>";
+        string from_9AM_to_4PM = "<option>" + "" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + "</option>";
+        string from_9AM_to_11AM = "<option>" + "" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "</option>";
         string from_3PM_to_7PM = "<option>" + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + "</option>";
-        string from_9AM_to_noon = "<option>" + "Select a Time" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + "</option>";
+        string from_9AM_to_noon = "<option>" + "" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + "</option>";
+        string from_12PM_to_8PM = "<option>" + "" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + "</option>";        
         #endregion Pacific Hours
 
         #region Mountain Hours
-        string from_10AM_to_5PM = "<option>" + "Select a Time" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + "</option>";
-        string from_10AM_to_noon = "<option>" + "Select a Time" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + "</option>";
+        string from_10AM_to_5PM = "<option>" + "" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + "</option>";
+        string from_10AM_to_noon = "<option>" + "" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + "</option>";
         string from_4PM_to_8PM = "<option>" + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + "</option>";
-        string from_10AM_to_1PM = "<option>" + "Select a Time" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + "</option>";
+        string from_10AM_to_1PM = "<option>" + "" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + "</option>";
+        string from_1PM_to_9PM = "<option>" + "" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + "</option>";                
         #endregion Mountain Hours
 
         #region Central Hours
-        string from_11AM_to_6PM = "<option>" + "Select a Time" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + "</option>";
-        string from_11AM_to_1PM = "<option>" + "Select a Time" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + "</option>";
+        string from_11AM_to_6PM = "<option>" + "" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + "</option>";
+        string from_11AM_to_1PM = "<option>" + "" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + "</option>";
         string from_5PM_to_9PM = "<option>" + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + "</option>";
-        string from_11AM_to_2PM = "<option>" + "Select a Time" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + "</option>";
+        string from_11AM_to_2PM = "<option>" + "" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + "</option>";
+        string from_2PM_to_10PM = "<option>" + "" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + oMin + "from 9:00PM to 9:30PM" + oMin + "from 9:30PM to 10:00PM" + "</option>";                              
         #endregion Central Hours
 
         #region Eastern Hours
-        string from_12PM_to_7PM = "<option>" + "Select a Time" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + "</option>";
-        string from_12PM_to_2PM = "<option>" + "Select a Time" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + "</option>";
+        string from_12PM_to_7PM = "<option>" + "" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + "</option>";
+        string from_12PM_to_2PM = "<option>" + "" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + "</option>";
         string from_6PM_to_10PM = "<option>" + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + oMin + "from 9:00PM to 9:30PM" + oMin + "from 9:30PM to 10:00PM";
-        string from_12AM_to_3PM = "<option>" + "Select a Time" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + "</option>";
+        string from_12PM_to_3PM = "<option>" + "" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + "</option>";
+        string from_3PM_to_11PM = "<option>" + "" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + oMin + "from 9:00PM to 9:30PM" + oMin + "from 9:30PM to 10:00PM" + oMin + "from 10:00PM to 10:30PM" + oMin + "from 10:30PM to 11:00PM" + "</option>";                        
         #endregion Eastern Hours
 
         #endregion Properties
@@ -447,13 +453,13 @@ public partial class GPRform : System.Web.UI.Page
                         Response.Write(from_6AM_to_1PM);
                         break;
                     case "Tuesday":
-                        Response.Write(from_6AM_to_8AM + oMin + from_noon_to_4PM);
+                        Response.Write(from_9AM_to_5PM);
                         break;
                     case "Wednesday":
-                        Response.Write(from_6AM_to_8AM + oMin + from_noon_to_4PM);
+                        Response.Write(from_9AM_to_5PM);
                         break;
                     case "Thursday":
-                        Response.Write(from_6AM_to_8AM + oMin + from_noon_to_4PM);
+                        Response.Write(from_9AM_to_5PM);
                         break;
                     case "Friday":
                         Response.Write(from_6AM_to_1PM);
@@ -476,13 +482,13 @@ public partial class GPRform : System.Web.UI.Page
                         Response.Write(from_9AM_to_4PM);
                         break;
                     case "Tuesday":
-                        Response.Write(from_9AM_to_11AM + oMin + from_3PM_to_7PM);
+                        Response.Write(from_12PM_to_8PM);
                         break;
                     case "Wednesday":
-                        Response.Write(from_9AM_to_11AM + oMin + from_3PM_to_7PM);
+                        Response.Write(from_12PM_to_8PM);
                         break;
                     case "Thursday":
-                        Response.Write(from_9AM_to_11AM + oMin + from_3PM_to_7PM);
+                        Response.Write(from_12PM_to_8PM);
                         break;
                     case "Friday":
                         Response.Write(from_9AM_to_4PM);
@@ -505,13 +511,13 @@ public partial class GPRform : System.Web.UI.Page
                         Response.Write(from_10AM_to_5PM);
                         break;
                     case "Tuesday":
-                        Response.Write(from_10AM_to_noon + oMin + from_4PM_to_8PM);
+                        Response.Write(from_1PM_to_9PM);
                         break;
                     case "Wednesday":
-                        Response.Write(from_10AM_to_noon + oMin + from_4PM_to_8PM);
+                        Response.Write(from_1PM_to_9PM);
                         break;
                     case "Thursday":
-                        Response.Write(from_10AM_to_noon + oMin + from_4PM_to_8PM);
+                        Response.Write(from_1PM_to_9PM);
                         break;
                     case "Friday":
                         Response.Write(from_10AM_to_5PM);
@@ -534,13 +540,13 @@ public partial class GPRform : System.Web.UI.Page
                         Response.Write(from_11AM_to_6PM);
                         break;
                     case "Tuesday":
-                        Response.Write(from_11AM_to_1PM + oMin + from_5PM_to_9PM);
+                        Response.Write(from_2PM_to_10PM);
                         break;
                     case "Wednesday":
-                        Response.Write(from_11AM_to_1PM + oMin + from_5PM_to_9PM);
+                        Response.Write(from_2PM_to_10PM);
                         break;
                     case "Thursday":
-                        Response.Write(from_11AM_to_1PM + oMin + from_5PM_to_9PM);
+                        Response.Write(from_2PM_to_10PM);
                         break;
                     case "Friday":
                         Response.Write(from_11AM_to_6PM);
@@ -563,19 +569,19 @@ public partial class GPRform : System.Web.UI.Page
                         Response.Write(from_12PM_to_7PM);
                         break;
                     case "Tuesday":
-                        Response.Write(from_12PM_to_2PM + oMin + from_6PM_to_10PM);
+                        Response.Write(from_3PM_to_11PM);
                         break;
                     case "Wednesday":
-                        Response.Write(from_12PM_to_2PM + oMin + from_6PM_to_10PM);
+                        Response.Write(from_3PM_to_11PM);
                         break;
                     case "Thursday":
-                        Response.Write(from_12PM_to_2PM + oMin + from_6PM_to_10PM);
+                        Response.Write(from_3PM_to_11PM);
                         break;
                     case "Friday":
                         Response.Write(from_12PM_to_7PM);
                         break;
                     case "Saturday":
-                        Response.Write(from_12AM_to_3PM);
+                        Response.Write(from_12PM_to_3PM);
                         break;
                 }
                 break;
@@ -620,6 +626,7 @@ public partial class GPRform : System.Web.UI.Page
     #endregion
 
     #region Properties
+    public int orderID { get; set; }
     public int CurrentUser_ID { get; set; }
     public string CurrentUser_FirstName { get; set; }
     public string CurrentUser_LastName { get; set; }
@@ -653,57 +660,22 @@ public partial class GPRform : System.Web.UI.Page
         set { txtEmail.Text = value; }
     }
 
-    public string NetWorth
+    private string NetWorth
     {
         get { return netWorth.SelectedValue; }
         set { netWorth.SelectedValue = value; }
     }
 
-    public string TimeZone
+    private string TimeZone
     {
-        get { return drdlTimeZone.SelectedValue; }
-        set { drdlTimeZone.SelectedValue = value; }
+        get { return ddlTimeZone.SelectedValue; }
+        set { ddlTimeZone.SelectedValue = value; }
     }
-
-
-
-
-
-
-
-
-
-    public string _date1;
-    //public string AppointmentDate
-    //{
-    //    get 
-    //    {
-    //        string foo = "";
-    //        if (RadioButtonSchedule.Checked)
-    //        {
-    //            _date1 = Date1.Text;
-    //        }
-    //        else
-    //        {
-    //            _date1 = "";
-    //        }
-    //        return foo; 
-    //    }
-    //    set { _date1 = value; }
-    //}
-
-
-    public string AppointmentDate
+    private string AppointmentDate
     {
         get { return Date1.Text; }
         set { Date1.Text = value; }
     }
-
-
-
-
-
-
     public string cookee;
     public string AppointmentTimeSelectedByTheProspect
     {
@@ -713,7 +685,6 @@ public partial class GPRform : System.Web.UI.Page
             if (RadioButtonSchedule.Checked)
             {
                 cookee = theCookie;
-
             }
             else
             {
@@ -1224,11 +1195,6 @@ public partial class GPRform : System.Web.UI.Page
         }
     }
 
-
-
-
-
-
     public string _likelyAvailable;
     public string LikelyAvailable
     {
@@ -1249,30 +1215,6 @@ public partial class GPRform : System.Web.UI.Page
         set { _likelyAvailable = value; }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private string Comments
     {
         get { return txtComments.InnerText; }
@@ -1292,15 +1234,9 @@ public partial class GPRform : System.Web.UI.Page
         //First Create the Address Info
         MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
         MailAddress to = new MailAddress(Email, FirstName + " " + LastName);
-        //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
-        //MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
 
         //Construct the email - just simple text email
         MailMessage message = new MailMessage(from, to);
-        //message.CC.Add(cc);
-        //message.Bcc.Add(bcc);
-        message.Bcc.Add("aaron.baker@strongbrook.com");
-        message.Bcc.Add("paul.janson@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
         #endregion Email Header Properties
@@ -1332,36 +1268,27 @@ public partial class GPRform : System.Web.UI.Page
             If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
         </p>
         <p>
-            In the meantime, feel free to visit {12}.Strongbrook.com/irc for more information: 
-            On this site you will be able to download our book, The Strait Path To Real Estate Wealth, for free if you enter the code, “FREE”. 
-            You will also be able to access several of our most recent completed real estate deals, reports, and what people all over the country are saying about Strongbrook.
+            In the meantime, feel free to visit <strong>http://{9}.strongbrook.com</strong> for more information: 
+            On this site you will be able to download a free digital copy of our 233 page hard cover book, <i>The Strait Path To Real Estate Wealth.</i> Simply enter the code, “FREE”.
+            You will also be able to access reports of our most recent completed real estate transactions and learn what people all over the country are saying about Strongbrook.
         </p>
         <p>
             We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
         </p>
-        <br />
-        <br />
         <p>
         <strong>To Your Success,                        </strong>
         <br />  The Strongbrook Team
         </p>
+        <br />
         <strong><u>The information you provided</u>     </strong>
         <p>     Name: {0} {1}                  </p>
         <p>     Main Phone: {2}                         </p>
         <p>     Secondary Phone: {3}                    </p>
         <p>     Email Address: {4}                      </p>
         <p>     Likely Available: {5}                   </p>
-
         <p>     Date Requested if any: {7}              </p>
         <p>     Time Requested if any: {8}              </p>
-        <p>     Your TimeZone: {6}                      </p>
-        <br />
-        <br />
-        <p><u>  Enroller Information:                   </u>
-        <br />  {9}
-        <br />  {10}
-        <br />  {11}
-        </p>
+        <p>     Your Time Zone: {6}                     </p>
         ", FirstName // 0
          , LastName // 1
          , Phone1 // 2
@@ -1370,18 +1297,14 @@ public partial class GPRform : System.Web.UI.Page
          , LikelyAvailable // 5
          , TimeZone // 6
          , AppointmentDate // 7
-         
          , AppointmentTimeSelectedByTheProspect // 8
-         , CurrentUser_FirstName + " " + CurrentUser_LastName // 9
-         , CurrentUser_Email // 10
-         , CurrentUser_Phone  // 11
-         , CurrentUser_WebAlias // 12
+         , CurrentUser_WebAlias // 9
          );
 
         message.Body = formattedMessage.ToString();
         #endregion Email Message Body
 
-        #region Main Mail server connection properties
+        #region Mail server connection properties
         //Email SMTP Settings
         Int16 port = 25;
         SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
@@ -1390,17 +1313,7 @@ public partial class GPRform : System.Web.UI.Page
         client.UseDefaultCredentials = false;
 
         client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
-        #endregion Main Mail server connection properties
-
-        #region Secondary Mail server connection properties. Use this as a backup if necessary!
-        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
-
-        //// Use these properties for a secure SMTP connection.
-        //client.UseDefaultCredentials = true;
-        //client.EnableSsl = true;
-
-        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
-        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+        #endregion Mail server connection properties
 
         #region Attempt to send the message
         try
@@ -1427,16 +1340,10 @@ public partial class GPRform : System.Web.UI.Page
         //First Create the Address Info
         MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
         MailAddress to = new MailAddress(CurrentUser_Email, CurrentUser_FirstName + " " + CurrentUser_LastName);
-        //MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
-        //MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
 
         //Construct the email - just simple text email
         MailMessage message = new MailMessage(from, to);
-        //message.CC.Add(cc);
-        //message.Bcc.Add(bcc);
-        message.Bcc.Add("aaron.baker@strongbrook.com");
-        message.Bcc.Add("paul.janson@strongbrook.com");
-        message.Subject = string.Format("New Game Plan requested submitted by {0} {1}", FirstName, LastName);
+        message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
         #endregion Email Header Properties
 
@@ -1450,22 +1357,23 @@ public partial class GPRform : System.Web.UI.Page
             <strong>Requested Contact Time (If the prospect requested a specific date and time to be contacted.)</strong><br />
             {7}<br />
             {8}<br />
+            {6}<br />
             <strong>If possible, you may want to do a follow up call with them to see how it went.</strong>
         </p>
-        <br />
-        <p>
-        <strong><u>The prospects information</u>        </strong>
-        <p>     Prospect Name: {0} {1}                  </p>
-        <p>     Main Phone: {2}                         </p>
-        <p>     Secondary Phone: {3}                    </p>
-        <p>     Email Address: {4}                      </p>
-        <p>     Prospects TimeZone: {6}                 </p>
-        <p>     Comments: {9}                           </p>
-        <br />
         <p>
         <strong>To Your Success,                        </strong>
         <br />  The Strongbrook Team
         </p>
+        <br />
+        <br />
+        <p>
+        <strong><u>The prospect's information</u>       </strong>
+        <p>     Prospect Name: {0} {1}                  </p>
+        <p>     Main Phone: {2}                         </p>
+        <p>     Secondary Phone: {3}                    </p>
+        <p>     Email Address: {4}                      </p>
+        <p>     Prospects Time Zone: {6}                </p>
+        <p>     Comments: {9}                           </p>
         ", FirstName // 0
          , LastName // 1
          , Phone1 // 2
@@ -1481,7 +1389,7 @@ public partial class GPRform : System.Web.UI.Page
         message.Body = formattedMessage.ToString();
         #endregion Email Message Body
 
-        #region Main Mail server connection properties
+        #region Mail server connection properties
         //Email SMTP Settings
         Int16 port = 25;
         SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
@@ -1490,17 +1398,7 @@ public partial class GPRform : System.Web.UI.Page
         client.UseDefaultCredentials = false;
 
         client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
-        #endregion Main Mail server connection properties
-
-        #region Secondary Mail server connection properties. Use this as a backup if necessary!
-        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
-
-        //// Use these properties for a secure SMTP connection.
-        //client.UseDefaultCredentials = true;
-        //client.EnableSsl = true;
-
-        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
-        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+        #endregion Mail server connection properties
 
         #region Attempt to send the message
         try
@@ -1534,8 +1432,6 @@ public partial class GPRform : System.Web.UI.Page
         MailMessage message = new MailMessage(from, to);
         message.CC.Add(cc);
         message.Bcc.Add(bcc);
-        message.Bcc.Add("aaron.baker@strongbrook.com");
-        message.Bcc.Add("paul.janson@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
         #endregion Email Header Properties
@@ -1547,17 +1443,17 @@ public partial class GPRform : System.Web.UI.Page
         formattedMessage.AppendFormat(@"
         <h1>    New Game Plan Request for: {0} {1}      </h1>
         <br />
+        <p>     Order ID: {14}                          </p>
         <p>     Prospect Name: {0} {1}                  </p>
         <p>     Main Phone: {2}                         </p>
         <p>     Secondary Phone: {3}                    </p>
         <p>     Email Address: {4}                      </p>
         <p>     Likely Available: {5}                   </p>
-        <p>     Prospects TimeZone: {6}                 </p>
+        <p>     Prospects Time Zone: {6}                </p>
         <p>     Date Requested if any: {7}              </p>
         <p>     Time Requested if any: {8}              </p>
         <p>     Estimated Net Worth: {9}                </p>
-        <br />
-        <p><u>  Comments:                                </u>  
+        <p><u>  Comments:                               </u>  
         <br />  {10}
         <br />
         <p><u>  Enroller Information:                   </u>
@@ -1579,12 +1475,13 @@ public partial class GPRform : System.Web.UI.Page
          , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
          , CurrentUser_Email // 12
          , CurrentUser_Phone  // 13
+         , orderID // 14
          );
 
         message.Body = formattedMessage.ToString();
         #endregion Email Message Body
 
-        #region Main Mail server connection properties
+        #region Mail server connection properties
         //Email SMTP Settings
         Int16 port = 25;
         SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
@@ -1593,17 +1490,7 @@ public partial class GPRform : System.Web.UI.Page
         client.UseDefaultCredentials = false;
 
         client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
-        #endregion Main Mail server connection properties
-
-        #region Secondary Mail server connection properties. Use this as a backup if necessary!
-        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
-
-        //// Use these properties for a secure SMTP connection.
-        //client.UseDefaultCredentials = true;
-        //client.EnableSsl = true;
-
-        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
-        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+        #endregion Mail server connection properties
 
         #region Attempt to send the message
         try
@@ -1637,28 +1524,5 @@ public partial class GPRform : System.Web.UI.Page
             writer.Write("We're sorry, your request could not be completed.  If this problem persists, please contact customer support " + ex.ToString());
         }
     }
-    #endregion
-
-    #region Error Handling
-    public string Message
-    {
-        get
-        {
-            return _message;
-        }
-        set
-        {
-            _message += value;
-            //ShowMessage.Value = "True";
-        }
-    }
-    private string _message;
-
-    private void ClearMessage()
-    {
-        Message = string.Empty;
-        //ShowMessage.Value = "";
-    }
-
     #endregion
 }

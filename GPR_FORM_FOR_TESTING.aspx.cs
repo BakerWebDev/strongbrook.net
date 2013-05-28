@@ -337,13 +337,13 @@ public partial class GPRTestform : System.Web.UI.Page
         firstAvailableTime.Items.Add(new ListItem("Afternoon"));
         firstAvailableTime.Items.Add(new ListItem("Evening"));
 
-        drdlTimeZone.Items.Clear();
-        drdlTimeZone.Items.Add(new ListItem("Select Your Time Zone"));
-        drdlTimeZone.Items.Add(new ListItem("Hawaii Time"));
-        drdlTimeZone.Items.Add(new ListItem("Pacific Time"));
-        drdlTimeZone.Items.Add(new ListItem("Mountain Time"));
-        drdlTimeZone.Items.Add(new ListItem("Central Time"));
-        drdlTimeZone.Items.Add(new ListItem("Eastern Time"));
+        ddlTimeZone.Items.Clear();
+        ddlTimeZone.Items.Add(new ListItem("Select Your Time Zone"));
+        ddlTimeZone.Items.Add(new ListItem("Hawaii Time"));
+        ddlTimeZone.Items.Add(new ListItem("Pacific Time"));
+        ddlTimeZone.Items.Add(new ListItem("Mountain Time"));
+        ddlTimeZone.Items.Add(new ListItem("Central Time"));
+        ddlTimeZone.Items.Add(new ListItem("Eastern Time"));
 
     }
     private void PopulateNetWorthFields()
@@ -667,8 +667,8 @@ public partial class GPRTestform : System.Web.UI.Page
 
     public string TimeZone
     {
-        get { return drdlTimeZone.SelectedValue; }
-        set { drdlTimeZone.SelectedValue = value; }
+        get { return ddlTimeZone.SelectedValue; }
+        set { ddlTimeZone.SelectedValue = value; }
     }
     public string AppointmentDate
     {
