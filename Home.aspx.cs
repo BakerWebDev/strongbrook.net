@@ -471,7 +471,8 @@ public partial class Home : System.Web.UI.Page
         var query = ExigoApiContext.CreateODataContext().PeriodVolumes
             .Where(c => c.CustomerID == Identity.Current.CustomerID)
             .Where(c => c.PeriodTypeID == PeriodTypes.Weekly)
-            .Where(c => c.Period.IsCurrentPeriod);
+            //.Where(c => c.Period.IsCurrentPeriod);
+            .Where(c => PeriodID == 18);
         #endregion Query the OData tables
 
         #region Fetch the nodes
