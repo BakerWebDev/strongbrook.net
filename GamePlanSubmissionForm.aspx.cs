@@ -637,7 +637,7 @@ public partial class GPRform : System.Web.UI.Page
             
     }
     public string TimeFrameTypeParagraph { get; set; }
-    public string TimeFrameType
+    public string TimeFrameTypeForProspect
     {
         get
         {
@@ -646,23 +646,161 @@ public partial class GPRform : System.Web.UI.Page
                 case "schedule": var paragraphOne = new StringBuilder();
                     #region Paragraph_1
                     paragraphOne.AppendFormat(@"
-                    <table>
-                        <tr>
-                            <td>
-                                Comments: {0}
-                            </td>
-                        </tr>
-                    </table>
-                    "
-                    , Comments
-                    );
+                    <h1>Congratulations {0}!</h1>
+                    <p>
+                        By requesting your customized Game Plan Report you've taken your first step to creating positive cash-flow for life!
+                    </p>
+                    <p>
+                        A Game Plan Counselor will be contacting you at your selected appointment time. He or she will spend a few minutes asking you questions that will 
+                        be used to generate your customized Game Plan. He or she will then email you your game plan options; or if you are an ideal candidate for the program, 
+                        will schedule an appointment for you to meet with a Game Plan Specialist from the executive team to go over your custom Game Plan Report.
+                    </p>
+                    <p>
+                        <strong>The date and time you requested to be contacted for your Game Plan Report is:<br />
+                        {5}<br />
+                        {6}<br />
+                        {7}<br />
+                        Make sure to mark your calendar for this conversation and be sure to call us back if you miss our call.</strong>
+                        <br />
+                    </p>
+                    <p>
+                        If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
+                    </p>
+                    <p>
+                        In the meantime, feel free to visit <strong>http://{8}.strongbrook.com</strong> for more information: 
+                        On this site you will be able to download a free digital copy of our 233 page hard cover book, <i>The Strait Path To Real Estate Wealth.</i> Simply enter the code, “FREE”.
+                        You will also be able to access reports of our most recent completed real estate transactions and learn what people all over the country are saying about Strongbrook.
+                    </p>
+                    <p>
+                        We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
+                    </p>
+                    <p>
+                    <strong>To Your Success,                        </strong>
+                    <br />  The Strongbrook Team
+                    </p>
+                    <br />
+                    <strong><u>The information you provided</u>     </strong>
+                    <p>     Name: {0} {1}                  </p>
+                    <p>     Main Phone: {2}                         </p>
+                    <p>     Secondary Phone: {3}                    </p>
+                    <p>     Email Address: {4}                      </p>
+                    <p>     Date Requested if any: {5}              </p>
+                    <p>     Time Requested if any: {6}              </p>
+                    <p>     Your Time Zone: {7}                     </p>
+                    ", FirstName // 0
+                     , LastName // 1
+                     , Phone1 // 2
+                     , Phone2 // 3
+                     , Email // 4
+                     , AppointmentDate // 5
+                     , AppointmentTimeSelectedByTheProspect // 6
+                     , TimeZone // 7
+                     , CurrentUser_WebAlias // 8
+                     );
                     #endregion Paragraph_1
                     TimeFrameTypeParagraph = paragraphOne.ToString();
                     break;
-                case "request": if (_likelyAvailable != "")
-                    {
-                        var paragraphTwo = new StringBuilder();
-                        #region Paragraph_2
+                case "request": var paragraphTwo = new StringBuilder();
+                    #region Paragraph_2
+                        paragraphTwo.AppendFormat(@"
+                        <h1>Congratulations {0}!</h1>
+                        <p>
+                            By requesting your customized Game Plan Report you've taken your first step to creating positive cash-flow for life!
+                        </p>
+                        <p>
+                            A Game Plan Counselor will be contacting you at your selected appointment time. He or she will spend a few minutes asking you questions that will 
+                            be used to generate your customized Game Plan. He or she will then email you your game plan options; or if you are an ideal candidate for the program, 
+                            will schedule an appointment for you to meet with a Game Plan Specialist from the executive team to go over your custom Game Plan Report.
+                        </p>
+                        <p>
+                            <strong>The time of day selected for the appointment is:</strong><br />
+                            Any {5} in the {6} time zone.<br />
+                            Make sure to mark your calendar for this conversation and be sure to call us back if you miss our call.</strong>
+                            <br />
+                        </p>
+                        <p>
+                            If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
+                        </p>
+                        <p>
+                            In the meantime, feel free to visit <strong>http://{7}.strongbrook.com</strong> for more information: 
+                            On this site you will be able to download a free digital copy of our 233 page hard cover book, <i>The Strait Path To Real Estate Wealth.</i> Simply enter the code, “FREE”.
+                            You will also be able to access reports of our most recent completed real estate transactions and learn what people all over the country are saying about Strongbrook.
+                        </p>
+                        <p>
+                            We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
+                        </p>
+                        <p>
+                        <strong>To Your Success,                        </strong>
+                        <br />  The Strongbrook Team
+                        </p>
+                        <br />
+                        <strong><u>The information you provided</u>     </strong>
+                        <p>     Name: {0} {1}                  </p>
+                        <p>     Main Phone: {2}                         </p>
+                        <p>     Secondary Phone: {3}                    </p>
+                        <p>     Email Address: {4}                      </p>
+                        <p>     Likely Available: {5}                   </p>
+                        <p>     Your Time Zone: {6}                     </p>
+                        ", FirstName // 0
+                         , LastName // 1
+                         , Phone1 // 2
+                         , Phone2 // 3
+                         , Email // 4
+                         , LikelyAvailable // 5
+                         , TimeZone // 6
+                         , CurrentUser_WebAlias // 7
+                         );
+                        #endregion Paragraph_2
+                    TimeFrameTypeParagraph = paragraphTwo.ToString();
+                    break;
+            }
+            return TimeFrameTypeParagraph;
+        }
+    }
+    public string TimeFrameTypeForUpline
+    {
+        get
+        {
+            switch (appointmentType)
+            {
+                case "schedule": var paragraphOne = new StringBuilder();
+                    #region Paragraph_1
+                    paragraphOne.AppendFormat(@"
+                    <h1>Congratulations, {0} {1} has just requested a Game Plan!</h1>
+                    <p>
+                        <strong>Requested Contact Time (If the prospect requested a specific date and time to be contacted.)</strong><br />
+                        {2}<br />
+                        {3}<br />
+                        {4}<br />
+                        <strong>If possible, you may want to do a follow up call with them to see how it went.</strong>
+                    </p>
+                    <p>
+                    <strong>To Your Success,                        </strong>
+                    <br />  The Strongbrook Team
+                    </p>
+                    <br />
+                    <br />
+                    <p>
+                    <strong><u>The prospect's information</u>       </strong>
+                    <p>     Prospect Name: {0} {1}                  </p>
+                    <p>     Main Phone: {5}                         </p>
+                    <p>     Secondary Phone: {6}                    </p>
+                    <p>     Email Address: {7}                      </p>
+                    <p>     Prospects Time Zone: {4}                </p>
+                    ", FirstName // 0
+                     , LastName // 1
+                     , AppointmentDate // 2
+                     , AppointmentTimeSelectedByTheProspect // 3
+                     , TimeZone // 4
+                     , Phone1   // 5
+                     , Phone2   // 6
+                     , Email    // 7
+                     );
+                    #endregion Paragraph_1
+                    TimeFrameTypeParagraph = paragraphOne.ToString();
+                    break;
+                case "request": var paragraphTwo = new StringBuilder();
+                    #region Paragraph_2
                         paragraphTwo.AppendFormat(@"
                         <h1>Congratulations, {0} {1} has just requested a Game Plan!</h1>
                         <p>
@@ -692,26 +830,95 @@ public partial class GPRform : System.Web.UI.Page
                          , Email // 6
                          );
                         #endregion Paragraph_2
-                        TimeFrameTypeParagraph = paragraphTwo.ToString();
-                    }
-                    else
-                    {
-                        var paragraphThree = new StringBuilder();
-                        #region Paragraph_3
-                        paragraphThree.AppendFormat(@"
-                        <table>
-                            <tr>
-                                <td>
-                                    Comments: {0}
-                                </td>
-                            </tr>
-                        </table>
-                        "
-                        , Comments
-                        );
-                        #endregion Paragraph_3
-                        TimeFrameTypeParagraph = paragraphThree.ToString();
-                    }
+                    TimeFrameTypeParagraph = paragraphTwo.ToString();
+                    break;
+            }
+            return TimeFrameTypeParagraph;
+        }
+    }
+    public string TimeFrameTypeForCorporate
+    {
+        get
+        {
+            switch (appointmentType)
+            {
+                case "schedule": var paragraphOne = new StringBuilder();
+                    #region Paragraph_1
+                    paragraphOne.AppendFormat(@"
+                    <h1>    New Game Plan Request for: {1} {2}      </h1>
+                    <br />
+                    <p>     Order ID: {0}                          </p>
+                    <p>     Prospect Name: {1} {2}                  </p>
+                    <p>     Main Phone: {3}                         </p>
+                    <p>     Secondary Phone: {4}                    </p>
+                    <p>     Email Address: {5}                      </p>
+                    <p>     Date Requested if any: {6}              </p>
+                    <p>     Time Requested if any: {7}              </p>
+                    <p>     Prospects Time Zone: {8}                </p>
+                    <p>     Estimated Net Worth: {9}                </p>
+                    <p><u>  Comments:                               </u>  
+                    <br />  {10}
+                    <br />
+                    <p><u>  Enroller Information:                   </u>
+                    <br />  {11}
+                    <br />  {12}
+                    <br />  {13}
+                    </p>
+                    ", orderID // 0
+                     , FirstName // 1
+                     , LastName // 2
+                     , Phone1 // 3
+                     , Phone2 // 4
+                     , Email // 5
+                     , AppointmentDate // 6
+                     , AppointmentTimeInCorporateTimeZone // 7
+                     , TimeZone // 8
+                     , NetWorth // 9
+                     , Comments  // 10
+                     , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
+                     , CurrentUser_Email // 12
+                     , CurrentUser_Phone  // 13
+                     );
+                    #endregion Paragraph_1
+                    TimeFrameTypeParagraph = paragraphOne.ToString();
+                    break;
+                case "request": var paragraphTwo = new StringBuilder();
+                    #region Paragraph_2
+                        paragraphTwo.AppendFormat(@"
+                        <h1>    New Game Plan Request for: {1} {2}      </h1>
+                        <br />
+                        <p>     Order ID: {0}                          </p>
+                        <p>     Prospect Name: {1} {2}                  </p>
+                        <p>     Main Phone: {3}                         </p>
+                        <p>     Secondary Phone: {4}                    </p>
+                        <p>     Email Address: {5}                      </p>
+                        <p>     Likely Available: {6}                   </p>
+                        <p>     Prospects Time Zone: {7}                </p>
+                        <p>     Estimated Net Worth: {8}                </p>
+                        <p><u>  Comments:                               </u>  
+                        <br />  {9}
+                        <br />
+                        <p><u>  Enroller Information:                   </u>
+                        <br />  {10}
+                        <br />  {11}
+                        <br />  {12}
+                        </p>
+                        ", orderID // 0
+                         , FirstName // 1
+                         , LastName // 2
+                         , Phone1 // 3
+                         , Phone2 // 4
+                         , Email // 5
+                         , LikelyAvailable // 6
+                         , TimeZone // 7
+                         , NetWorth // 8
+                         , Comments  // 9
+                         , CurrentUser_FirstName + " " + CurrentUser_LastName // 10
+                         , CurrentUser_Email // 11
+                         , CurrentUser_Phone  // 12
+                         );
+                        #endregion Paragraph_2
+                    TimeFrameTypeParagraph = paragraphTwo.ToString();
                     break;
             }
             return TimeFrameTypeParagraph;
@@ -1464,7 +1671,7 @@ public partial class GPRform : System.Web.UI.Page
         #endregion Email Header Properties
 
         #region Email Message Body
-        message.Body = TimeFrameType;
+        message.Body = TimeFrameTypeForUpline;
         #endregion Email Message Body
 
         //#region Main Mail server connection properties
