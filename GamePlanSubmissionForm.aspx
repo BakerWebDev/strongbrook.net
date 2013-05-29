@@ -244,7 +244,7 @@
                                 <tbody enableviewstate="False">
 
 
-
+<%--
                                     <tr id="FirstName" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
@@ -280,16 +280,16 @@
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
                                                 <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="Email" name="email" runat="server" Data="email" 
-                                                    Text="test@strongbrook.com" />
+                                                    Text="aaronbaker315@me.com" />
                                             </div>
                                         </td>
+--%>
 
 
 
 
 
 
-<%--
                                     <tr id="FirstName" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
@@ -325,7 +325,7 @@
                                                 <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="Email" name="email" runat="server" Data="email" />
                                             </div>
                                         </td>
---%>
+
 
 
 
