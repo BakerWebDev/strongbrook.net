@@ -38,6 +38,7 @@
             $('#Date1').addClass("txtDate1OnLoad");
             $('#txtDate1Label').show();
             $('#txtDate1Label').addClass("txtDate1LabelOnLoad");
+            $('#ddlfirstAvailableTimeLabel').hide();
         }
 
         function showRequest() {

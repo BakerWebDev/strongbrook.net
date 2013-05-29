@@ -127,11 +127,7 @@ public static class GlobalSettings
     {
         public static string ReplicatedSite                     = "strongbrook.com";
         public static string Signup                             = "https://strongbrookenroll.secure-backoffice.net/";
-
-
-        public static string EmailVerification                  = "http://www.strongbrook.com/VerifyOptIn.aspx";
-
-
+        public static string EmailVerification                  = "http://www.strongbrook.me/VerifyOptIn.aspx";
         public static string ResetPassword                      = "http://www.myexigo.com/public/{0}/ResetPassword.aspx";
         public static string Twitter                            = "http://www.twitter.com/" + Company.Twitter;
         public static string Facebook                           = "http://www.facebook.com/" + Company.Facebook;

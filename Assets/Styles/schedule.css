@@ -272,7 +272,7 @@
                 z-index: 1;
                 bottom: 70px;
                 left: 10px;
-                max-width: 81px;
+                max-width: 85px;
                 color: #888;
                 font-size: 11px;
             }
@@ -282,7 +282,7 @@
                 z-index: 0;
                 top: 55px;
                 left: 10px;
-                max-width: 81px;
+                max-width: 85px;
                 color: #ffffff;
                 display: none;
             }

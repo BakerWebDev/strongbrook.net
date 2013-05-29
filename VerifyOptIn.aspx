@@ -6,7 +6,7 @@
 <asp:Content ID="Content1" runat="server" ContentPlaceHolderID="Content">
     <asp:Panel ID="Panel_Verified" runat="server">
         <h2>Email Communications</h2>
-        <p>Thank you! Your email address '<%=Email %>' has been verified, and you have been successfully subscribed to email communications from '<% %> Company Name.</p>
+        <p>Thank you! Your email address '<%=Email %>' has been verified, and you have been successfully subscribed to email communications from <%=GlobalSettings.Company.Name%>.</p>
 
     </asp:Panel>
     <asp:Panel ID="Panel_AccessDenied" runat="server" Visible="false">

@@ -30,107 +30,16 @@
                     var currentOptInStatus = <%=Customer.IsSubscribedToBroadcasts.ToString().ToLower() %>;
                     var currentEmail = '<%=Customer.Email %>';
 
-
-
-
-
-
-
-
                     // Validates the page and calls the PostBack event that fires the email server-side.
                     function SubmitForm() {
                         // First check to see if the page is valid. 
                         // If the page does not have any .NET field validators, Page_ClientValidate() will not exist. We check to see if it exists, and act appropriately.
                         var PageIsValid = true;
-                        alert('1: ' + PageIsValid);
-
-
 
                         if(typeof(Page_ClientValidate) == 'function') Page_ClientValidate = 'undefined'; // PageIsValid = !Page_ClientValidate();
 
-
-
-
-
-                        alert('2: ' + PageIsValid);
-                        //if(typeof(Page_ClientValidate) != 'function') alert('The typeof Page Validate is: ' + typeof(Page_ClientValidate)).val();
-                        //alert('3: ' + PageIsValid);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         // If the page is valid, hit the PostBack and fire the email server-side.
                         if (PageIsValid) {
-                            alert('The page is valid');
                             if(currentOptInStatus) {
                                 if(currentEmail != $('#txtEmail').val()) {
                                     $.msgbox("Are you sure you want your email notifications sent to '" + $('#txtEmail').val() + "' instead of '<%=Customer.Email %>'?", {
@@ -152,9 +61,6 @@
                             else {
                                 <%=Page.ClientScript.GetPostBackEventReference(this, "SubmitForm") %>
                             }
-                        }
-                        else{
-                            alert('The page is NOT Valid');
                         }
                     }
 
