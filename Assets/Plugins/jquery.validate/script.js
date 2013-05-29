@@ -76,6 +76,7 @@ $(document).ready(function () {
                 $('#form1').validate({ ignore: '#firstAvailableTime' });
                 $('#txtDate1Label').addClass("txtDate1LabelLoaded");
                 $('#ddlAppTimeLabel').addClass("ddlAppTimeLabelLoaded");
+                $('#ddlfirstAvailableTimeLabel').addClass("ddlfirstAvailableTimeLabelLoaded");
             }
         }
     });

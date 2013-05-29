@@ -9,44 +9,46 @@
 
 /* New styles below */
 
-		label.valid {
-		  width: 1px;
-		  height: 20px;
-		  background: url(assets/img/valid.png) center center no-repeat;
-		  display: inline-block;
-		  text-indent: -9999px;
-          position:relative;
-          bottom:4px;
-          left:1px;
-		}
-		label.error {
-			font-weight: normal;
-			color: red;
-			padding: 0px 10px;
-            font-size:12px;
-            margin-bottom:2px;
-            margin-top:-14px;
-		}
+label.valid {
+    width: 1px;
+    height: 20px;
+    background: url(assets/img/valid.png) center center no-repeat;
+    display: inline-block;
+    text-indent: -9999px;
+    position: relative;
+    bottom: 4px;
+    left: 1px;
+}
+
+label.error {
+    font-weight: normal;
+    color: red;
+    padding: 0px 10px;
+    font-size: 12px;
+    margin-bottom: 2px;
+    margin-top: -14px;
+}
 
 
-        /* Special formatting for radio button labels */
-		#RadioButtons label.error {
-			font-weight: normal;
-			color: red;
-			padding: 0px 0px;
-            font-size:12px;
-            margin:0px;
-            position:relative;
-            top:0px;
-            left:0px;
-		}
-		#RadioButtons label.valid {
-		  width: 20px;
-		  height: 27px;
-		  background: url(assets/img/valid.png) center center no-repeat;
-		  display: inline-block;
-		  text-indent: -9999px;
-          position:relative;
-          bottom:4px;
-          vertical-align:top;
-		}
+/* Special formatting for radio button labels */
+#RadioButtons label.error {
+    font-weight: normal;
+    color: red;
+    padding: 0px 0px;
+    font-size: 12px;
+    margin: 0px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+
+#RadioButtons label.valid {
+    width: 20px;
+    height: 27px;
+    background: url(assets/img/valid.png) center center no-repeat;
+    display: inline-block;
+    text-indent: -9999px;
+    position: relative;
+    bottom: 4px;
+    vertical-align: top;
+}

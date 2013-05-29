@@ -267,6 +267,27 @@
                 display: none;
             }
 
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .ddlfirstAvailableTimeLabelOnLoad {
+                position: relative;
+                z-index: 1;
+                bottom: 70px;
+                left: 10px;
+                max-width: 81px;
+                color: #888;
+                font-size: 11px;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .ddlfirstAvailableTimeLabelLoaded {
+                position: relative;
+                z-index: 0;
+                top: 55px;
+                left: 10px;
+                max-width: 81px;
+                color: #ffffff;
+                display: none;
+            }
+
+
             .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection #RadioButtons label {
                 font-size: 11px;
                 margin: 0px;

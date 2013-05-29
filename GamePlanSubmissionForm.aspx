@@ -28,6 +28,7 @@
             $('#TimeZoneDropDownOnload').addClass("timeZoneDropDownOnload");
             $('#txtDate1Label').hide();
             $('#ddlAppTimeLabel').hide();
+            $('#ddlfirstAvailableTimeLabel').hide();
             $('#txtCommentsLabel').addClass("txtCommentsOnLoad");
         });
 
@@ -40,10 +41,13 @@
         }
 
         function showRequest() {
+            $('#ddlfirstAvailableTimeLabel').show();
+            $('#ddlfirstAvailableTimeLabel').addClass("ddlfirstAvailableTimeLabelOnLoad");
             $('#LikelyAvailable').show();
             $('#DatePicker').hide();
             $('#Time').hide();
             $('#txtDate1Label').hide();
+
         }
 
         function showRadioButtons() {
@@ -115,10 +119,20 @@
             $('#ddlAppTimeLabel').addClass("ddlAppTimeLabelLoaded");
 
             // Store and send appointment time information to the server
-            var selectedTimeFrame = $("#ddlAppTime").val();
-            $.post("GamePlanSubmissionForm.aspx", { timeFrameSelected: selectedTimeFrame }, function (data2) {
+            var selectedTime = $("#ddlAppTime").val();
+            $.post("GamePlanSubmissionForm.aspx", { timeFrameSelected: selectedTime }, function (data2) {
                 $("#txtSelectedTimeFrame").html(data2);
             });
+        }
+
+        function selectedTimeFrame() {
+            $('#ddlfirstAvailableTimeLabel').hide();
+            $('#ddlfirstAvailableTimeLabel').addClass("ddlfirstAvailableTimeLabelLoaded");
+        }
+
+        function submitClicked() {
+            $('#ddlfirstAvailableTimeLabel').hide();
+            $('#ddlfirstAvailableTimeLabel').addClass("ddlfirstAvailableTimeLabelLoaded");
         }
 
     </script>
@@ -132,35 +146,62 @@
         var timzn = 0;
         var date = 0;
         var time = 0;
-        var fstav = 0;
+        var fstAvail = 0;
         var rdosh = 0;
         var rdorq = 0;
         $(function () {
             $("#submitButton").click(function () {
-                if ($('#txtFirstName').val() != "") { fname = 1; };
-                if ($('#txtLastName').val() != "") { lname = 1; };
-                if ($('#txtPhone1').val() != "") { phone = 1; };
-                if ($('#txtEmail').val() != "") { email_ = 1; };
-                if ($('#ddlTimeZone').val() != "") { timzn = 1; };
 
-                var e = document.getElementById("ddlAppTime");
-                var strUser = e.options[e.selectedIndex].value;
-                if (strUser != "") { time = 1; };
+                if ($('#RadioButtonSchedule').is(':checked')) {
+                    var rdosh = 1;
 
-                if ($('#firstAvailableTime').val() != "Best Time to Call") { fstav = 1; };
-                if ($('#RadioButtonSchedule').is(':checked')) { rdosh = 1; rdorq = 0; };
-                if ($('#RadioButtonRequest').is(':checked')) { rdorq = 1; rdosh = 0 };
-                if (time == 1) { date = 1 };
+                    if ($('#txtFirstName').val() != "") { fname = 1; };
+                    if ($('#txtLastName').val() != "") { lname = 1; };
+                    if ($('#txtPhone1').val() != "") { phone = 1; };
+                    if ($('#txtEmail').val() != "") { email_ = 1; };
 
-                if (fname == 1 && lname == 1 && phone == 1 && email_ == 1 && timzn == 1 && date == 1 && time == 1 && rdosh == 1) {
-                    this.value = 'Processing...' + $('#Date1').val() + " " + $('#ddlAppTime').val();
-                }
-                else if (fname == 1 && lname == 1 && phone == 1 && email == 1 && fstav == 1 && rdorq == 1) {
-                    this.value = 'Processing...';
-                }
-                else {
-                    alert('Missing required information.\nPlease double check and resubmit.');
-                }
+                    var a = document.getElementById("ddlAppTime");
+                    var b = a.options[a.selectedIndex].value;
+                    if (b != "") { time = 1; };
+
+                    if ($('#ddlTimeZone').val() != "") { timzn = 1; };
+                    if (time == 1) { date = 1 };
+
+
+                    if (fname == 1 && lname == 1 && phone == 1 && email_ == 1 && timzn == 1 && date == 1 && time == 1 && rdosh == 1) {
+                        this.value = 'Processing...' + $('#Date1').val() + " " + $('#ddlAppTime').val();
+                    }
+                    else {
+                        alert('Missing required information.\nPlease double check and resubmit.');
+                    }
+                    //alert('fname: ' + $('#txtFirstName').val() + '\n' + 'lname: ' + $('#txtLastName').val() + '\n' + 'phone: ' + $('#txtPhone1').val() + '\n' + 'email: ' + $('#txtEmail').val() + '\n' + 'timezone: ' + $('#drdlTimeZone').val() + '\n' + 'date: ' + $('#Date1').val() + '\n' + 'time: ' + $('#drdlAppTime').val() + '\n' + 'firstAvail: ' + $('#firstAvailableTime').val());
+                    //alert('fname: ' + fname + '\n' + 'lname: ' + lname + '\n' + 'phone: ' + phone + '\n' + 'email: ' + email_ + '\n' + 'timezone: ' + timzn + '\n' + 'date: ' + date + '\n' + 'time: ' + time + '\n' + 'firstAvail: ' + fstAvail);
+                };
+
+
+                if ($('#RadioButtonRequest').is(':checked')) {
+                    var rdorq = 1;
+
+                    if ($('#txtFirstName').val() != "") { fname = 1; };
+                    if ($('#txtLastName').val() != "") { lname = 1; };
+                    if ($('#txtPhone1').val() != "") { phone = 1; };
+                    if ($('#txtEmail').val() != "") { email_ = 1; };
+                    if ($('#ddlTimeZone').val() != "") { timzn = 1; };
+
+                    var c = document.getElementById("firstAvailableTime");
+                    var d = c.options[c.selectedIndex].value;
+                    if (d != "") { fstAvail = 1; };
+
+
+                    if (fname == 1 && lname == 1 && phone == 1 && email_ == 1 && timzn == 1 && fstAvail == 1 && rdorq == 1) {
+                        this.value = 'Processing...' + 'Any' + " " + $('#firstAvailableTime').val() + " " + 'in the' + " " + $('#ddlTimeZone').val() + " " + 'Zone.';
+                    }
+                    else {
+                        alert('Missing required information.\nPlease double check and resubmit.');
+                    }
+                    //alert('fname: ' + $('#txtFirstName').val() + '\n' + 'lname: ' + $('#txtLastName').val() + '\n' + 'phone: ' + $('#txtPhone1').val() + '\n' + 'email: ' + $('#txtEmail').val() + '\n' + 'timezone: ' + $('#drdlTimeZone').val() + '\n' + 'date: ' + $('#Date1').val() + '\n' + 'time: ' + $('#drdlAppTime').val() + '\n' + 'firstAvail: ' + $('#firstAvailableTime').val());
+                    //alert('fname: ' + fname + '\n' + 'lname: ' + lname + '\n' + 'phone: ' + phone + '\n' + 'email: ' + email_ + '\n' + 'timezone: ' + timzn + '\n' + 'date: ' + date + '\n' + 'time: ' + time + '\n' + 'firstAvail: ' + fstAvail);
+                };
             });
         });
     </script>
@@ -201,6 +242,54 @@
                         <td id="FormFields" class="rightSide">
                             <table class="record">
                                 <tbody enableviewstate="False">
+
+
+
+                                    <tr id="FirstName" class="recordrow">
+                                        <td class="recordvalue">
+                                            <div class="fieldvalue">
+                                                <asp:TextBox CssClass="input textfield" ID="txtFirstName" name="FirstName" Placeholder="First Name" runat="server" Data="First Name" 
+                                                    Text="FirstName" />
+                                            </div>
+                                        </td>
+                                        <td class="recordvalue">
+                                            <div class="fieldvalue">
+                                                <asp:TextBox ID="txtLastName" name="LastName" Placeholder="Last Name"
+                                                    runat="server" Data="Last Name" CssClass="validate[required,custom[email]] text-input"
+                                                    Text="LastName" />
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr id="Phone1" class="recordrow">
+                                        <td class="recordvalue full">
+                                            <div class="fieldvalue">
+                                                <asp:TextBox CssClass="input textfield" ID="txtPhone1" name="homephone" runat="server" Placeholder="Phone 1" Data="Phone" 
+                                                    Text="444" />
+                                            </div>
+                                        </td>
+                                        <td class="recordvalue">
+                                            <div class="fieldvalue">
+                                                <asp:TextBox CssClass="input textfield" ID="txtPhone2" name="cellphone" runat="server" Placeholder="Phone 2 (optional)" Data="Phone"
+                                                    Text="555" />
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr id="Email" class="recordrow">
+                                        <td class="recordvalue">
+                                            <div class="fieldvalue">
+                                                <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="Email" name="email" runat="server" Data="email" 
+                                                    Text="test@strongbrook.com" />
+                                            </div>
+                                        </td>
+
+
+
+
+
+
+<%--
                                     <tr id="FirstName" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
@@ -236,13 +325,17 @@
                                                 <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="Email" name="email" runat="server" Data="email" />
                                             </div>
                                         </td>
+--%>
+
+
+
+
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
                                                 <asp:DropDownList ID="netWorth" ClientIDMode="Static" runat="server" />
                                             </div>
                                         </td>
                                     </tr>
-
                                     <tr id="TimeZone" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalueTimeSelection">
@@ -264,7 +357,7 @@
                                                     <asp:DropDownList ID="ddlAppTime" runat="server" onchange="sendTimeFrame();"></asp:DropDownList>
                                                 </div>
                                                 <div id="LikelyAvailable" class="recordvalue">
-                                                    <asp:DropDownList ID="firstAvailableTime" runat="server"></asp:DropDownList>
+                                                    <asp:DropDownList ID="firstAvailableTime" runat="server" onchange="selectedTimeFrame();"></asp:DropDownList>
                                                 </div>
                                                 <div id="RadioButtons">
                                                     <label for="RadioButtonSchedule">Schedule an Appointment</label>
@@ -276,6 +369,7 @@
 
                                                 <div id="txtDate1Label">Choose a Date</div>
                                                 <div id="ddlAppTimeLabel">Select a Time</div>
+                                                <div id="ddlfirstAvailableTimeLabel">Best Time to Call</div>
 
                                             </div>
                                         </td>
@@ -307,7 +401,7 @@
                                         <td colspan="2">
                                             <div style="width: 400px;">
                                                 <asp:Button ID="submitButton" runat="server" Text="Submit"
-                                                    CausesValidation="true" Style="float: right;" />
+                                                    CausesValidation="true" Style="float: right;" OnClientClick="submitClicked();" />
                                             </div>
                                         </td>
                                     </tr>
