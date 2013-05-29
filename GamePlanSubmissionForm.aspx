@@ -58,6 +58,7 @@
 
         function hideCommentsLabel() {
             $('#txtCommentsLabel').addClass("txtCommentsLoaded");
+            $('#txtComments').focus();
         }
 
         function checkDate(sender, args) {
@@ -245,7 +246,7 @@
                                 <tbody enableviewstate="False">
 
 
-<%--
+                                    <%--
                                     <tr id="FirstName" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
@@ -287,11 +288,7 @@
 --%>
 
 
-
-
-
-
-                                    <tr id="FirstName" class="recordrow">
+                                    <tr id="FirstName_LastName" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
                                                 <asp:TextBox CssClass="input textfield" ID="txtFirstName" name="FirstName" Placeholder="First Name" runat="server" Data="First Name" />
@@ -305,7 +302,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr id="Phone1" class="recordrow">
+                                    <tr id="Phone1_Phone2" class="recordrow">
                                         <td class="recordvalue full">
                                             <div class="fieldvalue">
                                                 <asp:TextBox CssClass="input textfield" ID="txtPhone1" name="homephone" runat="server" Placeholder="Phone 1"
@@ -320,25 +317,21 @@
                                         </td>
                                     </tr>
 
-                                    <tr id="Email" class="recordrow">
+                                    <tr id="Email_NetWorth" class="recordrow">
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
                                                 <asp:TextBox CssClass="input textfield" ID="txtEmail" Placeholder="Email" name="email" runat="server" Data="email" />
                                             </div>
                                         </td>
-
-
-
-
-
                                         <td class="recordvalue">
                                             <div class="fieldvalue">
                                                 <asp:DropDownList ID="netWorth" ClientIDMode="Static" runat="server" />
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr id="TimeZone" class="recordrow">
-                                        <td class="recordvalue">
+
+                                    <tr id="TimeZone_Comments" class="recordrow">
+                                        <td id="TimeZoneDropDown_DatePicker_TimeDropDown_LikelyAvailable_RadioButtons" class="recordvalue">
                                             <div class="fieldvalueTimeSelection">
                                                 <div id="TimeZoneDropDown">
                                                     <asp:DropDownList ID="ddlTimeZone" runat="server" onchange="showRadioButtons();" />
@@ -374,12 +367,12 @@
 
                                             </div>
                                         </td>
-                                        <td class="recordvalue" style="vertical-align: top;">
+                                        <td id="Comments" class="recordvalue" style="vertical-align: top;">
                                             <div class="fieldvalue">
                                                 <div class="border line" id="commentsborder" style="display: inline-block;">
                                                     <div class="textareabounds" id="commentsbody" style="width: 200px; min-height: 50px;">
                                                         <textarea id="txtComments" class="input textfield" cols="20" rows="5" runat="server" onclick="hideCommentsLabel();"></textarea>
-                                                        <div id="txtCommentsLabel">Any Special Instructions?</div>
+                                                        <div id="txtCommentsLabel" onclick="hideCommentsLabel();">Any Special Instructions?</div>
                                                     </div>
                                                     <div class="border-resize" id="commentsresize">
                                                     </div>
@@ -395,17 +388,21 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr id="spacer">
-                                        <td id="spanner" colspan="2"></td>
-                                    </tr>
-                                    <tr>
+
+                                    <tr id="spacer"><td id="spanner" colspan="2"></td></tr>
+
+                                    <tr id="Submit_Button">
                                         <td colspan="2">
                                             <div style="width: 400px;">
                                                 <asp:Button ID="submitButton" runat="server" Text="Submit"
                                                     CausesValidation="true" Style="float: right;" OnClientClick="submitClicked();" />
                                             </div>
+                                            <div style="width: 200px; height: 25px; float: right; padding-top:7px; font-weight:bold; font-size:11px;">
+                                                Please, only click Submit one time!
+                                            </div>
                                         </td>
                                     </tr>
+
                                 </tbody>
                             </table>
                         </td>
