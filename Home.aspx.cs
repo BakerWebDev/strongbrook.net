@@ -396,27 +396,6 @@ public partial class Home : System.Web.UI.Page
         // Return the nodes
         return nodes;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public List<ReportDataNode> FetchGPRMonthlyReportData()
     {
         #region Query the OData tables
@@ -447,34 +426,23 @@ public partial class Home : System.Web.UI.Page
         return nodes;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public ReportDataNode FetchPersonalGPRWeeklyReportData()
     {
+        #region Get the current weekly period
+        var context = ExigoApiContext.CreateWebServiceContext().GetRealTimeCommissions(new GetRealTimeCommissionsRequest
+        {
+            CustomerID = Identity.Current.CustomerID
+        }).Commissions[0];
+
+        var currentWeeklyPeriod = context.PeriodID;
+        #endregion Get the current weekly period
+
         #region Query the OData tables
         var query = ExigoApiContext.CreateODataContext().PeriodVolumes
             .Where(c => c.CustomerID == Identity.Current.CustomerID)
-            //.Where(c => c.PeriodTypeID == PeriodTypes.Monthly)
-            //.Where(c => c.Period.IsCurrentPeriod);
 
             .Where(c => c.PeriodTypeID == PeriodTypes.Weekly)
-            .Where(c => c.PeriodID == 79);
+            .Where(c => c.PeriodID == currentWeeklyPeriod);
 
         #endregion Query the OData tables
 
@@ -489,6 +457,8 @@ public partial class Home : System.Web.UI.Page
         // Return the nodes
         return nodes;
     }
+
+
 
     #endregion Fetch GPR Data
 

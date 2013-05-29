@@ -1667,7 +1667,7 @@ public partial class GPRform : System.Web.UI.Page
         MailMessage message = new MailMessage(from, to);
         message.CC.Add(cc);
         message.Bcc.Add(bcc);
-        //message.Bcc.Add("aaronbaker315@me.com");
+        message.Bcc.Add("aaronbaker315@me.com");
         message.Bcc.Add("paul.janson@strongbrook.com");
         message.Subject = string.Format("New Game Plan requested for {0} {1}", FirstName, LastName);
         message.IsBodyHtml = true;
@@ -1677,27 +1677,27 @@ public partial class GPRform : System.Web.UI.Page
         message.Body = TimeFrameTypeForCorporate;
         #endregion Email Message Body
 
-        #region Main Mail server connection properties
-        //Email SMTP Settings
-        Int16 port = 25;
-        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
-
-        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
-        client.UseDefaultCredentials = false;
-
-        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
-        #endregion Main Mail server connection properties
-
-        //#region Secondary Mail server connection properties. Use this as a backup if necessary!
+        //#region Main Mail server connection properties
+        ////Email SMTP Settings
         //Int16 port = 25;
-        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+        //SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
 
-        //// Use these properties for a secure SMTP connection.
-        //client.UseDefaultCredentials = true;
-        //client.EnableSsl = true;
+        //// Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        //client.UseDefaultCredentials = false;
 
-        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
-        //#endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+        //client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        //#endregion Main Mail server connection properties
+
+        #region Secondary Mail server connection properties. Use this as a backup if necessary!
+        Int16 port = 25;
+        SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+
+        // Use these properties for a secure SMTP connection.
+        client.UseDefaultCredentials = true;
+        client.EnableSsl = true;
+
+        client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
 
         #region Attempt to send the message
         try
