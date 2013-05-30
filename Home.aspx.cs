@@ -127,6 +127,8 @@ public partial class Home : System.Web.UI.Page
         // Return the model
         return model; 
     }
+
+
     public CommissionResponse FetchCurrentCommissions()
     {
         try
@@ -142,13 +144,27 @@ public partial class Home : System.Web.UI.Page
         }
     }
 
+
+    private List<CommissionResponse> FetchCurrentCommissions2()
+    {
+        int PeriodTypeID = PeriodTypes.Weekly;
+        return ExigoApiContext.CreateWebServiceContext().GetRealTimeCommissions(new GetRealTimeCommissionsRequest
+        {
+            CustomerID = 11309 // Identity.Current.CustomerID
+        }).Commissions
+            .Where(c => c.PeriodType == PeriodTypeID).ToList();
+            //.OrderByDescending(c => c.PeriodID).ToList();
+    }
+
+
+
     #region Current Commissions Earnings
     public decimal CurrentWeeklyCommissionsEarnings()
 	{
         decimal amount;
         var context = ExigoApiContext.CreateODataContext().Commissions;
 
-		var query = (from c in context // .Expand("CommissionRun")
+		var query = (from c in context
 					 where c.CustomerID == Identity.Current.CustomerID
 					 where c.CommissionRunID == FetchPreviousCommissionRunID()
 					 where c.CurrencyCode == Identity.Current.CurrencyCode
@@ -429,12 +445,15 @@ public partial class Home : System.Web.UI.Page
     public ReportDataNode FetchPersonalGPRWeeklyReportData()
     {
         #region Get the current weekly period
-        var context = ExigoApiContext.CreateWebServiceContext().GetRealTimeCommissions(new GetRealTimeCommissionsRequest
-        {
-            CustomerID = Identity.Current.CustomerID
-        }).Commissions[0];
 
-        var currentWeeklyPeriod = context.PeriodID;
+        //var period = FetchCurrentCommissions();
+        //var currentWeeklyPeriod = period.PeriodID;
+
+        //var period = FetchCurrentCommissions2();
+        //var currentWeeklyPeriod = period[0].PeriodID;
+
+        var currentWeeklyPeriod = 79;
+
         #endregion Get the current weekly period
 
         #region Query the OData tables
