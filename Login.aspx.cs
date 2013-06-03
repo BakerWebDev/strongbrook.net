@@ -64,6 +64,7 @@ public partial class Login : Page
     }
 
     public string UsernameCookieName = "Username";
+    public string PasswordCookie = "Password";
     #endregion
 
     #region Helper Methods
@@ -85,6 +86,16 @@ public partial class Login : Page
             Response.Cookies.Add(cookie);
         }
     }
+    public string cookie { get; set; }
+    public void SavePasswordCookie()
+    {
+        string encryptedPasswd = Encrypt(string.Format("{0}", Password), "theKey");
+
+        var cookee = Request.Cookies[PasswordCookie] ?? new HttpCookie(PasswordCookie);
+        cookee.Value = encryptedPasswd;
+        cookee.Expires = DateTime.Now.AddSeconds(60); // .AddDays(1);
+        Response.Cookies.Add(cookee);
+    }
     #endregion
 
     #region Event Handlers
@@ -97,6 +108,8 @@ public partial class Login : Page
             var svc = new IdentityAuthenticationService();
             if (svc.SignIn(LoginName, Password))
             {
+                SavePasswordCookie();
+
                 if (Request.QueryString["ReturnUrl"] != null)
                 {
                     Response.Redirect(Request.QueryString["ReturnUrl"], false);
@@ -190,4 +203,26 @@ public partial class Login : Page
     }
     #endregion
 
+    #region Encryption Method
+    string Encrypt(string uncoded, string key)
+    {
+        RijndaelManaged cryptProvider = new RijndaelManaged();
+        cryptProvider.KeySize = 256;
+        cryptProvider.BlockSize = 256;
+        cryptProvider.Mode = CipherMode.CBC;
+        SHA256Managed hashSHA256 = new SHA256Managed();
+        cryptProvider.Key = hashSHA256.ComputeHash(ASCIIEncoding.ASCII.GetBytes(key));
+        string iv = "signup";
+        cryptProvider.IV = hashSHA256.ComputeHash(ASCIIEncoding.ASCII.GetBytes(iv));
+        byte[] plainTextByteArray = ASCIIEncoding.ASCII.GetBytes(uncoded);
+        MemoryStream ms = new MemoryStream();
+        CryptoStream cs = new CryptoStream(ms, cryptProvider.CreateEncryptor(), CryptoStreamMode.Write);
+        cs.Write(plainTextByteArray, 0, plainTextByteArray.Length);
+        cs.FlushFinalBlock();
+        cs.Close();
+        byte[] byt = ms.ToArray();
+        return Convert.ToBase64String(byt);
+    }
+
+    #endregion Encryption Method
 }

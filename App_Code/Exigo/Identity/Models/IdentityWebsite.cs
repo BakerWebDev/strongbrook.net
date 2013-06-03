@@ -46,12 +46,10 @@ public class IdentityWebsite
         // Wait for all tasks to complete before ending this call.
         Task.WaitAll(tasks.ToArray());
         tasks.Clear();
-
-
-
 	}
 
     public string WebAlias { get; set; }
     public string LoginName { get; set; }
     public string Password { get; set; }
+
 }

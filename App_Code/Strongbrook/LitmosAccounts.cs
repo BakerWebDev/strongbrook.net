@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Exigo.WebService;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,8 +7,6 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Xml;
-using Exigo.API;
-using ExigoWebService;
 
 /// <summary>
 /// Class containing methods to create, modify, and delete
@@ -1363,13 +1362,11 @@ public class LitmosAccounts
     {
         try
         {
-            ExigoApiServices auth = new ExigoApiServices();
-
-            UpdateCustomerRequest req = new UpdateCustomerRequest();
-            req.CustomerID = user.ExigoCustomerID;
-            req.Field4 = user.UserID;
-
-            UpdateCustomerResponse res = auth.WebService.UpdateCustomer(req);
+            ExigoApiContext.CreateWebServiceContext().UpdateCustomer(new UpdateCustomerRequest
+            {
+                CustomerID = user.ExigoCustomerID,
+                Field4 = user.UserID
+            });
         }
         catch
         {

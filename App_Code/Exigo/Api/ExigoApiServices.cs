@@ -171,4 +171,4 @@ public class ExigoImageApi
         var response = (HttpWebResponse)request.GetResponse();
     }
 }
-#endregion
+#endregion Supporting Classes

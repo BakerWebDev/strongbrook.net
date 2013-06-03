@@ -10,6 +10,7 @@ using Exigo.WebService;
 using System.Net;
 using System.IO;
 using System.Xml;
+using System.Security.Cryptography;
 
 public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
 {
@@ -136,6 +137,8 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
     private string _newCreditCardPaymentToken;
 
     private int NewOrderID;
+    private int NewAutoOrderID;
+
     #endregion
 
     #region Load Data
@@ -158,6 +161,9 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
                 Quantity        = item.Quantity,
                 ParentItemCode  = item.ParentItemCode                    
             });
+
+            if (item.ItemCode == "3130") IsPurchasingTheStrongbrookAcademySubscription = true;
+
         });
 
         return details.ToArray();
@@ -353,6 +359,11 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
         // Add the request to create an order
         details.Add(Request_CreateOrder());
 
+        if (IsPurchasingTheStrongbrookAcademySubscription)
+        { 
+            // Add the request to create an Autoship Order
+            details.Add(CreateWealthClubMonthlySubscription());        
+        }
 
         // Add the requests that handle the payment method for the order
         switch (Shopping.PropertyBag.PaymentType)
@@ -386,7 +397,6 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
                 break;                
         }
 
-
         request.TransactionRequests = details.ToArray();
         return request;
     }
@@ -405,8 +415,24 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
             foreach (var apiResponse in orderResponse.TransactionResponses)
             {
                 if (apiResponse is CreateOrderResponse) NewOrderID = ((CreateOrderResponse)apiResponse).OrderID;
+                if (apiResponse is CreateAutoOrderResponse) NewAutoOrderID = ((CreateAutoOrderResponse)apiResponse).AutoOrderID;
             }
-            CreateLitmosUserID();
+
+            #region Create Litmos User
+            if (IsPurchasingTheStrongbrookAcademySubscription)
+            {
+                CreateLitmosUserID();
+                SendRestCall();
+                Request_UpdateCustomer();
+
+                string response = AddLitmosTeamForCoaching();
+                if (response != "Success")
+                {
+                    //ErrorString += "We could not create your Academy Account";
+                }
+            }
+
+            #endregion Create Litmos User
         }
     }
     #endregion
@@ -563,6 +589,7 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
         }
         catch (Exception ex)
         {
+            Response.Write(ex.Message);
             ApplicationErrors.ErrorMessage += ex.Message;
         }
     }
@@ -613,67 +640,42 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
     #endregion
 
     #region SEP Integration (Litmos)
-    //SEP Integration
-    public string SepUserCreateWebServiceUrl { get; set; }
-    public string SepWebServiceClientId { get; set; }
-    public string SepWebServiceReferrerUrl { get; set; }
 
+    #region Properties required by Litmos
+    public string SepUserCreateWebServiceUrl = "http://service.netgenondemand.com/Service/UserAccountAPI.aspx";
+    public string SepWebServiceClientId = "01840765-8685-41c7-93c6-c614c0e70790---2f91efb3-e6ff-48b5-b5b5-c48da3d55468";
+    public string SepWebServiceReferrerUrl = "http://www.strongbrookenroll.com";
     public int CustomerID = Identity.Current.CustomerID;
     public string FirstName = Identity.Current.FirstName;
     public string LastName = Identity.Current.LastName;
     public string Username = Identity.Current.Website.LoginName;
-    public string Password = Identity.Current.Website.Password;
     public string DaytimePhone = Identity.Current.ContactInfo.Phone;
     public string email = Identity.Current.ContactInfo.Email;
     public int CustTy = Identity.Current.CustomerTypeID;
     public string LitmosID { get; set; }
-
-    protected void CreateLitmosUserID()
+    #region Get the Password from the cookie
+    public string PasswordCookie = "Password";
+    public string SavedLoginPassword { get; set; }
+    private string Password
     {
-        WebResponse result = null;
-        try
+        get
         {
-            string SEPUrl = string.Format(SepUserCreateWebServiceUrl +
-                                          "?Action=Create" +
-                                          "&ClientID=" + SepWebServiceClientId +
-                                          "&ExternalId=" + CustomerID +
-                                          "&FirstName=" + FirstName +
-                                          "&LastName=" + LastName +
-                                          "&Username=" + Username +
-                                          "&Password=" + Password +
-                                          "&Phone=" + DaytimePhone +
-                                          "&Email=" + email +
-                                          "&Verbose=false" +
-                                          "&ProductId=" + CustTy);
-
-            WebRequest req = WebRequest.Create(SEPUrl);
-            req.Timeout = 270000; //give it 4.5 mins (right under script timeout)
-            req.Method = "POST";
-
-
-            // Set our variables
-            var h = (HttpWebRequest)req;
-            h.Referer = SepWebServiceReferrerUrl;
-
-            Stream requestStream = null;
-            req.ContentLength = 0;
-
-            result = req.GetResponse();
-            Stream receiveStream = result.GetResponseStream();
-            Encoding encode = Encoding.GetEncoding("utf-8");
-            var sr = new StreamReader(receiveStream, encode);
-
-            string response = sr.ReadToEnd();
-
-            if (requestStream != null) requestStream.Close();
-            sr.Close();
-        }
-        catch (Exception ex)
-        {
-            //ErrorString += "An unexpected error has occurred while processing your request.<br />" + ex.Message;
+            // Gets the password from the cookie
+            if (Request.Cookies[PasswordCookie] != null)
+            {
+                string cookiePasswdEncrypted = Request.Cookies[PasswordCookie].Value;
+                string cookiePasswdDecrypted = Decrypt(cookiePasswdEncrypted, "theKey").Split('|')[0];
+                SavedLoginPassword = cookiePasswdDecrypted;
+            }
+            return SavedLoginPassword;
         }
     }
-    #endregion
+
+    #endregion Get the password from the cookie
+    public string WealthClubOrder;
+    public bool IsPurchasingTheStrongbrookAcademySubscription { get; set; }
+
+    #endregion Properties required by Litmos
 
     #region XML
     private static byte[] GenerateLitmostXML(string userName, string firstName, string lastName, string email, string phone)
@@ -715,7 +717,7 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
 
         return stream.ToArray();
     }
-    #endregion
+    #endregion XML
 
     #region REST calls
     private string apiKey
@@ -912,5 +914,134 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
         }
     }
 
+    #endregion REST calls
+
+    #region Create the Autoship Order
+    private CreateAutoOrderRequest CreateWealthClubMonthlySubscription()
+    {
+        CreateAutoOrderRequest request = new CreateAutoOrderRequest();
+
+        request.CustomerID = Identity.Current.CustomerID;
+
+        request.CurrencyCode = Shopping.Configuration.CurrencyCode;
+        request.WarehouseID = Shopping.Configuration.WarehouseID;
+        request.PriceType = Shopping.Configuration.PriceTypeID;
+        request.ShipMethodID = Shopping.PropertyBag.ShipMethodID;
+
+        request.ProcessType = Exigo.WebService.AutoOrderProcessType.AlwaysProcess;
+        request.PaymentType = Exigo.WebService.AutoOrderPaymentType.PrimaryCreditCard;
+        request.Frequency = Exigo.WebService.FrequencyType.Monthly;
+        request.StartDate = DateTime.Now.AddDays(30);
+
+        request.FirstName = Shopping.PropertyBag.ShippingFirstName;
+        request.LastName = Shopping.PropertyBag.ShippingLastName;
+        request.Address1 = Shopping.PropertyBag.ShippingAddress1;
+        request.Address2 = Shopping.PropertyBag.ShippingAddress2;
+        request.City = Shopping.PropertyBag.ShippingCity;
+        request.State = Shopping.PropertyBag.ShippingState;
+        request.Zip = Shopping.PropertyBag.ShippingZip;
+        request.Country = Shopping.PropertyBag.ShippingCountry;
+        request.Phone = Shopping.PropertyBag.Phone;
+        request.Email = Shopping.PropertyBag.Email;
+        request.Details = SilverPackageDetails();
+
+        return request;
+    }
+    OrderDetailRequest[] SilverPackageDetails()
+    {
+        List<OrderDetailRequest> details = new List<OrderDetailRequest>();
+        details.Add(new OrderDetailRequest
+        {
+            ItemCode = "3120",
+            Quantity = 1
+        });
+        return details.ToArray();
+    }
+
+    #endregion Create the Autoship Order
+
+    #region Update the customer with the new Litmos User ID
+    protected void CreateLitmosUserID()
+    {
+        WebResponse result = null;
+        try
+        {
+            string SEPUrl = string.Format(SepUserCreateWebServiceUrl +
+                                          "?Action=Create" +
+                                          "&ClientID=" + SepWebServiceClientId +
+                                          "&ExternalId=" + CustomerID +
+                                          "&FirstName=" + FirstName +
+                                          "&LastName=" + LastName +
+                                          "&Username=" + Username +
+                                          "&Password=" + Password +
+                                          "&Phone=" + DaytimePhone +
+                                          "&Email=" + email +
+                                          "&Verbose=false" +
+                                          "&ProductId=" + CustTy);
+
+            WebRequest req = WebRequest.Create(SEPUrl);
+            req.Timeout = 270000; //give it 4.5 mins (right under script timeout)
+            req.Method = "POST";
+
+
+            // Set our variables
+            var h = (HttpWebRequest)req;
+            h.Referer = SepWebServiceReferrerUrl;
+
+            Stream requestStream = null;
+            req.ContentLength = 0;
+
+            result = req.GetResponse();
+            Stream receiveStream = result.GetResponseStream();
+            Encoding encode = Encoding.GetEncoding("utf-8");
+            var sr = new StreamReader(receiveStream, encode);
+
+            string response = sr.ReadToEnd();
+
+            if (requestStream != null) requestStream.Close();
+            sr.Close();
+        }
+        catch (Exception ex)
+        {
+            //ErrorString += "An unexpected error has occurred while processing your request.<br />" + ex.Message;
+        }
+    }
+    public void Request_UpdateCustomer()
+    {
+        UpdateCustomerRequest req = new UpdateCustomerRequest()
+        {
+            CustomerID = CustomerID,
+            Field4 = LitmosID
+        };
+
+        UpdateCustomerResponse res = ExigoApiContext.CreateWebServiceContext().UpdateCustomer(req);
+    }
+
+    #endregion Update the customer with the new Litmos User ID
+
+    #region Decrypt the cookie data
+    string Decrypt(string coded, string key)
+    {
+        RijndaelManaged cryptProvider = new RijndaelManaged();
+        cryptProvider.KeySize = 256;
+        cryptProvider.BlockSize = 256;
+        cryptProvider.Mode = CipherMode.CBC;
+        SHA256Managed hashSHA256 = new SHA256Managed();
+        cryptProvider.Key = hashSHA256.ComputeHash(ASCIIEncoding.ASCII.GetBytes(key));
+        string iv = "signup";
+        cryptProvider.IV = hashSHA256.ComputeHash(ASCIIEncoding.ASCII.GetBytes(iv));
+        byte[] cipherTextByteArray = Convert.FromBase64String(coded);
+        MemoryStream ms = new MemoryStream();
+        CryptoStream cs = new CryptoStream(ms, cryptProvider.CreateDecryptor(), CryptoStreamMode.Write);
+        cs.Write(cipherTextByteArray, 0, cipherTextByteArray.Length);
+        cs.FlushFinalBlock();
+        cs.Close();
+        byte[] byt = ms.ToArray();
+        return Encoding.ASCII.GetString(byt);
+    }
+
+    #endregion Decrypt the cookie data
+
     #endregion
+
 }
