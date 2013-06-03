@@ -173,9 +173,9 @@ You always carry the title of the highest rank you reach, but are “Paid As” 
                 <div id="GPR_Values">
                     <a id="PersonalWeeklyGPRs" href="GPR_WeeklyDetails.aspx">
                         <div class="tile tile-icon size-1x1 theme-peach2" 
-                            title="The total number of Game Plan Report requests (GPRs) submitted by you and your entire sales team this week to date.">
-                            <h2><% Render_Personal_GPR_Count_PeriodType_Weekly(); %></h2>
-                            <h4>This Week GPRs</h4>
+                            title="The total number of Game Plan Report requests (GPRs) submitted by you and your entire sales team this month to date.">
+                            <h2><% Render_Organizational_GPR_Count_PeriodType_Monthly(); %></h2>
+                            <h4>This Months GPRs</h4>
                         </div>
                     </a>
 

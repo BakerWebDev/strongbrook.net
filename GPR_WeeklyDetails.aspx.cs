@@ -17,7 +17,7 @@ public partial class GPR_WeeklyDetails : System.Web.UI.Page
         var query = ExigoApiContext.CreateODataContext().UniLevelTreePeriodVolumes
             .Where(c => c.TopCustomerID == Identity.Current.CustomerID)
             .Where(c => c.PeriodTypeID == PeriodTypes.Weekly)
-            .Where(c => c.Period.IsCurrentPeriod)
+            .Where(c => c.PeriodID == 79) // .IsCurrentPeriod)
             .Where(c => c.PeriodVolume.Volume98 != 0);
         
 

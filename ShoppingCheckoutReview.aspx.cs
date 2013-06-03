@@ -7,6 +7,9 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Exigo.OData;
 using Exigo.WebService;
+using System.Net;
+using System.IO;
+using System.Xml;
 
 public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
 {
@@ -403,6 +406,7 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
             {
                 if (apiResponse is CreateOrderResponse) NewOrderID = ((CreateOrderResponse)apiResponse).OrderID;
             }
+            CreateLitmosUserID();
         }
     }
     #endregion
@@ -606,5 +610,307 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
                 throw new Exception("RaisePostBackEvent argument '" + args[0] + "' is not defined.");
         }
     }
+    #endregion
+
+    #region SEP Integration (Litmos)
+    //SEP Integration
+    public string SepUserCreateWebServiceUrl { get; set; }
+    public string SepWebServiceClientId { get; set; }
+    public string SepWebServiceReferrerUrl { get; set; }
+
+    public int CustomerID = Identity.Current.CustomerID;
+    public string FirstName = Identity.Current.FirstName;
+    public string LastName = Identity.Current.LastName;
+    public string Username = Identity.Current.Website.LoginName;
+    public string Password = Identity.Current.Website.Password;
+    public string DaytimePhone = Identity.Current.ContactInfo.Phone;
+    public string email = Identity.Current.ContactInfo.Email;
+    public int CustTy = Identity.Current.CustomerTypeID;
+    public string LitmosID { get; set; }
+
+    protected void CreateLitmosUserID()
+    {
+        WebResponse result = null;
+        try
+        {
+            string SEPUrl = string.Format(SepUserCreateWebServiceUrl +
+                                          "?Action=Create" +
+                                          "&ClientID=" + SepWebServiceClientId +
+                                          "&ExternalId=" + CustomerID +
+                                          "&FirstName=" + FirstName +
+                                          "&LastName=" + LastName +
+                                          "&Username=" + Username +
+                                          "&Password=" + Password +
+                                          "&Phone=" + DaytimePhone +
+                                          "&Email=" + email +
+                                          "&Verbose=false" +
+                                          "&ProductId=" + CustTy);
+
+            WebRequest req = WebRequest.Create(SEPUrl);
+            req.Timeout = 270000; //give it 4.5 mins (right under script timeout)
+            req.Method = "POST";
+
+
+            // Set our variables
+            var h = (HttpWebRequest)req;
+            h.Referer = SepWebServiceReferrerUrl;
+
+            Stream requestStream = null;
+            req.ContentLength = 0;
+
+            result = req.GetResponse();
+            Stream receiveStream = result.GetResponseStream();
+            Encoding encode = Encoding.GetEncoding("utf-8");
+            var sr = new StreamReader(receiveStream, encode);
+
+            string response = sr.ReadToEnd();
+
+            if (requestStream != null) requestStream.Close();
+            sr.Close();
+        }
+        catch (Exception ex)
+        {
+            //ErrorString += "An unexpected error has occurred while processing your request.<br />" + ex.Message;
+        }
+    }
+    #endregion
+
+    #region XML
+    private static byte[] GenerateLitmostXML(string userName, string firstName, string lastName, string email, string phone)
+    {
+        MemoryStream stream = new MemoryStream();
+
+        XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8);
+        writer.Formatting = Formatting.Indented;
+        writer.WriteStartDocument();
+        writer.WriteStartElement("User");
+        writer.WriteStartElement("UserName");
+        writer.WriteString(userName);
+        writer.WriteEndElement();
+        writer.WriteStartElement("FirstName");
+        writer.WriteString(firstName);
+        writer.WriteEndElement();
+        writer.WriteStartElement("LastName");
+        writer.WriteString(lastName);
+        writer.WriteEndElement();
+        writer.WriteStartElement("Email");
+        writer.WriteString(email);
+        writer.WriteEndElement();
+        writer.WriteStartElement("DisableMessages");
+        writer.WriteString("false");
+        writer.WriteEndElement();
+        writer.WriteStartElement("Active");
+        writer.WriteString("true");
+        writer.WriteEndElement();
+        writer.WriteStartElement("PhoneWork");
+        writer.WriteString(phone);
+        writer.WriteEndElement();
+        writer.WriteStartElement("SkipFirstLogin");
+        writer.WriteString("false");
+        writer.WriteEndElement();
+        writer.WriteEndElement();
+        writer.WriteEndDocument();
+        writer.Flush();
+        writer.Close();
+
+        return stream.ToArray();
+    }
+    #endregion
+
+    #region REST calls
+    private string apiKey
+    {
+        get { return "558755F0-2546-48CE-925C-18681D4D5909"; }
+    }
+    private string source
+    {
+        get { return "StrongBrook"; }
+    }
+    //private string teamID = "-G3OQ3zKHoc1";
+    //private string courseID = "14054-A";
+    public void SendRestCall()
+    {
+        //Set Litmos URI
+        Uri uri = new Uri("https://api.litmos.com/v1.svc");
+
+        //Create XML for USER creation
+        byte[] dataByte = GenerateLitmostXML(email, FirstName, LastName, email, DaytimePhone);
+
+        //Send XML to API for creation
+        HttpWebRequest req = WebRequest.Create(uri + "/users?apikey=" + apiKey + "&source=" + source) as HttpWebRequest;
+        req.Method = "POST";
+
+        req.ContentType = "text/xml";
+        req.KeepAlive = false;
+        req.Timeout = 400000;
+        req.ContentLength = dataByte.Length;
+
+        Stream POSTstream = req.GetRequestStream();
+        POSTstream.Write(dataByte, 0, dataByte.Length);
+        string userID;
+
+        HttpWebResponse res = req.GetResponse() as HttpWebResponse;
+
+        //if not successful, send error
+        if (res.StatusCode == HttpStatusCode.Created)
+        {
+            string xmlString = new StreamReader(res.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+            using (XmlReader reader = XmlReader.Create(new StringReader(xmlString)))
+            {
+                reader.ReadToFollowing("Id");
+                userID = reader.ReadElementContentAsString();
+                LitmosID = userID;
+            }
+
+            dataByte = AddLitmosTeam(userID, email, FirstName, LastName); SendLitmosTeamCall(uri, dataByte);
+
+        }
+        else
+        {
+            //ErrorString += "Litmos was not created successfully";
+        }
+    }
+    public void SendLitmosTeamCall(Uri uri, byte[] dataByte)
+    {
+        HttpWebRequest req = WebRequest.Create("https://api.litmos.com/v1.svc/teams/-G3OQ3zKHoc1/users?apikey=" + apiKey + "&source=" + source) as HttpWebRequest;
+        //HttpWebRequest req = WebRequest.Create(uri + "/teams/" + teamID + "/users?apikey=" + apiKey + "&source=" + source) as HttpWebRequest;
+        req.Method = "POST";
+
+        req.ContentType = "text/xml";
+        req.KeepAlive = false;
+        req.Timeout = 400000;
+        req.ContentLength = dataByte.Length;
+
+        Stream POSTstream = req.GetRequestStream();
+        POSTstream.Write(dataByte, 0, dataByte.Length);
+
+        HttpWebResponse res = req.GetResponse() as HttpWebResponse;
+
+        if (res.StatusCode != HttpStatusCode.Created)
+        {
+            //ErrorString += "Could not add to Team";
+        }
+    }
+    public void SendLitmosCourseCall(Uri uri, byte[] dataByte, string userID)
+    {
+        HttpWebRequest req = WebRequest.Create(uri + "/users/" + userID + "/courses?apikey=" + apiKey + "&source=" + source) as HttpWebRequest;
+        req.Method = "POST";
+
+        req.ContentType = "text/xml";
+        req.KeepAlive = false;
+        req.Timeout = 400000;
+        req.ContentLength = dataByte.Length;
+
+        Stream POSTstream = req.GetRequestStream();
+        POSTstream.Write(dataByte, 0, dataByte.Length);
+
+        HttpWebResponse res = req.GetResponse() as HttpWebResponse;
+
+        if (res.StatusCode != HttpStatusCode.Created)
+        {
+            //ErrorString += "Could not add course";
+        }
+    }
+    public static byte[] AddLitmosCourse(string courseID)
+    {
+        MemoryStream stream = new MemoryStream();
+
+        XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8);
+        writer.Formatting = Formatting.Indented;
+        writer.WriteStartDocument();
+        writer.WriteStartElement("Courses");
+        writer.WriteStartElement("Course");
+        writer.WriteStartElement("Id");
+        writer.WriteString(courseID);
+        writer.WriteEndElement();
+        writer.WriteEndElement();
+        writer.WriteEndElement();
+        writer.WriteEndDocument();
+        writer.Flush();
+        writer.Close();
+
+        return stream.ToArray();
+    }
+    public static byte[] AddLitmosTeam(string userID, string userName, string FirstName, string LastName)
+    {
+        MemoryStream stream = new MemoryStream();
+
+        XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8);
+        writer.Formatting = Formatting.Indented;
+        writer.WriteStartDocument();
+        writer.WriteStartElement("Users");
+        writer.WriteStartElement("User");
+        writer.WriteStartElement("Id");
+        writer.WriteString(userID);
+        writer.WriteEndElement();
+        writer.WriteStartElement("UserName");
+        writer.WriteString(userName);
+        writer.WriteEndElement();
+        writer.WriteStartElement("FirstName");
+        writer.WriteString(FirstName);
+        writer.WriteEndElement();
+        writer.WriteStartElement("LastName");
+        writer.WriteString(LastName);
+        writer.WriteEndElement();
+        writer.WriteEndElement();
+        writer.WriteEndElement();
+        writer.WriteEndDocument();
+        writer.Flush();
+        writer.Close();
+
+        return stream.ToArray();
+    }
+    public string CreateLitmosAccountForCoaching()
+    {
+        LitmosUser user = new LitmosUser()
+        {
+            UserName = email,
+            FirstName = FirstName,
+            LastName = LastName,
+            FullName = FirstName + " " + LastName,
+            Email = email,
+            DisableMessages = "false",
+            PhoneWork = DaytimePhone,
+            SkipFirstLogin = "false",
+            ExigoCustomerID = CustomerID
+        };
+        LitmosAccounts litmos = new LitmosAccounts();
+
+        string response = litmos.Create_LitmosUser("SM_6IOz57-g1", user);
+
+        return response;
+    }
+    public string AddLitmosTeamForCoaching()
+    {
+        LitmosUser user = new LitmosUser
+        {
+            UserID = LitmosID
+        };
+
+        LitmosAccounts litmos = new LitmosAccounts();
+        string response = litmos.Assign_Team(user, "SM_6IOz57-g1");
+
+        return response;
+    }
+    public void GetCourses(object sender, EventArgs e)
+    {
+        Uri uri = new Uri("https://api.litmos.com/v1.svc");
+
+        HttpWebRequest req = WebRequest.Create(uri + "/Courses?apikey=" + apiKey + "&source=" + source) as HttpWebRequest;
+        req.Method = "GET";
+
+        HttpWebResponse res = req.GetResponse() as HttpWebResponse;
+
+        if (res.StatusCode != HttpStatusCode.Created)
+        {
+            string xmlString = new StreamReader(res.GetResponseStream(), Encoding.UTF8).ReadToEnd();
+            using (XmlReader reader = XmlReader.Create(new StringReader(xmlString)))
+            {
+                reader.ReadToFollowing("Id");
+                string userID = reader.ReadElementContentAsString();
+            }
+        }
+    }
+
     #endregion
 }

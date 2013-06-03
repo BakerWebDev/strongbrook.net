@@ -127,8 +127,6 @@ public partial class Home : System.Web.UI.Page
         // Return the model
         return model; 
     }
-
-
     public CommissionResponse FetchCurrentCommissions()
     {
         try
@@ -143,20 +141,6 @@ public partial class Home : System.Web.UI.Page
             return new CommissionResponse();
         }
     }
-
-
-    private List<CommissionResponse> FetchCurrentCommissions2()
-    {
-        int PeriodTypeID = PeriodTypes.Weekly;
-        return ExigoApiContext.CreateWebServiceContext().GetRealTimeCommissions(new GetRealTimeCommissionsRequest
-        {
-            CustomerID = 11309 // Identity.Current.CustomerID
-        }).Commissions
-            .Where(c => c.PeriodType == PeriodTypeID).ToList();
-            //.OrderByDescending(c => c.PeriodID).ToList();
-    }
-
-
 
     #region Current Commissions Earnings
     public decimal CurrentWeeklyCommissionsEarnings()
@@ -249,6 +233,7 @@ public partial class Home : System.Web.UI.Page
         dateString = WeeklyCommissionsPeriodDescription;
         return dateString;
     }
+
     #endregion Current Commissions Earnings
 
     #region Commissions Earnings 1 Month Ago
@@ -442,26 +427,14 @@ public partial class Home : System.Web.UI.Page
         return nodes;
     }
 
-    public ReportDataNode FetchPersonalGPRWeeklyReportData()
+    public ReportDataNode FetchOrganizationalGPRMonthlyReportData()
     {
-        #region Get the current weekly period
-
-        //var period = FetchCurrentCommissions();
-        //var currentWeeklyPeriod = period.PeriodID;
-
-        //var period = FetchCurrentCommissions2();
-        //var currentWeeklyPeriod = period[0].PeriodID;
-
-        var currentWeeklyPeriod = 79;
-
-        #endregion Get the current weekly period
-
         #region Query the OData tables
         var query = ExigoApiContext.CreateODataContext().PeriodVolumes
             .Where(c => c.CustomerID == Identity.Current.CustomerID)
 
-            .Where(c => c.PeriodTypeID == PeriodTypes.Weekly)
-            .Where(c => c.PeriodID == currentWeeklyPeriod);
+            .Where(c => c.PeriodTypeID == PeriodTypes.Monthly)
+            .Where(c => c.Period.IsCurrentPeriod);
 
         #endregion Query the OData tables
 
@@ -469,15 +442,13 @@ public partial class Home : System.Web.UI.Page
         var nodes = query.Select(c => new ReportDataNode
         {
             CustomerID = c.CustomerID,
-            VolumeBucket99  = c.Volume99, // GPR Credits Weekly
+            VolumeBucket100  = c.Volume100, // GPR Credits Weekly
         }).FirstOrDefault();
         #endregion Fetch the nodes
 
         // Return the nodes
         return nodes;
     }
-
-
 
     #endregion Fetch GPR Data
 
@@ -609,7 +580,6 @@ public partial class Home : System.Web.UI.Page
         writer.Write(html.ToString());
     }
     #region Render GPR Data
-
     public void Render_UniLevelDownlineGPR_Count_Weekly()
     {
         var html = new StringBuilder();
@@ -647,31 +617,6 @@ public partial class Home : System.Web.UI.Page
         var writer = new HtmlTextWriter(Response.Output);
         writer.Write(html.ToString());    
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     public void Render_AveGPRsperIBD()
     {
         var html = new StringBuilder();
@@ -747,42 +692,15 @@ public partial class Home : System.Web.UI.Page
         var writer = new HtmlTextWriter(Response.Output);
         writer.Write(html.ToString());
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void Render_Personal_GPR_Count_PeriodType_Weekly()
+    public void Render_Organizational_GPR_Count_PeriodType_Monthly()
     {
         var html = new StringBuilder();
 
-        var nodes = FetchPersonalGPRWeeklyReportData();
+        var nodes = FetchOrganizationalGPRMonthlyReportData();
 
-        if (nodes.VolumeBucket99 != null)
+        if (nodes.VolumeBucket100 != 0)
         {
-            var number = nodes.VolumeBucket99;
+            var number = nodes.VolumeBucket100;
 
             html.AppendFormat(@"
                 {0}
@@ -1293,22 +1211,6 @@ public partial class Home : System.Web.UI.Page
     #endregion
 
     #region Fetching Data
-    // Current Commissions
-    //private List<CommissionResponse> FetchCurrentCommissions()
-    //{
-    //    return ExigoApiContext.CreateWebServiceContext().GetRealTimeCommissions(new GetRealTimeCommissionsRequest
-    //    {
-    //        CustomerID = Identity.Current.CustomerID
-    //    }).Commissions
-    //        .Where(c => c.PeriodType == PeriodTypeID2)
-    //        .OrderByDescending(c => c.PeriodID).ToList();        
-    //}
-    //private List<CommissionBonusResponse> FetchCurrentCommissionBonuses()
-    //{
-    //    return CurrentCommissions[0].Bonuses.ToList();
-    //}
-
-    // Prior Commissions
     private List<Commission> FetchPriorCommissions()
     {
         return ExigoApiContext.CreateODataContext().Commissions.Expand("CommissionRun")

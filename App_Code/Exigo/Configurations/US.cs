@@ -35,8 +35,8 @@ public class USInitialOrderConfiguration : IOrderConfiguration
     public string CurrencyCode          { get { return Exigo.Global.Currencies.USDollars; } }
     public int PriceTypeID              { get { return (int)PriceTypes.Distributor; } }
     public int LanguageID               { get { return (int)Languages.English; } }
-    public int DefaultShipMethodID      { get { return 1; } }
-    public List<int> AvailableShipMethods { get { return new List<int> { 1, 2, 3, 11 }; } }
+    public int DefaultShipMethodID      { get { return 11; } }
+    public List<int> AvailableShipMethods { get { return new List<int> { 11, 3 }; } }
     public string DefaultCountryCode    { get { return "US"; } }
 
     public int WebID                    { get { return 3; } }
@@ -52,8 +52,8 @@ public class USAutoshipConfiguration : IAutoOrderConfiguration
     public string CurrencyCode          { get { return Exigo.Global.Currencies.USDollars; } }
     public int PriceTypeID              { get { return (int)PriceTypes.Distributor; } }
     public int LanguageID               { get { return (int)Languages.English; } }
-    public int DefaultShipMethodID      { get { return 1; } }
-    public List<int> AvailableShipMethods { get { return new List<int> { 1, 2, 3, 11 }; } }
+    public int DefaultShipMethodID      { get { return 11; } }
+    public List<int> AvailableShipMethods { get { return new List<int> { 11, 3 }; } }
     public string DefaultCountryCode    { get { return "US"; } }
     public FrequencyType Frequency      { get { return FrequencyType.Monthly; } }
     public DateTime StartDate           { get { return GlobalUtilities.GetNewAutoOrderStartDate(FrequencyType.Monthly); } }
@@ -72,8 +72,8 @@ public class USAnnualSubscriptionAutoshipConfiguration : IAutoOrderConfiguration
     public string CurrencyCode          { get { return Exigo.Global.Currencies.USDollars; } }
     public int PriceTypeID              { get { return (int)PriceTypes.Distributor; } }
     public int LanguageID               { get { return (int)Languages.English; } }
-    public int DefaultShipMethodID      { get { return 1; } }
-    public List<int> AvailableShipMethods { get { return new List<int> { 1, 2, 3, 11 }; } }
+    public int DefaultShipMethodID      { get { return 11; } }
+    public List<int> AvailableShipMethods { get { return new List<int> { 11, 3 }; } }
     public string DefaultCountryCode    { get { return "US"; } }
     public FrequencyType Frequency      { get { return FrequencyType.Yearly; } }
     public DateTime StartDate           { get { return GlobalUtilities.GetNewAutoOrderStartDate(FrequencyType.Yearly); } }

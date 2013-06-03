@@ -28,7 +28,8 @@ public partial class GPR_LeadManager : System.Web.UI.Page
         // This call can be slow because it has to fetch all the rows every call.
         var data = ExigoApiContext.CreateWebServiceContext().GetCustomerLeads(new GetCustomerLeadsRequest
         {
-            CustomerID = customerID           
+            CustomerID = customerID,
+            BatchSize = 1000
         });
 
 
@@ -82,7 +83,7 @@ public partial class GPR_LeadManager : System.Web.UI.Page
                     #region For each record in the response write a row.
                     foreach(var record in nodes)
                     {
-                        if (record.Zip == "1") // Only show customer leads where the Zip is equal to 1, because I set the Zip to 1 if the lead was created by the Game Plan Request form.
+                        if (1 == 1) // (record.Zip == "1") // Only show customer leads where the Zip is equal to 1, because I set the Zip to 1 if the lead was created by the Game Plan Request form.
                         { 
                             // Assemble our html
                             html.AppendFormat("<tr>");
