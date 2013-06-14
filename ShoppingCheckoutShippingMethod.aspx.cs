@@ -56,7 +56,7 @@ public partial class ShoppingCheckoutShippingMethod : Page
                     PriceType = Shopping.Configuration.PriceTypeID,
                     CurrencyCode = Shopping.Configuration.CurrencyCode,
                     ReturnShipMethods = true,
-                    ShipMethodID = 1,
+                    ShipMethodID = Shopping.Configuration.DefaultShipMethodID,
                     Details = Shopping.Cart.Items.Select(i => new OrderDetailRequest
                     {
                         ItemCode = i.ItemCode,
@@ -154,7 +154,7 @@ public partial class ShoppingCheckoutShippingMethod : Page
             var selectedShippingMethodItems = rdoShipMethod.Items.Cast<ListItem>().Where(i => i.Selected == true).ToList();
             if (selectedShippingMethodItems.Count == 0)
             {
-                var defaultShippingMethodID = CalculatedOrder.ShipMethods.Where(s => s.ShippingAmount > 0M).OrderBy(s => s.ShippingAmount).FirstOrDefault();
+                var defaultShippingMethodID = CalculatedOrder.ShipMethods.Where(s => s.ShippingAmount > 0M && s.ShipMethodID < 4).OrderBy(s => s.ShippingAmount).FirstOrDefault();
                 if (defaultShippingMethodID != null)
                 {
                     rdoShipMethod.Items.FindByValue(defaultShippingMethodID.ShipMethodID.ToString()).Selected = true;

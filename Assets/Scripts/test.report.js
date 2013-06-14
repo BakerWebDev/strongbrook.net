@@ -288,13 +288,12 @@ report.results = {
             cache: false,
             success: function (data) {
 
-
+                
 
                 // Insert the HTML of the results into the table.
                 var html = data.split('^')[1];
-                var count = data.split('^')[0];
 
-                $('#gridCount').append(count);
+               
                 $('#' + report.settings.gridReportTableID).append(html);
 
 

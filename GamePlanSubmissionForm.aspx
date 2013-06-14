@@ -99,6 +99,11 @@
             }
 
 
+            if (dateTextbox == "Wednesday, July 4, 2013") {
+                alert("Closed for the July 4th Holiday.\n Please choose another day.");
+            }
+
+
             // Adjust what fields are visible
             $('#txtDate1Label').hide();
             $('#txtDate1Label').addClass("txtDate1LabelLoaded");

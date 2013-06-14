@@ -22,7 +22,7 @@
        Use the singleton instance of this class, $.datepicker, to interact with the date picker.
        Settings for (groups of) date pickers are maintained in an instance object,
        allowing multiple different settings on the same page. */
-
+    
     function Datepicker() {
         this.debug = false; // Change this to true to start debugging
         this._curInst = null; // The current instance in use

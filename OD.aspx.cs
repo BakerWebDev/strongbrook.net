@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class OrganizationDetails : System.Web.UI.Page
+public partial class OD : System.Web.UI.Page
 {
     #region Properties
     public string IBD_CustomerCountClass
@@ -132,6 +132,7 @@ public partial class OrganizationDetails : System.Web.UI.Page
             return visibility;
         }
     }
+
     #endregion Properties
 
     #region Fetching Data
@@ -176,6 +177,7 @@ public partial class OrganizationDetails : System.Web.UI.Page
         // Return the nodes
         return nodes;
     }
+
 
     public int IBD_CustomerCount
     {
@@ -414,6 +416,7 @@ public partial class OrganizationDetails : System.Web.UI.Page
         return recordCount;
         }
     }
+
     #endregion
 
     #region Render
@@ -432,16 +435,20 @@ public partial class OrganizationDetails : System.Web.UI.Page
 
                     // First, add our record count
                     html.AppendFormat("{0}^", nodes.Count());
+
                     foreach(var record in nodes)
                     {
                         // Assemble our html
                         html.AppendFormat("<tr>");
                         html.AppendFormat("<td>{0}</td>", record.NestedLevel);
+
                         html.AppendFormat(@"<td class='customerdetails'>
                                                 <a href='Profile.aspx?id={0}' title='View profile'>{0}</a><br />
                                                 <span class='title'>{1}</span>
                                             </td>", record.CustomerID,
                                                   record.CustomerRank);
+
+
                         html.AppendFormat(@"
                                 <td class='customerdetails'>
                                     <a href='Profile.aspx?id={0}' title='View profile'>
@@ -455,44 +462,16 @@ public partial class OrganizationDetails : System.Web.UI.Page
                             record.CustomerStatus,
                             record.CustomerType);
 
-                        var email = (!string.IsNullOrEmpty(record.Email)) ? string.Format("<i class='icon-envelope'></i>&nbsp;<a href='CreateMessage.aspx?to={0}' title='Send email'>{0}</a><br />", record.Email) : "";
-                        var phone = (!string.IsNullOrEmpty(record.Phone)) ? string.Format("<i class='icon-home'></i>&nbsp;{0}<br />", record.Phone) : "";
-                        var phone2 = (!string.IsNullOrEmpty(record.Phone2)) ? string.Format("<i class='icon-briefcase'></i>&nbsp;{0}", record.Phone2) : "";
-                        html.AppendFormat(@"
-                                <td>
-                                    {0}
-                                    {1}
-                                    {2}
-                                </td>
-                            ", email,
-                             phone,
-                             phone2);
 
-                        html.AppendFormat("<td>{0:M/d/yyyy}</td>", record.JoinedDate);
-                        html.AppendFormat("<td>{0:N0}</td>", record.Volume1);
-                        html.AppendFormat("<td>{0:N0}</td>", record.Volume2);
-                        html.AppendFormat("<td>{0:N0}</td>", record.Volume3);
-                        html.AppendFormat("<td>{0:N0}</td>", record.Volume4);
-                        html.AppendFormat("<td>{0:N0}</td>", record.Volume5);;
 
-                        html.AppendFormat(@"
-                                <td>
-                                    <div class='btn-group pull-right'>
-                                        <a href='CreateMessage.aspx?to={0}' class='btn'><i class='icon-envelope'></i></a>
-                                        <a href='javascript:;' class='btn dropdown-toggle' data-toggle='dropdown'>
-                                            <span class='caret'></span>
-                                        </a>
-                                        <ul class='dropdown-menu pull-right'>
-                                            <li><a href='CreateMessage.aspx?to={0}'><i class='icon-envelope'></i>&nbsp;Email</a></li>
-                                            <li><a href='OrderHistory.aspx?id={1}'>View order history</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            ", record.Email,
-                             record.CustomerID);
+
+
 
                         html.AppendFormat("</tr>");
                     }
+
+
+
 
                     Response.Clear();
                     writer.Write(html.ToString());
@@ -510,6 +489,7 @@ public partial class OrganizationDetails : System.Web.UI.Page
             base.Render(writer);
         }
     }
+
     public void Render_CustomerCount()
     {
         HtmlTextWriter writer = new HtmlTextWriter(Response.Output);
@@ -582,6 +562,7 @@ public partial class OrganizationDetails : System.Web.UI.Page
  
         writer.Write(html.ToString());
     }
+
     #endregion
 
     #region Models
@@ -627,3 +608,4 @@ public partial class OrganizationDetails : System.Web.UI.Page
     }
     #endregion
 }
+

@@ -1,10 +1,10 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPages/Site.master" AutoEventWireup="true" CodeFile="OrganizationDetails.aspx.cs" Inherits="OrganizationDetails" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPages/Site.master" AutoEventWireup="true" CodeFile="OD.aspx.cs" Inherits="OD" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="Server">
     <link href="Assets/Styles/reports.min.css" rel="stylesheet" />
     <link href="Assets/Styles/organization.css" rel="stylesheet" />
     <script src="Assets/Scripts/exigo.util.js"></script>
-    <script src="Assets/Scripts/exigo.report.js"></script>
+    <script src="Assets/Scripts/test.report.js"></script>
     <script src="Assets/Scripts/exigo.report.searching.js"></script>
 
     <script>
@@ -82,7 +82,7 @@
                     </tr>
                 </table>
             </div>
-                        
+
             <div id="countTable">
                 <% Render_CustomerCount(); %>
             </div>

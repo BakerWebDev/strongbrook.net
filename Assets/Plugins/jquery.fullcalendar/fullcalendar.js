@@ -15,7 +15,8 @@
  *
  */
  
-(function($, undefined) {
+(function ($, undefined) {
+    alert();
 
 
 var defaults = {

@@ -75,7 +75,7 @@ public class ShoppingCartManager
                 return new List<Exigo.WebService.PaymentType>()
                 {
                     Exigo.WebService.PaymentType.CreditCard,
-                    Exigo.WebService.PaymentType.ACHDebit
+                    //Exigo.WebService.PaymentType.ACHDebit
                 };
             }
         }

@@ -33,7 +33,6 @@ public partial class AutoshipCheckoutReview : Page, IPostBackEventHandler
             Response.Redirect(Autoship.GetStepUrl(AutoshipManagerStep.Payment));
         }
 
-
         if (!IsPostBack)
         {
             PopulateAvailableShippingMethods_Load();
@@ -124,7 +123,7 @@ public partial class AutoshipCheckoutReview : Page, IPostBackEventHandler
     {
         get
         {
-            if (!string.IsNullOrEmpty(_newCreditCardPaymentToken))
+            if (string.IsNullOrEmpty(_newCreditCardPaymentToken))
             {
                 var paymentApi = new ExigoPaymentApi();
                 _newCreditCardPaymentToken = paymentApi.FetchCreditCardToken
@@ -406,7 +405,7 @@ public partial class AutoshipCheckoutReview : Page, IPostBackEventHandler
             var selectedShippingMethodItems = rdoShipMethod.Items.Cast<ListItem>().Where(i => i.Selected == true).ToList();
             if (selectedShippingMethodItems.Count == 0)
             {
-                var defaultShippingMethodID = CalculatedOrder.ShipMethods.Where(s => s.ShippingAmount > 0M).OrderBy(s => s.ShippingAmount).FirstOrDefault();
+                var defaultShippingMethodID = CalculatedOrder.ShipMethods.Where(s => s.ShippingAmount > 0M && s.ShipMethodID < 4).OrderBy(s => s.ShippingAmount).FirstOrDefault();
                 if (defaultShippingMethodID != null)
                 {
                     rdoShipMethod.Items.FindByValue(defaultShippingMethodID.ShipMethodID.ToString()).Selected = true;

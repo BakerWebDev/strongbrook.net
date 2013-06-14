@@ -245,6 +245,7 @@ public class AutoshipCartPropertyBag
         NextRunDate = autoship.NextRunDate;
         ShipMethodID = autoship.ShipMethodID;
 
+
         ShippingFirstName = autoship.FirstName;
         ShippingLastName = autoship.LastName;
         ShippingAddress1 = autoship.Address1;

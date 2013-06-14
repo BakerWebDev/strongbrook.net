@@ -1,0 +1,15 @@
+#countTable { width:100%;
+    .countDetails { 
+		h3 { width: 100%; margin:0px; color:#0088cc; padding-top:10px; }
+		table { max-width: 99%;
+			th { font-size: 11px; padding:0px 20px 0px 3px; min-width: 100%;
+				.hidden { visibility: hidden; }
+				.visible { visibility: visible; }
+			}
+			td { COLOR: #888; FONT-SIZE: 10px; text-align: center; padding:0px 20px 0px 0px;
+				.hidden { visibility: hidden; }
+				.visible { visibility: visible; }		
+			}
+		}
+	}
+}

@@ -323,14 +323,13 @@ public partial class Commissions : System.Web.UI.Page
     {
         return (from o in ExigoApiContext.CreateODataContext().PeriodVolumes
                 where o.CustomerID == Identity.Current.CustomerID
-                where o.PeriodTypeID == PeriodTypeID
+                where o.PeriodTypeID == PeriodTypes.Weekly
                 where o.PeriodID == PeriodID
                 select new PeriodVolume()
                 {
                     Rank = o.Rank,
                     PaidRank = o.PaidRank,
                     Volume1 = o.Volume1,
-                    Volume2 = o.Volume2,
                     Volume3 = o.Volume3,
                 }).FirstOrDefault();
     }

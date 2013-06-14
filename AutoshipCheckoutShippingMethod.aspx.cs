@@ -54,7 +54,7 @@ public partial class AutoshipCheckoutShippingMethod : Page
                     PriceType = Autoship.Configuration.PriceTypeID,
                     CurrencyCode = Autoship.Configuration.CurrencyCode,
                     ReturnShipMethods = true,
-                    ShipMethodID = 1,
+                    ShipMethodID = Autoship.Configuration.DefaultShipMethodID,
                     Details = Autoship.Cart.Items.Select(i => new OrderDetailRequest
                     {
                         ItemCode = i.ItemCode,
@@ -153,7 +153,7 @@ public partial class AutoshipCheckoutShippingMethod : Page
             var selectedShippingMethodItems = rdoShipMethod.Items.Cast<ListItem>().Where(i => i.Selected == true).ToList();
             if (selectedShippingMethodItems.Count == 0)
             {
-                var defaultShippingMethodID = CalculatedOrder.ShipMethods.Where(s => s.ShippingAmount > 0M).OrderBy(s => s.ShippingAmount).FirstOrDefault();
+                var defaultShippingMethodID = CalculatedOrder.ShipMethods.Where(s => s.ShippingAmount > 0M && s.ShipMethodID < 4).OrderBy(s => s.ShippingAmount).FirstOrDefault();
                 if (defaultShippingMethodID != null)
                 {
                     rdoShipMethod.Items.FindByValue(defaultShippingMethodID.ShipMethodID.ToString()).Selected = true;

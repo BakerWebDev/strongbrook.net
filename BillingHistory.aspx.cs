@@ -54,7 +54,7 @@ public partial class BillingHistory : System.Web.UI.Page
                         string paymentdescription = string.Empty;
                         switch(payment.PaymentType)
                         {
-                            case PaymentType.ACHDebit:          paymentdescription = "ACH/Debit payment"; break;
+                            //case PaymentType.ACHDebit:          paymentdescription = "ACH/Debit payment"; break;
                             case PaymentType.BankDeposit:       paymentdescription = "Bank deposit payment"; break;
                             case PaymentType.BankDraft:         paymentdescription = "Bank draft payment"; break;
                             case PaymentType.BankWire:          paymentdescription = "Bank wire payment"; break;

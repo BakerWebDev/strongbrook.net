@@ -1,0 +1,27 @@
+#countTable {
+  width: 100%; }
+  #countTable .countDetails h3 {
+    width: 100%;
+    margin: 0px;
+    color: #0088cc;
+    padding-top: 10px; }
+  #countTable .countDetails table {
+    max-width: 99%; }
+    #countTable .countDetails table th {
+      font-size: 11px;
+      padding: 0px 20px 0px 3px;
+      min-width: 100%; }
+      #countTable .countDetails table th .hidden {
+        visibility: hidden; }
+      #countTable .countDetails table th .visible {
+        visibility: visible; }
+    #countTable .countDetails table td {
+      COLOR: #888;
+      FONT-SIZE: 10px;
+      text-align: center;
+      padding: 0px 20px 0px 0px; }
+      #countTable .countDetails table td .hidden {
+        visibility: hidden; }
+      #countTable .countDetails table td .visible {
+        visibility: visible; }
+
