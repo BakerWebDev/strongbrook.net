@@ -1,35 +1,31 @@
 ﻿.gridreporttableheader {
-    margin:0px;
+    margin: 0px;
+    width: 100%;
 }
 
-.gridreporttableheader #ID {
-    width:20px;
-    text-align:left;
-    padding-left:20px;
-}
-.gridreporttableheader #Name {
-    width:30px;
-    text-align:left;
-}
-.gridreporttableheader #OrderID {
-    width:40px;
-    text-align:right;
-}
-.gridreporttableheader #OrderDate {
-    width:35px;
-    text-align:center;
-}
-.gridreporttableheader #BV {
-    width:20px;
-    text-align:center;
-    padding-right:24px;
-}
-.gridreporttableheader #Total {
-    width:20px;
-    text-align:left;
-    padding-right:10px;
-}
-.gridreporttableheader #Actions {
-    width:40px;
-    text-align:center;
-}
+    .gridreporttablewrapper #ID {
+
+    }
+
+    .gridreporttablewrapper #Name {
+
+    }
+
+    .gridreporttablewrapper #OrderID {
+
+    }
+
+    .gridreporttablewrapper #OrderDate {
+    }
+
+    .gridreporttablewrapper #BV {
+    }
+
+    .gridreporttablewrapper #Total {
+
+    }
+
+    .gridreporttablewrapper #Actions {
+        text-align: right;
+        padding-right:17px;
+    }

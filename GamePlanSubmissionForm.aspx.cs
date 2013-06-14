@@ -25,7 +25,7 @@ public partial class GPRform : System.Web.UI.Page
         {
             string timeZoneSelection = Request.Form["timeZone"];
             if (timeZoneSelection == null)
-            { 
+            {
                 PopulateAvailabilityFields();
                 PopulateNetWorthFields();
             }
@@ -327,7 +327,7 @@ public partial class GPRform : System.Web.UI.Page
     {
 
         firstAvailableTime.Items.Clear();
-        firstAvailableTime.Items.Add(new ListItem("Best Time to Call"));
+        firstAvailableTime.Items.Add(new ListItem(""));
         firstAvailableTime.Items.Add(new ListItem("Morning"));
         firstAvailableTime.Items.Add(new ListItem("Afternoon"));
         firstAvailableTime.Items.Add(new ListItem("Evening"));
@@ -373,7 +373,7 @@ public partial class GPRform : System.Web.UI.Page
         string from_6AM_to_8AM = "<option>" + "" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + "</option>";
         string from_noon_to_4PM = "<option>" + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + "</option>";
         string from_6AM_to_9AM = "<option>" + "" + oMin + "from 6:00AM to 6:30AM" + oMin + "from 6:30AM to 7:00AM" + oMin + "from 7:00AM to 7:30AM" + oMin + "from 7:30AM to 8:00AM" + oMin + "from 8:00AM to 8:30AM" + oMin + "from 8:30AM to 9:00AM" + "</option>";
-        string from_9AM_to_5PM = "<option>" + "" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + "</option>";        
+        string from_9AM_to_5PM = "<option>" + "" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + "</option>";
         #endregion Hawaii Hours
 
         #region Pacific Hours
@@ -381,7 +381,7 @@ public partial class GPRform : System.Web.UI.Page
         string from_9AM_to_11AM = "<option>" + "" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "</option>";
         string from_3PM_to_7PM = "<option>" + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + "</option>";
         string from_9AM_to_noon = "<option>" + "" + oMin + "from 9:00AM to 9:30AM" + oMin + "from 9:30AM to 10:00AM" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + "</option>";
-        string from_12PM_to_8PM = "<option>" + "" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + "</option>";        
+        string from_12PM_to_8PM = "<option>" + "" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + "</option>";
         #endregion Pacific Hours
 
         #region Mountain Hours
@@ -389,7 +389,7 @@ public partial class GPRform : System.Web.UI.Page
         string from_10AM_to_noon = "<option>" + "" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + "</option>";
         string from_4PM_to_8PM = "<option>" + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + "</option>";
         string from_10AM_to_1PM = "<option>" + "" + oMin + "from 10:00AM to 10:30AM" + oMin + "from 10:30AM to 11:00AM" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + "</option>";
-        string from_1PM_to_9PM = "<option>" + "" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + "</option>";                
+        string from_1PM_to_9PM = "<option>" + "" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + "</option>";
         #endregion Mountain Hours
 
         #region Central Hours
@@ -397,7 +397,7 @@ public partial class GPRform : System.Web.UI.Page
         string from_11AM_to_1PM = "<option>" + "" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + "</option>";
         string from_5PM_to_9PM = "<option>" + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + "</option>";
         string from_11AM_to_2PM = "<option>" + "" + oMin + "from 11:00AM to 11:30AM" + oMin + "from 11:30AM to 12:00PM" + oMin + "from 12:00AM to 12:30AM" + oMin + "from 12:30AM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + "</option>";
-        string from_2PM_to_10PM = "<option>" + "" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + oMin + "from 9:00PM to 9:30PM" + oMin + "from 9:30PM to 10:00PM" + "</option>";                              
+        string from_2PM_to_10PM = "<option>" + "" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + oMin + "from 9:00PM to 9:30PM" + oMin + "from 9:30PM to 10:00PM" + "</option>";
         #endregion Central Hours
 
         #region Eastern Hours
@@ -405,7 +405,7 @@ public partial class GPRform : System.Web.UI.Page
         string from_12PM_to_2PM = "<option>" + "" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + "</option>";
         string from_6PM_to_10PM = "<option>" + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + oMin + "from 9:00PM to 9:30PM" + oMin + "from 9:30PM to 10:00PM";
         string from_12PM_to_3PM = "<option>" + "" + oMin + "from 12:00PM to 12:30PM" + oMin + "from 12:30PM to 1:00PM" + oMin + "from 1:00PM to 1:30PM" + oMin + "from 1:30PM to 2:00PM" + oMin + "from 2:00PM to 2:30PM" + oMin + "from 2:30PM to 3:00PM" + "</option>";
-        string from_3PM_to_11PM = "<option>" + "" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + oMin + "from 9:00PM to 9:30PM" + oMin + "from 9:30PM to 10:00PM" + oMin + "from 10:00PM to 10:30PM" + oMin + "from 10:30PM to 11:00PM" + "</option>";                        
+        string from_3PM_to_11PM = "<option>" + "" + oMin + "from 3:00PM to 3:30PM" + oMin + "from 3:30PM to 4:00PM" + oMin + "from 4:00PM to 4:30PM" + oMin + "from 4:30PM to 5:00PM" + oMin + "from 5:00PM to 5:30PM" + oMin + "from 5:30PM to 6:00PM" + oMin + "from 6:00PM to 6:30PM" + oMin + "from 6:30PM to 7:00PM" + oMin + "from 7:00PM to 7:30PM" + oMin + "from 7:30PM to 8:00PM" + oMin + "from 8:00PM to 8:30PM" + oMin + "from 8:30PM to 9:00PM" + oMin + "from 9:00PM to 9:30PM" + oMin + "from 9:30PM to 10:00PM" + oMin + "from 10:00PM to 10:30PM" + oMin + "from 10:30PM to 11:00PM" + "</option>";
         #endregion Eastern Hours
 
         #endregion Properties
@@ -623,7 +623,8 @@ public partial class GPRform : System.Web.UI.Page
             return appointmentTimeFromCookie;
         }
     }
-    #endregion
+
+    #endregion Helpers
 
     #region Properties
     public int orderID { get; set; }
@@ -1198,10 +1199,10 @@ public partial class GPRform : System.Web.UI.Page
     public string _likelyAvailable;
     public string LikelyAvailable
     {
-        get 
+        get
         {
             var _likelyAvailable = firstAvailableTime.SelectedValue;
-            if (_likelyAvailable != "Best Time to Call" && RadioButtonRequest.Checked)
+            if (_likelyAvailable != "" && RadioButtonRequest.Checked)
             {
                 return _likelyAvailable;
             }
@@ -1212,7 +1213,6 @@ public partial class GPRform : System.Web.UI.Page
 
             return _likelyAvailable;
         }
-        set { _likelyAvailable = value; }
     }
 
     private string Comments
@@ -1226,6 +1226,308 @@ public partial class GPRform : System.Web.UI.Page
     #endregion Properties
 
     #region Email Senders
+    #region Render
+    private string appointmentType
+    {
+        get
+        {
+            string button = "";
+            if(RadioButtonSchedule.Checked) button = "schedule";
+            if(RadioButtonRequest.Checked) button = "request";
+            return button;
+        }
+            
+    }
+    public string TimeFrameTypeParagraph { get; set; }
+    public string TimeFrameTypeForProspect
+    {
+        get
+        {
+            switch (appointmentType)
+            {
+                case "schedule": var paragraphOne = new StringBuilder();
+                    #region Paragraph_1
+                    paragraphOne.AppendFormat(@"
+                    <h1>Congratulations {0}!</h1>
+                    <p>
+                        By requesting your customized Game Plan Report you've taken your first step to creating positive cash-flow for life!
+                    </p>
+                    <p>
+                        A Game Plan Counselor will be contacting you at your selected appointment time. He or she will spend a few minutes asking you questions that will 
+                        be used to generate your customized Game Plan. He or she will then email you your game plan options; or if you are an ideal candidate for the program, 
+                        will schedule an appointment for you to meet with a Game Plan Specialist from the executive team to go over your custom Game Plan Report.
+                    </p>
+                    <p>
+                        <strong>The date and time you requested to be contacted for your Game Plan Report is:</strong><br />
+                        {5}<br />
+                        {6}<br />
+                        {7}<br />
+                        <strong>Make sure to mark your calendar for this conversation and be sure to call us back if you miss our call.</strong>
+                        <br />
+                    </p>
+                    <p>
+                        If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
+                    </p>
+                    <p>
+                        In the meantime, feel free to visit <strong>http://{8}.strongbrook.com</strong> for more information: 
+                        On this site you will be able to download a free digital copy of our 233 page hard cover book, <i>The Strait Path To Real Estate Wealth.</i> Simply enter the code, “FREE”.
+                        You will also be able to access reports of our most recent completed real estate transactions and learn what people all over the country are saying about Strongbrook.
+                    </p>
+                    <p>
+                        We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
+                    </p>
+                    <p>
+                    <strong>To Your Success,                        </strong>
+                    <br />  The Strongbrook Team
+                    </p>
+                    <br />
+                    <strong><u>The information you provided</u>     </strong>
+                    <p>     Name: {0} {1}                  </p>
+                    <p>     Main Phone: {2}                         </p>
+                    <p>     Secondary Phone: {3}                    </p>
+                    <p>     Email Address: {4}                      </p>
+                    <p>     Date Requested if any: {5}              </p>
+                    <p>     Time Requested if any: {6}              </p>
+                    <p>     Your Time Zone: {7}                     </p>
+                    ", FirstName // 0
+                     , LastName // 1
+                     , Phone1 // 2
+                     , Phone2 // 3
+                     , Email // 4
+                     , AppointmentDate // 5
+                     , AppointmentTimeSelectedByTheProspect // 6
+                     , TimeZone // 7
+                     , CurrentUser_WebAlias // 8
+                     );
+                    #endregion Paragraph_1
+                    TimeFrameTypeParagraph = paragraphOne.ToString();
+                    break;
+                case "request": var paragraphTwo = new StringBuilder();
+                    #region Paragraph_2
+                        paragraphTwo.AppendFormat(@"
+                        <h1>Congratulations {0}!</h1>
+                        <p>
+                            By requesting your customized Game Plan Report you've taken your first step to creating positive cash-flow for life!
+                        </p>
+                        <p>
+                            A Game Plan Counselor will be contacting you at your selected appointment time. He or she will spend a few minutes asking you questions that will 
+                            be used to generate your customized Game Plan. He or she will then email you your game plan options; or if you are an ideal candidate for the program, 
+                            will schedule an appointment for you to meet with a Game Plan Specialist from the executive team to go over your custom Game Plan Report.
+                        </p>
+                        <p>
+                            <strong>The time of day selected for the appointment is:</strong><br />
+                            Any {5} in the {6} time zone.<br />
+                            <strong>Make sure to mark your calendar for this conversation and be sure to call us back if you miss our call.</strong>
+                            <br />
+                        </p>
+                        <p>
+                            If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
+                        </p>
+                        <p>
+                            In the meantime, feel free to visit <strong>http://{7}.strongbrook.com</strong> for more information: 
+                            On this site you will be able to download a free digital copy of our 233 page hard cover book, <i>The Strait Path To Real Estate Wealth.</i> Simply enter the code, “FREE”.
+                            You will also be able to access reports of our most recent completed real estate transactions and learn what people all over the country are saying about Strongbrook.
+                        </p>
+                        <p>
+                            We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
+                        </p>
+                        <p>
+                        <strong>To Your Success,                        </strong>
+                        <br />  The Strongbrook Team
+                        </p>
+                        <br />
+                        <strong><u>The information you provided</u>     </strong>
+                        <p>     Name: {0} {1}                  </p>
+                        <p>     Main Phone: {2}                         </p>
+                        <p>     Secondary Phone: {3}                    </p>
+                        <p>     Email Address: {4}                      </p>
+                        <p>     Likely Available: {5}                   </p>
+                        <p>     Your Time Zone: {6}                     </p>
+                        ", FirstName // 0
+                         , LastName // 1
+                         , Phone1 // 2
+                         , Phone2 // 3
+                         , Email // 4
+                         , LikelyAvailable // 5
+                         , TimeZone // 6
+                         , CurrentUser_WebAlias // 7
+                         );
+                        #endregion Paragraph_2
+                    TimeFrameTypeParagraph = paragraphTwo.ToString();
+                    break;
+            }
+            return TimeFrameTypeParagraph;
+        }
+    }
+    public string TimeFrameTypeForUpline
+    {
+        get
+        {
+            switch (appointmentType)
+            {
+                case "schedule": var paragraphOne = new StringBuilder();
+                    #region Paragraph_1
+                    paragraphOne.AppendFormat(@"
+                    <h1>Congratulations, {0} {1} has just requested a Game Plan!</h1>
+                    <p>
+                        <strong>Requested Contact Time (If the prospect requested a specific date and time to be contacted.)</strong><br />
+                        {2}<br />
+                        {3}<br />
+                        {4}<br />
+                        <strong>If possible, you may want to do a follow up call with them to see how it went.</strong>
+                    </p>
+                    <p>
+                    <strong>To Your Success,                        </strong>
+                    <br />  The Strongbrook Team
+                    </p>
+                    <br />
+                    <br />
+                    <p>
+                    <strong><u>The prospect's information</u>       </strong>
+                    <p>     Prospect Name: {0} {1}                  </p>
+                    <p>     Main Phone: {5}                         </p>
+                    <p>     Secondary Phone: {6}                    </p>
+                    <p>     Email Address: {7}                      </p>
+                    <p>     Prospects Time Zone: {4}                </p>
+                    ", FirstName // 0
+                     , LastName // 1
+                     , AppointmentDate // 2
+                     , AppointmentTimeSelectedByTheProspect // 3
+                     , TimeZone // 4
+                     , Phone1   // 5
+                     , Phone2   // 6
+                     , Email    // 7
+                     );
+                    #endregion Paragraph_1
+                    TimeFrameTypeParagraph = paragraphOne.ToString();
+                    break;
+                case "request": var paragraphTwo = new StringBuilder();
+                    #region Paragraph_2
+                        paragraphTwo.AppendFormat(@"
+                        <h1>Congratulations, {0} {1} has just requested a Game Plan!</h1>
+                        <p>
+                            <strong>The time of day selected for the appointment is:</strong><br />
+                            Any {2} in the {3} time zone.<br />
+                            <strong>If possible, you may want to do a follow up call with them in a few days to see how it went.</strong>
+                        </p>
+                        <p>
+                        <strong>To Your Success,                        </strong>
+                        <br />  The Strongbrook Team
+                        </p>
+                        <br />
+                        <br />
+                        <p>
+                        <strong><u>The prospect's information</u>       </strong>
+                        <p>     Prospect Name: {0} {1}                  </p>
+                        <p>     Main Phone: {4}                         </p>
+                        <p>     Secondary Phone: {5}                    </p>
+                        <p>     Email Address: {6}                      </p>
+                        <p>     Prospects Time Zone: {3}                </p>
+                        ", FirstName // 0
+                         , LastName // 1
+                         , LikelyAvailable // 2
+                         , TimeZone // 3
+                         , Phone1 // 4
+                         , Phone2 // 5
+                         , Email // 6
+                         );
+                        #endregion Paragraph_2
+                    TimeFrameTypeParagraph = paragraphTwo.ToString();
+                    break;
+            }
+            return TimeFrameTypeParagraph;
+        }
+    }
+    public string TimeFrameTypeForCorporate
+    {
+        get
+        {
+            switch (appointmentType)
+            {
+                case "schedule": var paragraphOne = new StringBuilder();
+                    #region Paragraph_1
+                    paragraphOne.AppendFormat(@"
+                    <h1>    New Game Plan Request for: {1} {2}      </h1>
+                    <br />
+                    <p>     Order ID: {0}                          </p>
+                    <p>     Prospect Name: {1} {2}                  </p>
+                    <p>     Main Phone: {3}                         </p>
+                    <p>     Secondary Phone: {4}                    </p>
+                    <p>     Email Address: {5}                      </p>
+                    <p>     Date Requested if any: {6}              </p>
+                    <p>     Time Requested if any: {7}              </p>
+                    <p>     Prospects Time Zone: {8}                </p>
+                    <p>     Estimated Net Worth: {9}                </p>
+                    <p><u>  Comments:                               </u>  
+                    <br />  {10}
+                    <br />
+                    <p><u>  Enroller Information:                   </u>
+                    <br />  {11}
+                    <br />  {12}
+                    <br />  {13}
+                    </p>
+                    ", orderID // 0
+                     , FirstName // 1
+                     , LastName // 2
+                     , Phone1 // 3
+                     , Phone2 // 4
+                     , Email // 5
+                     , AppointmentDate // 6
+                     , AppointmentTimeInCorporateTimeZone // 7
+                     , TimeZone // 8
+                     , NetWorth // 9
+                     , Comments  // 10
+                     , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
+                     , CurrentUser_Email // 12
+                     , CurrentUser_Phone  // 13
+                     );
+                    #endregion Paragraph_1
+                    TimeFrameTypeParagraph = paragraphOne.ToString();
+                    break;
+                case "request": var paragraphTwo = new StringBuilder();
+                    #region Paragraph_2
+                        paragraphTwo.AppendFormat(@"
+                        <h1>    New Game Plan Request for: {1} {2}      </h1>
+                        <br />
+                        <p>     Order ID: {0}                          </p>
+                        <p>     Prospect Name: {1} {2}                  </p>
+                        <p>     Main Phone: {3}                         </p>
+                        <p>     Secondary Phone: {4}                    </p>
+                        <p>     Email Address: {5}                      </p>
+                        <p>     Likely Available: {6}                   </p>
+                        <p>     Prospects Time Zone: {7}                </p>
+                        <p>     Estimated Net Worth: {8}                </p>
+                        <p><u>  Comments:                               </u>  
+                        <br />  {9}
+                        <br />
+                        <p><u>  Enroller Information:                   </u>
+                        <br />  {10}
+                        <br />  {11}
+                        <br />  {12}
+                        </p>
+                        ", orderID // 0
+                         , FirstName // 1
+                         , LastName // 2
+                         , Phone1 // 3
+                         , Phone2 // 4
+                         , Email // 5
+                         , LikelyAvailable // 6
+                         , TimeZone // 7
+                         , NetWorth // 8
+                         , Comments  // 9
+                         , CurrentUser_FirstName + " " + CurrentUser_LastName // 10
+                         , CurrentUser_Email // 11
+                         , CurrentUser_Phone  // 12
+                         );
+                        #endregion Paragraph_2
+                    TimeFrameTypeParagraph = paragraphTwo.ToString();
+                    break;
+            }
+            return TimeFrameTypeParagraph;
+        }
+    }
+
+    #endregion Render
     private bool SendEmailToProspect()
     {
         emailSent = false;
@@ -1248,66 +1550,7 @@ public partial class GPRform : System.Web.UI.Page
         #endregion Email Header Properties
 
         #region Email Message Body
-
-        var formattedMessage = new StringBuilder();
-
-        formattedMessage.AppendFormat(@"
-        <h1>Congratulations {0}!</h1>
-        <p>
-            By requesting your customized Game Plan Report you've taken your first step to creating positive cash-flow for life!
-        </p>
-        <p>
-            A Game Plan Counselor will be contacting you at your selected appointment time. He or she will spend a few minutes asking you questions that will 
-            be used to generate your customized Game Plan Report, which will then be immediately emailed to you.
-        </p>
-        <p>
-            <strong>The date and time you requested to be contacted for your Game Plan Report is:<br />
-            {5}<br />
-            {7}<br />
-            {8}<br />
-            {6}<br />
-            <br />
-            Make sure to mark your calendar for this conversation and be sure to call us back if you miss our call.</strong>
-            <br />
-        </p>
-        <p>
-            If anything comes up and you need to reschedule your appointment or would like to get a Game Plan sooner, please contact Strongbrook at 801-204-9117.
-        </p>
-        <p>
-            In the meantime, feel free to visit <strong>http://{9}.strongbrook.com</strong> for more information: 
-            On this site you will be able to download a free digital copy of our 233 page hard cover book, <i>The Strait Path To Real Estate Wealth.</i> Simply enter the code, “FREE”.
-            You will also be able to access reports of our most recent completed real estate transactions and learn what people all over the country are saying about Strongbrook.
-        </p>
-        <p>
-            We look forward to sharing how the addition of Strongbrook's program can help build your wealth and turbo-charge your retirement cash-flow through investment grade rental real estate! 
-        </p>
-        <p>
-        <strong>To Your Success,                        </strong>
-        <br />  The Strongbrook Team
-        </p>
-        <br />
-        <strong><u>The information you provided</u>     </strong>
-        <p>     Name: {0} {1}                  </p>
-        <p>     Main Phone: {2}                         </p>
-        <p>     Secondary Phone: {3}                    </p>
-        <p>     Email Address: {4}                      </p>
-        <p>     Likely Available: {5}                   </p>
-        <p>     Date Requested if any: {7}              </p>
-        <p>     Time Requested if any: {8}              </p>
-        <p>     Your Time Zone: {6}                     </p>
-        ", FirstName // 0
-         , LastName // 1
-         , Phone1 // 2
-         , Phone2 // 3
-         , Email // 4
-         , LikelyAvailable // 5
-         , TimeZone // 6
-         , AppointmentDate // 7
-         , AppointmentTimeSelectedByTheProspect // 8
-         , CurrentUser_WebAlias // 9
-         );
-
-        message.Body = formattedMessage.ToString();
+        message.Body = TimeFrameTypeForProspect;
         #endregion Email Message Body
 
         //#region Main Mail server connection properties
@@ -1367,45 +1610,7 @@ public partial class GPRform : System.Web.UI.Page
         #endregion Email Header Properties
 
         #region Email Message Body
-
-        var formattedMessage = new StringBuilder();
-
-        formattedMessage.AppendFormat(@"
-        <h1>Congratulations, {0} {1} has just requested a Game Plan!</h1>
-        <p>
-            <strong>Requested Contact Time (If the prospect requested a specific date and time to be contacted.)</strong><br />
-            {7}<br />
-            {8}<br />
-            {6}<br />
-            <strong>If possible, you may want to do a follow up call with them to see how it went.</strong>
-        </p>
-        <p>
-        <strong>To Your Success,                        </strong>
-        <br />  The Strongbrook Team
-        </p>
-        <br />
-        <br />
-        <p>
-        <strong><u>The prospect's information</u>       </strong>
-        <p>     Prospect Name: {0} {1}                  </p>
-        <p>     Main Phone: {2}                         </p>
-        <p>     Secondary Phone: {3}                    </p>
-        <p>     Email Address: {4}                      </p>
-        <p>     Prospects Time Zone: {6}                </p>
-        <p>     Comments: {9}                           </p>
-        ", FirstName // 0
-         , LastName // 1
-         , Phone1 // 2
-         , Phone2 // 3
-         , Email // 4
-         , LikelyAvailable // 5
-         , TimeZone // 6
-         , AppointmentDate // 7
-         , AppointmentTimeInCorporateTimeZone // 8
-         , Comments  // 9
-         );
-
-        message.Body = formattedMessage.ToString();
+        message.Body = TimeFrameTypeForUpline;
         #endregion Email Message Body
 
         //#region Main Mail server connection properties
@@ -1469,71 +1674,30 @@ public partial class GPRform : System.Web.UI.Page
         #endregion Email Header Properties
 
         #region Email Message Body
-
-        var formattedMessage = new StringBuilder();
-
-        formattedMessage.AppendFormat(@"
-        <h1>    New Game Plan Request for: {0} {1}      </h1>
-        <br />
-        <p>     Order ID: {14}                          </p>
-        <p>     Prospect Name: {0} {1}                  </p>
-        <p>     Main Phone: {2}                         </p>
-        <p>     Secondary Phone: {3}                    </p>
-        <p>     Email Address: {4}                      </p>
-        <p>     Likely Available: {5}                   </p>
-        <p>     Prospects Time Zone: {6}                </p>
-        <p>     Date Requested if any: {7}              </p>
-        <p>     Time Requested if any: {8}              </p>
-        <p>     Estimated Net Worth: {9}                </p>
-        <p><u>  Comments:                               </u>  
-        <br />  {10}
-        <br />
-        <p><u>  Enroller Information:                   </u>
-        <br />  {11}
-        <br />  {12}
-        <br />  {13}
-        </p>
-        ", FirstName // 0
-         , LastName // 1
-         , Phone1 // 2
-         , Phone2 // 3
-         , Email // 4
-         , LikelyAvailable // 5
-         , TimeZone // 6
-         , AppointmentDate // 7
-         , AppointmentTimeInCorporateTimeZone // 8
-         , NetWorth // 9
-         , Comments  // 10
-         , CurrentUser_FirstName + " " + CurrentUser_LastName // 11
-         , CurrentUser_Email // 12
-         , CurrentUser_Phone  // 13
-         , orderID // 14
-         );
-
-        message.Body = formattedMessage.ToString();
+        message.Body = TimeFrameTypeForCorporate;
         #endregion Email Message Body
 
-        #region Main Mail server connection properties
-        //Email SMTP Settings
-        Int16 port = 25;
-        SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
-
-        // Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
-        client.UseDefaultCredentials = false;
-
-        client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
-        #endregion Main Mail server connection properties
-
-        //#region Secondary Mail server connection properties. Use this as a backup if necessary!
+        //#region Main Mail server connection properties
+        ////Email SMTP Settings
         //Int16 port = 25;
-        //SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+        //SmtpClient client = new SmtpClient("smtpout.secureserver.net", port);
 
-        //// Use these properties for a secure SMTP connection.
-        //client.UseDefaultCredentials = true;
-        //client.EnableSsl = true;
+        //// Use these properties for a un-secure SMTP connection. ie. the strongbrookdirect.com email server.
+        //client.UseDefaultCredentials = false;
 
-        //client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
-        //#endregion Secondary Mail server connection properties. Use this as a backup if necessary!
+        //client.Credentials = new System.Net.NetworkCredential("support@strongbrookdirect.com", "Reic2012");
+        //#endregion Main Mail server connection properties
+
+        #region Secondary Mail server connection properties. Use this as a backup if necessary!
+        Int16 port = 25;
+        SmtpClient client = new SmtpClient("smtp.gmail.com", port);
+
+        // Use these properties for a secure SMTP connection.
+        client.UseDefaultCredentials = true;
+        client.EnableSsl = true;
+
+        client.Credentials = new System.Net.NetworkCredential("aaron@bakerwebdev.com", "sting123");
+        #endregion Secondary Mail server connection properties. Use this as a backup if necessary!
 
         #region Attempt to send the message
         try

@@ -710,4 +710,9 @@ public class User : System.Web.UI.Page
     }
     #endregion
 
+
+    public string WealthClubLevel = "4";
+
+
+         
 }

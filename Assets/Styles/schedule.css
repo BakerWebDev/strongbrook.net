@@ -1,43 +1,298 @@
 ﻿
 
+#LeftText h3 {
+    font-size: 15px;
+    margin-top: 0px;
+}
+
+.scheduler {
+    min-height: 545px;
+    min-width: 799px;
+    max-width: 800px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border: 1px solid #aaa;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 0px;
+    position: relative;
+    background-color: white;
+    overflow-x: hidden;
+    margin: auto;
+}
+
+    .scheduler .heading {
+        margin-top: 0px;
+        margin-bottom: 20px;
+        font-size: 30px;
+    }
+
+    .scheduler .notes {
+        margin-right: 20px;
+        color: #888;
+        font-size: 15px;
+        line-height: 130%;
+    }
+
+    .scheduler .reminder {
+        background-color: #f3f3f3;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        padding: 15px;
+    }
+
+    .scheduler .thankYouBody .spacedText1 {
+        color: black;
+        font-size: 15px;
+        margin-bottom: 0px;
+    }
+
+    .scheduler .thankYouBody .spacedText2 {
+        color: black;
+        font-size: 15px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+    }
+
+    .scheduler .thankYouBody .spacedText3 {
+        color: black;
+        font-size: 15px;
+        margin-bottom: -12px;
+        margin-top: 0px;
+    }
+
+    .scheduler .thankYouBody .spacedText4 {
+        color: black;
+        font-size: 15px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+    }
+
+    .scheduler .thankYouBody .spacedText5 {
+        color: black;
+        font-size: 15px;
+        padding-bottom: 0px;
+        padding-top: 0px;
+        text-indent: -5px;
+        margin-top: 20px;
+        margin-bottom: 0px;
+    }
+
+    .scheduler .thankYouBody .spacedText6 {
+        color: black;
+        font-size: 15px;
+        padding-bottom: 0px;
+        padding-top: 0px;
+        text-indent: -1px;
+        margin-top: 0px;
+    }
 
 
-.scheduler { min-height:545px; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; border:1px solid #aaa; padding-top:15px; padding-left:15px; padding-right:15px; padding-bottom:0px; position:relative; background-color:white; overflow-x:hidden; }
-.scheduler .heading { margin-top:0px; }
-.scheduler .notes { margin-right:20px; color:#888; font-size:15px; line-height:130%; }
-.scheduler .reminder { background-color:#f3f3f3; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; padding:15px; }
-    .scheduler TABLE #grid1 { }
-        .scheduler #grid1 .leftSide { max-width:400px; }
 
-        .scheduler #grid1 .rightSide { width:345px; }
-        .scheduler #grid1 .rightSide .recordlabel { width:95px; text-align:right; padding-right:3px; padding-bottom:6px; }
-        .scheduler #grid1 .rightSide .recordlabel .fieldlabel { font-size:12px; font-family:Helvetica, Verdana, Arial, sans-serif; max-width:90px; }
-
-        .scheduler #grid1 .rightSide .recordvalue .fieldvalue { max-width:245px; }
-
-        .scheduler #grid1 .rightSide .dropdowns { width:100px; text-align:right; }
-        .scheduler #grid1 .rightSide .dropdowns .time { float:left; width:105px; }
-        .scheduler #grid1 .rightSide .dropdowns .time select { width:100px; }
-        .scheduler #grid1 .rightSide .dropdowns .zone { float:right; width:115px; }
-        .scheduler #grid1 .rightSide .dropdowns .zone select { width:110px; }
+    .scheduler #grid1 .leftSide {
+        max-width: 465px;
+    }
 
 
-.panelRight { width:100%; position:absolute; bottom:0px; left:0px; right:0px; }
-.schedulerbuttons { float:right; padding:10px 15px; }
+
+    .scheduler #grid1 .rightSide {
+        width: 300px;
+    }
+
+        .scheduler #grid1 .rightSide table {
+            float: right;
+            margin: 10px;
+        }
+
+        .scheduler #grid1 .rightSide #spanner {
+            min-width: 430px;
+        }
 
 
-.schedulegrid { width:100%; border-collapse:collapse; }
-.schedulegrid .time { margin:0px 4px; padding:3px; color:#777; text-align:center; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; cursor:pointer; }
-.schedulegrid .time.selected { background-color:rgb(72,111,183); color:white; }
-.schedulegrid .time.invalid { filter:alpha(opacity=30); opacity:0.3; cursor:default; }
-.schedulegrid .cell { border:1px solid #ccc; padding:4px; background-color:#f8f8f8; }
-.schedulegrid .day { border:1px solid #ccc; padding:4px; background-color:#ccc; text-align:center; }
+        .scheduler #grid1 .rightSide .dropdowns {
+            width: 100px;
+            text-align: right;
+        }
+
+            .scheduler #grid1 .rightSide .dropdowns .time {
+                float: left;
+                width: 100px;
+            }
+
+                .scheduler #grid1 .rightSide .dropdowns .time select {
+                    width: 100px;
+                }
+
+            .scheduler #grid1 .rightSide .dropdowns .zone {
+                float: right;
+                width: 115px;
+            }
+
+                .scheduler #grid1 .rightSide .dropdowns .zone select {
+                    width: 110px;
+                }
 
 
-.clientscore { font-weight:bold; color:white; background-color:green; float:right; border-radius:99px; -moz-border-radius:99px; -webkit-border-radius:99px; padding:2px 4px; min-width:10px; text-align:center; }
-.clientname { font-weight:bold; }
-.clientphone {  }
-.clientemail {  }
-.clientibd { font-size:80%; margin-top:5px; filter:alpha(opacity=50); opacity:0.5; }
+
+        .scheduler #grid1 .rightSide .recordlabel {
+            width: 95px;
+            text-align: right;
+            padding-right: 3px;
+            padding-bottom: 6px;
+        }
+
+            .scheduler #grid1 .rightSide .recordlabel .fieldlabel {
+                font-size: 12px;
+                font-family: Helvetica, Verdana, Arial, sans-serif;
+                max-width: 90px;
+            }
 
 
+
+        .scheduler #grid1 .rightSide .recordvalue {
+            vertical-align: top;
+            width: 218px;
+        }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalue {
+                max-width: 212px;
+            }
+
+                .scheduler #grid1 .rightSide .recordvalue .fieldvalue input[type="text"] {
+                    max-width: 170px;
+                }
+
+                .scheduler #grid1 .rightSide .recordvalue .fieldvalue select {
+                    max-width: 184px;
+                }
+
+                .scheduler #grid1 .rightSide .recordvalue .fieldvalue textarea {
+                    max-width: 170px;
+                }
+
+                .scheduler #grid1 .rightSide .recordvalue .fieldvalue .txtCommentsOnLoad {
+                    position: relative;
+                    z-index: 9999;
+                    bottom: 111px;
+                    left: 10px;
+                    max-width: 125px;
+                    color: #888;
+                    font-size: 11px;
+                }
+
+                .scheduler #grid1 .rightSide .recordvalue .fieldvalue .txtCommentsLoaded {
+                    position: relative;
+                    z-index: 0;
+                    bottom: 111px;
+                    left: 10px;
+                    max-width: 125px;
+                    color: #ffffff;
+                    visibility: hidden;
+                }
+
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .timeZoneDropDownOnload {
+                position: relative;
+                z-index: 9999;
+                bottom: 32px;
+                left: 10px;
+                max-width: 115px;
+                color: #888;
+                font-size: 11px;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .timeZoneDropDownLoaded {
+                position: relative;
+                z-index: 0;
+                top: 9999px;
+                left: 9999px;
+                color: #ffffff;
+                display: none;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection select {
+                max-width: 184px;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection input {
+                max-width: 170px;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .txtDate1OnLoad {
+                background-position: 159px center;
+                background-image: url('../Images/Icons/16x16/calendar--plus.png');
+                background-repeat: no-repeat;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .txtDate1LabelOnLoad {
+                position: relative;
+                z-index: 1;
+                bottom: 70px;
+                left: 10px;
+                max-width: 75px;
+                color: #888;
+                font-size: 11px;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .txtDate1LabelLoaded {
+                position: relative;
+                z-index: 0;
+                top: 55px;
+                left: 10px;
+                max-width: 75px;
+                color: #ffffff;
+                display: none;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .ddlAppTimeLabelOnLoad {
+                position: relative;
+                z-index: 1;
+                bottom: 70px;
+                left: 10px;
+                max-width: 71px;
+                color: #888;
+                font-size: 11px;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .ddlAppTimeLabelLoaded {
+                position: relative;
+                z-index: 0;
+                top: 55px;
+                left: 10px;
+                max-width: 71px;
+                color: #ffffff;
+                display: none;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .ddlfirstAvailableTimeLabelOnLoad {
+                position: relative;
+                z-index: 1;
+                bottom: 70px;
+                left: 10px;
+                max-width: 85px;
+                color: #888;
+                font-size: 11px;
+            }
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection .ddlfirstAvailableTimeLabelLoaded {
+                position: relative;
+                z-index: 0;
+                top: 55px;
+                left: 10px;
+                max-width: 85px;
+                color: #ffffff;
+                display: none;
+            }
+
+
+            .scheduler #grid1 .rightSide .recordvalue .fieldvalueTimeSelection #RadioButtons label {
+                font-size: 11px;
+                margin: 0px;
+                line-height: 2px;
+                position: relative;
+                top: 12px;
+                left: 16px;
+            }
