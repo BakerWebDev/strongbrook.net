@@ -1,9 +1,33 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPages/PopUp.Master" AutoEventWireup="true" CodeFile="GamePlanSubmitted.aspx.cs" Inherits="GamePlanSubmitted" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/MasterPages/Site.master" AutoEventWireup="true" CodeFile="GPRLeadManager.aspx.cs" Inherits="GPRLeadManager" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
-    <link rel="stylesheet" type="text/css" href="Assets/Styles/schedule.css" />
+    <script type="text/javascript" src="Assets/Scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="Assets/Scripts/exigo.util.js"></script>
+    <script type="text/javascript" src="Assets/Scripts/exigo.report.js"></script>
+    <script type="text/javascript" src="Assets/Scripts/exigo.report.searching.js"></script>
+
+
+    <link href="Assets/Styles/reports.min.css" rel="stylesheet" />
+
+
+
+
+    <script type="text/javascript">
+        // Set page variables
+        var page = {
+            activenavigation: 'organization'
+        };
+
+        $(function () {
+            // Report
+            setInitialSort('IndentedSort', report.sortOrderTypes.ASCENDING);
+            initializeReport();
+        });
+    </script>
+
 </asp:Content>
-<asp:Content ID="Content2" runat="server" ContentPlaceHolderID="Content">
+
+<asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="Server">
     <script type="text/javascript" language="javascript">
         $(document).ready(function () {
             if ($('INPUT[type="hidden"][id*="ShowMessage"]').val() != '') {
@@ -40,8 +64,27 @@
     </script>
     <asp:HiddenField ID="ShowMessage" runat="server" />
 
-    <div class="scheduler">
-        <%ShowThisMessage(); %>
+    <h1>GPR Manager</h1>
+
+    <div class="sidebar">
+        <navigation:Organization ID="SideNavigation" ActiveNavigation="leads" runat="server" />
     </div>
 
+    <div class="maincontent">
+        <div class="well well-white list">
+
+            <div class="gridreporttablewrapper">
+                <table class="table gridreporttable" id="gridreporttable">
+                    <tr class="table-headers">
+
+                        <th style="border-top:0px">Date (received)</th>
+                        <th style="border-top:0px">Name</th>
+                        <th style="border-top:0px">Phone #</th>
+                        <th style="border-top:0px">Email</th>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 </asp:Content>

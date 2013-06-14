@@ -13,12 +13,9 @@
     <link href="../Assets/Plugins/twitter.bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="../Assets/Icons/glyphicons/glyphicons.css" rel="stylesheet" />
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-
-    <script src="Assets/Plugins/twitter.bootstrap/js/bootstrap.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+    <script src="Assets/Scripts/jquery.min.js"></script>
     <script src="Assets/Plugins/jquery-ui/js/jquery-ui.custom.min.js"></script>
-
+    <script src="Assets/Plugins/twitter.bootstrap/js/bootstrap.js"></script>
     <!--[if lt IE 9]>  
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>  
     <![endif]-->
@@ -47,11 +44,7 @@
                     <li data-key="events"><i class="glyphicons-icon white calendar"></i><a href="Calendar.aspx"><%=Resources.Navigation.Events %></a></li>
                     <li data-key="organization"><i class="glyphicons-icon white group"></i><a href="OrganizationExplorerTemp.aspx"><%=Resources.Navigation.Organization %></a></li>
 
-
-
                     <li data-key="gameplan"><i class="glyphicons-icon white notes"></i><a href="GPR_WeeklyDetails.aspx"><%=Resources.Navigation.GamePlanReports %></a></li>
-
-
 
                     <li data-key="commissions"><i class="glyphicons-icon white usd"></i><a href="CommissionsPortal.aspx"><%=Resources.Navigation.Commissions %></a></li>
                     <li data-key="orders"><i class="glyphicons-icon white shopping_cart"></i><a href="ShoppingProductList.aspx"><%=Resources.Navigation.Orders %></a></li>

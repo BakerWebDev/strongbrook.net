@@ -11,6 +11,8 @@
     <link href="../Assets/Plugins/twitter.bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="../Assets/Plugins/twitter.bootstrap/css/bootstrap-responsive.css" rel="stylesheet" />
 
+
+
     <!--[if lt IE 9]>  
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>  
     <![endif]-->
@@ -20,7 +22,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <asp:ScriptManager ID="ScriptManager1" runat="server" />
+
 
         <div id="ContentWrapperNew">
             <asp:ContentPlaceHolder ID="Content" runat="server" />

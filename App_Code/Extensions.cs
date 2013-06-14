@@ -94,14 +94,11 @@ public static class GlobalExtensions
         foreach (string prop in props)
         {
             // use reflection (not ComponentModel) to mirror LINQ
-            PropertyInfo pi = type.GetProperty(prop); 
+            PropertyInfo pi = type.GetProperty(prop);
 
-            if(pi != null)// If this value is "null" or "0" this will error.
-            {
-                expr = Expression.Property(expr, pi);
+            expr = Expression.Property(expr, pi);
 
-                type = pi.PropertyType;
-            }
+            type = pi.PropertyType;
         }
         Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
         LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);

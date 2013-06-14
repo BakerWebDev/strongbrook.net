@@ -76,6 +76,8 @@ report.actions = {
         var url = report.settings.requestUrl;
         var currentUserID = getUrlVars()["id"];
 
+        
+
         url = url + "&page=" + report.settings.current.page;
         url = url + "&recordcount=" + report.settings.recordsPerPage;
         url = url + "&sortfield=" + report.settings.current.sortField;
@@ -156,14 +158,9 @@ report.actions = {
 
         report.results.clear();
         report.results.render();
-        
     },
     getScrollParent: function () {
-
-
         return (report.settings.height != null) ? $('.' + report.settings.gridReportTableWrapperID) : $(window);
-
-
     },
     init: function () {
         // Determine if we are using advanced searching through the exigo.report.Searching plugin.
@@ -287,19 +284,9 @@ report.results = {
             type: 'GET',
             cache: false,
             success: function (data) {
-
-
-
                 // Insert the HTML of the results into the table.
                 var html = data.split('^')[1];
-                var count = data.split('^')[0];
-
-                $('#gridCount').append(count);
                 $('#' + report.settings.gridReportTableID).append(html);
-
-
-
-
 
 
                 // Update the status of the infinite scroll trigger

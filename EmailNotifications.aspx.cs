@@ -15,6 +15,10 @@ public partial class EmailNotifications : System.Web.UI.Page, IPostBackEventHand
     protected string FromEmail = GlobalSettings.Mail.NoReplyEmailAddress;
     protected string ReplyToEmail = GlobalSettings.Mail.NoReplyEmailAddress;
 
+
+
+
+
     #region Page Load
     protected void Page_Load(object sender, EventArgs e)
     {

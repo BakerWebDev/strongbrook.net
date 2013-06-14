@@ -46,7 +46,6 @@ public class IdentityAuthenticationService : IAuthenticationService
         else return false;
     }
 
-
     /// <summary>
     /// Signs the customer into the backoffice.
     /// </summary>
@@ -162,6 +161,4 @@ public class IdentityAuthenticationService : IAuthenticationService
         }
         return true;
     }
-
-
 }

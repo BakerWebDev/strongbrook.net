@@ -1,5 +1,4 @@
-﻿using Exigo.OData;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -18,32 +17,78 @@ public partial class DownlineOrders : System.Web.UI.Page
     #region Fetching Data
     public List<ReportDataNode> FetchReportData()
     {
-        // Create our query
-        var query = ExigoApiServicesToo.CreateODataContext().CustomerData
-            .Where(c => c.EnrollerID == Identity.Current.CustomerID);
+        /*
+        var report = new SqlReportDataHelper();
+        var helper = new SqlHelper();
 
-        // Apply ordering and filtering
-        var helper = new GridReportHelper();
-        query = helper.ApplyFiltering<Exigo.CustomOData.CustomerData>(query);
-        query = helper.ApplyOrdering<Exigo.CustomOData.CustomerData>(query);
+        var table = helper.GetTable(@"
+                DECLARE @_page int = " + report.Page + @"
+                DECLARE @_rowcount int = " + report.RowsPerPage + @"
 
-        // Fetch the nodes
-        var nodes = query.Select(c => new ReportDataNode
-            {
-                CustomerID      = c.CustomerID,
-                FirstName       = c.FirstName,
-                LastName        = c.LastName,
-                Company         = c.Company,
-                CustomerType    = c.CustomerType,
-                CustomerStatus  = c.CustomerStatus,
-                OrderID         = c.OrderID,
-                OrderDate       = c.OrderDate,
-                BV              = c.CommissionableVolume,            
-                Total           = c.Total            
-            }).Skip((helper.Page - 1) * helper.RecordCount).Take(helper.RecordCount).ToList();
+                SELECT ud.CustomerID
+	                , c.FirstName
+	                , c.LastName
+	                , c.Company
+	                , c.Email
+                    , ct.CustomerTypeDescription
+                    , cs.CustomerStatusDescription
+		            , o.OrderID
+                    , os.OrderStatusDescription
+		            , o.Total
+		            , o.BusinessVolumeTotal
+		            , o.OrderDate
+                FROM
+	                Orders o
+	                INNER JOIN UniLevelDownline ud
+		                ON ud.CustomerID = o.CustomerID
+	                INNER JOIN Customers c
+		                ON c.CustomerID = ud.CustomerID
+                    INNER JOIN CustomerTypes ct
+                        ON ct.CustomerTypeID = c.CustomerTypeID
+                    INNER JOIN CustomerStatuses cs
+                        ON cs.CustomerStatusID = c.CustomerStatusID     
+                    INNER JOIN OrderStatuses os
+		                ON os.OrderStatusID = o.OrderStatusID          
+                WHERE
+                    " + report.WhereClause + @"
+	                ud.DownlineCustomerID = {0}
+                    AND o.OrderID > GETDATE() - 14
+                ORDER BY
+	                " + report.OrderByClause + @"
+
+                OFFSET (@_page - 1) * @_rowcount ROWS
+                FETCH NEXT @_rowcount ROWS ONLY
+            ", 
+                    Identity.Current.CustomerID,
+                    PeriodTypes.Default,
+                    GlobalUtilities.GetCurrentPeriodID());
+
+
+        // Assemble the nodes
+        var nodes = new List<ReportDataNode>();            
+        foreach(DataRow row in table.Rows)
+        {
+            var node = new ReportDataNode();
+
+            node.CustomerID             = Convert.ToInt32(row["CustomerID"]);
+            node.FirstName              = row["FirstName"].ToString();
+            node.LastName               = row["LastName"].ToString();
+            node.Company                = row["Company"].ToString();
+            node.Email                  = row["Email"].ToString();
+            node.CustomerType           = row["CustomerTypeDescription"].ToString();
+            node.CustomerStatus         = row["CustomerStatusDescription"].ToString();
+            node.OrderID                = Convert.ToInt32(row["OrderID"]);
+            node.OrderStatus            = row["OrderStatusDescription"].ToString();
+            node.OrderDate              = Convert.ToDateTime(row["OrderDate"]);
+            node.Total                  = Convert.ToDecimal(row["Total"]);
+            node.BV                     = Convert.ToDecimal(row["BusinessVolumeTotal"]);
+
+            nodes.Add(node);
+        }
+        */
 
         // Return the nodes
-        return nodes;
+        return new List<ReportDataNode>();
     }
     #endregion
 
@@ -67,19 +112,11 @@ public partial class DownlineOrders : System.Web.UI.Page
                     {
                         // Assemble our html
                         html.AppendFormat("<tr>");
-                        #region Customer ID
-                        html.AppendFormat(@"
-                                <td>
-                                    <span class='id'><a href='Profile.aspx?id={0}' target='_blank' title='View profile'>{0}</a></span>
-                                </td>
-                        ", record.CustomerID);
-                        #endregion Customer ID
-                        #region Name
                         html.AppendFormat(@"
                                 <td class='customerdetails'>
-                                    <a href='Profile.aspx?id={0}' title='View profile' target='_blank'>
+                                    <a href='Profile.aspx?id={0}' title='View profile'>
                                         <img src='{1}' class='avatar' /></a>
-                                    <span class='name'><a href='Profile.aspx?id={0}' target='_blank' title='View profile'>{2}</a></span>
+                                    <span class='name'><a href='Profile.aspx?id={0}' title='View profile'>{2}</a></span>
                                     <span class='title'>{3} {4}</span>
                                 </td>", 
                             record.CustomerID,
@@ -87,24 +124,11 @@ public partial class DownlineOrders : System.Web.UI.Page
                             GlobalUtilities.Coalesce(record.Company, record.FirstName + " " + record.LastName),
                             record.CustomerStatus,
                             record.CustomerType);
-                        #endregion Name
-                        #region Order ID
-                        html.AppendFormat(@"
-                                <td>
-                                    <span class='id'>{0}</span>
-                                </td>
-                        ", record.OrderID);
-                        #endregion Order ID
-                        #region Order Date
-                        html.AppendFormat("<td>{0:M/d/yyyy}</td>", record.OrderDate);
-                        #endregion Order Date
-                        #region Order Commissionable Volume
-                        html.AppendFormat("<td>{0:N0}</td>", record.BV);
-                        #endregion Order Commissionable Volume
-                        #region Order Total
+
                         html.AppendFormat("<td>{0:C}</td>", record.Total);
-                        #endregion Order Total
-                        #region Actions Column
+                        html.AppendFormat("<td>{0:N0}</td>", record.BV);
+                        html.AppendFormat("<td>{0:M/d/yyyy}</td>", record.OrderDate);
+
                         html.AppendFormat(@"
                                 <td>
                                     <div class='btn-group pull-right'>
@@ -121,7 +145,7 @@ public partial class DownlineOrders : System.Web.UI.Page
                                 </td>
                             ", record.Email,
                              record.CustomerID);
-                        #endregion Actions Column
+
                         html.AppendFormat("</tr>");
                     }
 
@@ -129,6 +153,7 @@ public partial class DownlineOrders : System.Web.UI.Page
                     writer.Write(html.ToString());
                     Response.End();
                     break;
+
 
                 default: 
                     base.Render(writer);

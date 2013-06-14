@@ -357,17 +357,10 @@ public partial class AutoshipCheckoutPayment : Page, IPostBackEventHandler
                     Autoship.PropertyBag.ReferredByEndOfCheckout = false;
                     Autoship.PropertyBag.Save();
                     Response.Redirect(Autoship.GetStepUrl(AutoshipManagerStep.Review));
-
-                    
-
                 }
                 else
                 {
                     Response.Redirect(Autoship.GetStepUrl(AutoshipManagerStep.Review));
-
-
-                    RenderCreditCardOnFile(AccountCreditCardType.Primary);// Just saving this here but it needs to go somewhere else.
-
                 }
                 break;
 
@@ -524,25 +517,20 @@ public partial class AutoshipCheckoutPayment : Page, IPostBackEventHandler
     #region Helper Methods
     public bool IsCreditCardOnFileValid(AccountCreditCardType creditCardType)
     {
-        bool isValid = false;
         var creditCardOnFile = CreditCardsOnFile.Where(c => c.CreditCardType == creditCardType).FirstOrDefault();
-        
-        if (creditCardOnFile == null) isValid = false;
+
+        if (creditCardOnFile == null) return false;
 
         TimeSpan expirationDateDifference = creditCardOnFile.ExpirationDate.Subtract(DateTime.Now);
 
-        if (!string.IsNullOrEmpty(creditCardOnFile.CreditCardNumberDisplay)
-            && !string.IsNullOrEmpty(creditCardOnFile.NameOnCard)
-            && !string.IsNullOrEmpty(creditCardOnFile.BillingAddress)
-            && !string.IsNullOrEmpty(creditCardOnFile.BillingCity)
-            && !string.IsNullOrEmpty(creditCardOnFile.BillingState)
-            && !string.IsNullOrEmpty(creditCardOnFile.BillingZip)
-            && !string.IsNullOrEmpty(creditCardOnFile.BillingCountry))
-        {
-            isValid = true;
-        }
-
-        return isValid;
+        return (!string.IsNullOrEmpty(creditCardOnFile.CreditCardNumberDisplay)
+                && expirationDateDifference.Days > 0
+                && !string.IsNullOrEmpty(creditCardOnFile.NameOnCard)
+                && !string.IsNullOrEmpty(creditCardOnFile.BillingAddress)
+                && !string.IsNullOrEmpty(creditCardOnFile.BillingCity)
+                && !string.IsNullOrEmpty(creditCardOnFile.BillingState)
+                && !string.IsNullOrEmpty(creditCardOnFile.BillingZip)
+                && !string.IsNullOrEmpty(creditCardOnFile.BillingCountry));
     }
     public bool IsBankAccountOnFileValid(BankAccountType bankAccountType)
     {
