@@ -233,7 +233,7 @@ public partial class UpdateCConFile : Page, IPostBackEventHandler
                 {
                     Autoship.PropertyBag.ReferredByEndOfCheckout = false;
                     Autoship.PropertyBag.Save();
-                    Request_SaveNewCreditCardToAccount(Autoship.PropertyBag.CreditCardType);
+                    Request_AutoshipTransaction();
                     Response.Redirect(Autoship.GetStepUrl(AutoshipManagerStep.Review));
                 }
                 else
@@ -248,6 +248,20 @@ public partial class UpdateCConFile : Page, IPostBackEventHandler
     }
     #endregion
 
+
+    #region Exigo API Transaction Requests
+    private TransactionalRequest Request_AutoshipTransaction()
+    {
+        TransactionalRequest request = new TransactionalRequest();
+        List<ApiRequest> details = new List<ApiRequest>();
+
+        // Add the request save the new credit card to the account
+        details.Add(Request_SaveNewCreditCardToAccount(Autoship.PropertyBag.CreditCardType));
+
+        request.TransactionRequests = details.ToArray();
+        return request;
+    }
+    #endregion
 
     private SetAccountCreditCardTokenRequest Request_SaveNewCreditCardToAccount(AccountCreditCardType creditCardType)
     {
