@@ -14,12 +14,14 @@ using System.Web.UI.WebControls;
 
 public partial class Home : System.Web.UI.Page
 {
+    #region Settings set prior to page load
     private int customerID = Identity.Current.CustomerID;
     public int rankID = Identity.Current.Ranks.CurrentPeriodRankID;
     private int periodType = PeriodTypes.Default;
     public string actualRankTitle = Identity.Current.Ranks.HighestAchievedRankDescription;
     public string currentMonthsQualifiedRank = Identity.Current.Ranks.CurrentPeriodRankDescription;
     public string guaranteedMinPaidAsRank = Identity.Current.Ranks.HighestCurrentPeriodRankDescription;
+    #endregion Settings set prior to page load
 
     #region Page Load
     protected void Page_Load(object sender, EventArgs e)
@@ -87,8 +89,7 @@ public partial class Home : System.Web.UI.Page
     private CommissionResponse _commissions;
     #endregion Properties
 
-    #region Fetching Data
-
+    #region Fetching Data -ADB
     public PeriodVolume FetchCurrentVolumes()
     {
         return ExigoApiContext.CreateODataContext().PeriodVolumes
@@ -143,14 +144,14 @@ public partial class Home : System.Web.UI.Page
     }
 
     #region Current Commissions Earnings
-    public decimal CurrentWeeklyCommissionsEarnings()
+    public decimal LastAcceptedWeeklyAmountEarned()
 	{
         decimal amount;
         var context = ExigoApiContext.CreateODataContext().Commissions;
 
 		var query = (from c in context
 					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == FetchPreviousCommissionRunID()
+					 where c.CommissionRunID == FetchPreviousWeeklyCommissionRunID()
 					 where c.CurrencyCode == Identity.Current.CurrencyCode
 					 select new
 					 {
@@ -175,7 +176,7 @@ public partial class Home : System.Web.UI.Page
 
 		var query = (from c in context // .Expand("CommissionRun")
 					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == FetchPreviousCommissionRunID()
+					 where c.CommissionRunID == FetchPreviousWeeklyCommissionRunID()
 					 where c.CurrencyCode == Identity.Current.CurrencyCode
 					 select new
 					 {
@@ -213,7 +214,7 @@ public partial class Home : System.Web.UI.Page
     {
         decimal sum = 0;
         var MonthlyCommissionsTotal = CurrentMonthlyCommissionsEarnings();
-        var WeeklyCommissionsTotal = CurrentWeeklyCommissionsEarnings();
+        var WeeklyCommissionsTotal = LastAcceptedWeeklyAmountEarned();
 
         sum = WeeklyCommissionsTotal + MonthlyCommissionsTotal;
 
@@ -222,7 +223,7 @@ public partial class Home : System.Web.UI.Page
     public decimal LatestCheckPaidAmount()
     {
         decimal amount = 0;
-        var WeeklyCommissionsTotal = CurrentWeeklyCommissionsEarnings();
+        var WeeklyCommissionsTotal = LastAcceptedWeeklyAmountEarned();
         amount = WeeklyCommissionsTotal;
         return amount;
     }
@@ -233,8 +234,35 @@ public partial class Home : System.Web.UI.Page
         dateString = WeeklyCommissionsPeriodDescription;
         return dateString;
     }
-
     #endregion Current Commissions Earnings
+
+    #region Last Weeks Weekly Commissions Earned
+    public decimal LastWeeksWeeklyCommissionsEarned()
+	{
+        decimal amount;
+        var context = ExigoApiContext.CreateODataContext().Commissions;
+
+		var query = (from c in context
+					 where c.CustomerID == Identity.Current.CustomerID
+					 where c.CommissionRunID == FetchPreviousWeeklyCommissionRunID()
+					 where c.CurrencyCode == Identity.Current.CurrencyCode
+					 select new
+					 {
+						 c.Earnings
+					 }).FirstOrDefault();
+
+        if(query != null)
+        {
+            amount = query.Earnings;
+        }
+        else
+        {
+            amount = 0;
+        }
+        
+		return amount;	
+	}
+    #endregion Last Weeks Weekly Commissions Earned
 
     #region Commissions Earnings 1 Month Ago
 
@@ -451,8 +479,7 @@ public partial class Home : System.Web.UI.Page
     }
 
     #endregion Fetch GPR Data
-
-    #endregion Fetching Data
+    #endregion Fetching Data -ADB
 
     #region Render
     protected override void Render(HtmlTextWriter writer)
@@ -491,7 +518,6 @@ public partial class Home : System.Web.UI.Page
             base.Render(writer);
         }
     }
-
     public void RenderCompanyNews()
     {
         var html = new StringBuilder();
@@ -789,7 +815,16 @@ public partial class Home : System.Web.UI.Page
         var writer = new HtmlTextWriter(Response.Output);
         writer.Write(html.ToString());
     }
-    public void RenderCurrentCheckReceivedPeriodDescription()
+    public void Render_LastAccepted_Weekly_CommissionAmountEarned()
+    {
+        var html = new StringBuilder();
+
+        html.AppendFormat(@"<tr><td style=""text-align:right;"">{0:C}</td></tr>", LastAcceptedWeeklyAmountEarned());
+       
+        var writer = new HtmlTextWriter(Response.Output);
+        writer.Write(html.ToString());
+    }
+    public void Render_LastAccepted_Weekly_CommissionAmountEarned_PeriodDescription()
     {
         var LastCommissionsCheckPaidPeriodDescription = LatestCheckPaidPeriodDescription();
 
@@ -887,8 +922,6 @@ public partial class Home : System.Web.UI.Page
     }
     #endregion Render
 
-
-
     #region Travis'
     public void RenderCommissionRunSummary()
     {
@@ -922,12 +955,11 @@ public partial class Home : System.Web.UI.Page
     #endregion Travis'
 
     #region Travis'
-    private int PeriodTypeID2 = PeriodTypes.Monthly;
-    //public int PeriodTypeID2 { get; set; }
+    //private int PeriodTypeID2 = PeriodTypes.Monthly;
     #endregion Travis'
 
     #region Properties
-    // Returns the latest commission period for the initial report.
+    // Returns the latest accepted commission period for the initial report.
     public int PeriodID
     {
         get
@@ -937,14 +969,6 @@ public partial class Home : System.Web.UI.Page
             {
                 try
                 {
-                    //if (CurrentCommissions.Count > 0)
-                    //{
-                    //    periodID = CurrentCommissions.FirstOrDefault().PeriodID;
-                    //}
-                    //else
-                    //{
-                    //    periodID = PriorCommissions.FirstOrDefault().CommissionRun.PeriodID;
-                    //}
                     periodID = PriorCommissions.FirstOrDefault().CommissionRun.PeriodID;
                 }
                 catch
@@ -1046,9 +1070,9 @@ public partial class Home : System.Web.UI.Page
                     _dataModel.Earned = data.Earnings;
                     _dataModel.Fee = data.Fee;
                     _dataModel.Total = data.Total;
-                    _dataModel.Volume1 = PeriodVolumes.Volume1;
-                    _dataModel.Volume2 = PeriodVolumes.Volume2;
-                    _dataModel.Volume3 = PeriodVolumes.Volume3;
+                    //_dataModel.Volume1 = PeriodVolumes.Volume1;
+                    //_dataModel.Volume2 = PeriodVolumes.Volume2;
+                    //_dataModel.Volume3 = PeriodVolumes.Volume3;
 
                     foreach(var bonus in bonuses)
                     {
@@ -1065,26 +1089,6 @@ public partial class Home : System.Web.UI.Page
         }
     }
     private CommissionModel _dataModel;
-
-    //public List<CommissionResponse> CurrentCommissions
-    //{
-    //    get
-    //    {
-    //        _currentCommissions = _currentCommissions ?? FetchCurrentCommissions();
-    //        return _currentCommissions;
-    //    }
-    //}
-    //private List<CommissionResponse> _currentCommissions;
-
-    //public List<CommissionBonusResponse> CurrentCommissionBonuses
-    //{
-    //    get
-    //    {
-    //        _currentCommissionBonuses = _currentCommissionBonuses ?? FetchCurrentCommissionBonuses();
-    //        return _currentCommissionBonuses;
-    //    }
-    //}
-    //private List<CommissionBonusResponse> _currentCommissionBonuses;
 
     public List<Commission> PriorCommissions
     {
@@ -1112,8 +1116,6 @@ public partial class Home : System.Web.UI.Page
     }
     private Commission _commissionDetails;
 
-
-
     public Commission CommissionDetails2
     {
         get
@@ -1126,7 +1128,6 @@ public partial class Home : System.Web.UI.Page
         }
     }
     private Commission _commissionDetails2;
-
 
     public CommissionRun CommissionRunDetails
     {
@@ -1186,28 +1187,28 @@ public partial class Home : System.Web.UI.Page
     }
     private string _paidRankDescription;    
 
-    public PeriodVolume PeriodVolumes
-    {
-        get
-        {
-            if (_periodVolumes == null)
-            {
-                _periodVolumes = FetchPeriodVolumes();
-            }
-            return _periodVolumes;
-        }
-    }
-    private PeriodVolume _periodVolumes;
+    //public PeriodVolume PeriodVolumes
+    //{
+    //    get
+    //    {
+    //        if (_periodVolumes == null)
+    //        {
+    //            _periodVolumes = FetchPeriodVolumes();
+    //        }
+    //        return _periodVolumes;
+    //    }
+    //}
+    //private PeriodVolume _periodVolumes;
 
-    public Period PeriodDetails
-    {
-        get
-        {
-            _periodDetails = _periodDetails ?? FetchPeriodDetails();
-            return _periodDetails;
-        }
-    }
-    private Period _periodDetails;
+    //public Period PeriodDetails
+    //{
+    //    get
+    //    {
+    //        _periodDetails = _periodDetails ?? FetchPeriodDetails();
+    //        return _periodDetails;
+    //    }
+    //}
+    //private Period _periodDetails;
     #endregion
 
     #region Fetching Data
@@ -1243,9 +1244,6 @@ public partial class Home : System.Web.UI.Page
                 orderby c.BonusDescription
                 select c).ToList();
     }
-
-
-
 
     #region I added this
     private Commission FetchCommissionDetails2()
@@ -1294,84 +1292,28 @@ public partial class Home : System.Web.UI.Page
     }
 
     #endregion I added this
-    //private List<CommissionBonus> FetchCommissionBonuses()
+
+    //private PeriodVolume FetchPeriodVolumes()
     //{
-    //    return (from c in ExigoApiContext.CreateODataContext().CommissionBonuses
-    //            where c.CustomerID == Identity.Current.CustomerID
-    //            where c.CommissionRunID == MonthlyCommissionRunID
-    //            orderby c.BonusDescription
-    //            select c).ToList();
+    //    return (from o in ExigoApiContext.CreateODataContext().PeriodVolumes
+    //            where o.CustomerID == Identity.Current.CustomerID
+    //            where o.PeriodTypeID == PeriodTypeID2
+    //            where o.PeriodID == PeriodID
+    //            select new PeriodVolume()
+    //            {
+    //                Rank = o.Rank,
+    //                PaidRank = o.PaidRank,
+    //                Volume1 = o.Volume1,
+    //                Volume2 = o.Volume2,
+    //                Volume3 = o.Volume3,
+    //            }).FirstOrDefault();
     //}
-
-
-
-    private PeriodVolume FetchPeriodVolumes()
-    {
-        return (from o in ExigoApiContext.CreateODataContext().PeriodVolumes
-                where o.CustomerID == Identity.Current.CustomerID
-                where o.PeriodTypeID == PeriodTypeID2
-                where o.PeriodID == PeriodID
-                select new PeriodVolume()
-                {
-                    Rank = o.Rank,
-                    PaidRank = o.PaidRank,
-                    Volume1 = o.Volume1,
-                    Volume2 = o.Volume2,
-                    Volume3 = o.Volume3,
-                }).FirstOrDefault();
-    }
     private string FetchPaidRankDescription()
     {
         return (from c in ExigoApiContext.CreateODataContext().Ranks
                 where c.RankID == CommissionDetails.PaidRankID
                 select c.RankDescription).FirstOrDefault();
     }
-
-
-
-
-
-
-
-    // This seems to work for Monthly but not for Weekly.
-
-    int January = 15;
-    int February = 16;
-    int March = 17;
-
-    private int FetchMonthlyCommissionRunID()
-    {
-        var data = (from c in ExigoApiContext.CreateODataContext().CommissionRuns
-                    where c.PeriodID == 884// January // PeriodID
-                    orderby c.CommissionRunID descending
-                    select new
-                    {
-                        c.CommissionRunID
-                    }).FirstOrDefault();
-
-        if (data == null) return 0;
-        else return data.CommissionRunID;
-    }
-
-    int Week17 = 236;
-
-    //private int FetchMonthlyCommissionRunID()
-    //{
-    //    var data = (from c in ExigoApiContext.CreateODataContext().CommissionRuns
-    //                where c.PeriodID == January // PeriodID
-    //                orderby c.CommissionRunID descending
-    //                select new
-    //                {
-    //                    c.CommissionRunID
-    //                }).FirstOrDefault();
-
-    //    if (data == null) return 0;
-    //    else return data.CommissionRunID;
-    //}
-
-
-
-
     private int FetchCurrentCommissionRunID()
     {
         var data = (from c in ExigoApiContext.CreateODataContext().CommissionRuns
@@ -1385,13 +1327,11 @@ public partial class Home : System.Web.UI.Page
         if (data == null) return 0;
         else return data.CommissionRunID;
     }
-
-
-    #region I added this
-    private int FetchPreviousCommissionRunID()
+    private int FetchPreviousWeeklyCommissionRunID()
     {
         var data = (from c in ExigoApiContext.CreateODataContext().CommissionRuns
-                    where c.PeriodID == PeriodID - 1
+                    where c.PeriodID == PeriodID
+                    where c.PeriodTypeID == 1 // Weekly
                     orderby c.CommissionRunID descending
                     select new
                     {
@@ -1401,40 +1341,6 @@ public partial class Home : System.Web.UI.Page
         if (data == null) return 0;
         else return data.CommissionRunID;
     }
-    #endregion I added this
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     #region I added this
     private int FetchCommissionRunIDFrom1MonthAgo()
@@ -1453,17 +1359,17 @@ public partial class Home : System.Web.UI.Page
     #endregion I added this
 
     // Misc. Data
-    private Period FetchPeriodDetails()
-    {
-        return (from c in ExigoApiContext.CreateODataContext().Periods
-                where c.PeriodID == PeriodID
-                where c.PeriodTypeID == PeriodTypeID2
-                select new Period()
-                {
-                    StartDate = c.StartDate,
-                    EndDate = c.EndDate
-                }).FirstOrDefault();
-    }
+    //private Period FetchPeriodDetails()
+    //{
+    //    return (from c in ExigoApiContext.CreateODataContext().Periods
+    //            where c.PeriodID == PeriodID
+    //            where c.PeriodTypeID == PeriodTypeID2
+    //            select new Period()
+    //            {
+    //                StartDate = c.StartDate,
+    //                EndDate = c.EndDate
+    //            }).FirstOrDefault();
+    //}
     #endregion
 
     #region Helper Methods
@@ -1531,10 +1437,6 @@ public partial class Home : System.Web.UI.Page
     }
     #endregion
 
-
-
-
-
     #region Models
     public class ReportDataNode
     {
@@ -1545,19 +1447,5 @@ public partial class Home : System.Web.UI.Page
         public decimal VolumeBucket100 { get; set; }
     }
     #endregion Models
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

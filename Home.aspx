@@ -193,19 +193,106 @@ You always carry the title of the highest rank you reach, but are “Paid As” 
                     <h4><%=Resources.Dashboard.HomeTransactionCredits %></h4>
                 </div>
 
-                <%--
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
 
                                 <div id="CurrentEarnings" class="tile tile-icon size-2x1 theme-aqua2" title="The amount of your most recent commission check.">
 
 
-                                    <table style="margin-left:50px; width:110px; height:50px">
-                                        <%Render3MonthsOfEarnings(); %>
-                                    </table>
-                                    <h2><% RenderCurrentCheckReceivedAmount(); %></h2>
-                                    <h4>Current Earnings for <% RenderCurrentCheckReceivedPeriodDescription(); %></h4>          
+                                    1: <%Render_LastAccepted_Weekly_CommissionAmountEarned_PeriodDescription(); %>
+                                    <br /><br />
+                                    Amount of last weeks Weekly Commissions Earned: <% Render_LastAccepted_Weekly_CommissionAmountEarned(); %>
+
+                                    
+                                              
                                 </div>
 
-                --%>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
 
                 <div id="CorporateInfo" class="tile tile-icon size-2x4 theme-skyblue" style="width:205px; padding:5px;" title="Corporate Information">
                     <h2 style="margin-bottom:0px;">National Team Call</h2>

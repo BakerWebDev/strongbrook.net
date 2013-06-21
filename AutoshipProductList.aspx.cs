@@ -338,6 +338,7 @@ public partial class AutoshipProductList : Page, IPostBackEventHandler
     {
         StringBuilder html = new StringBuilder();
 
+        #region Item Image and Details
         html.AppendLine(@"
             <div class='picture'>
                 <a href='" + Autoship.UrlProductDetail + "?item=" + item.ItemCode + @"'>
@@ -345,41 +346,53 @@ public partial class AutoshipProductList : Page, IPostBackEventHandler
             <div class='detailswrapper'>
                 <div class='description'>
                     <a href='" + Autoship.UrlProductDetail + "?item=" + item.ItemCode + @"' title='View Details'>" + item.Description + @"</a></div>
-                <div class='price'>
-                    " + item.Price.ToString("C") + @"</div>
-                <div class='volume'>
-                    " + item.BusinessVolume.ToString("N2") + @" " + Resources.Shopping.BV + @"</div>
-            </div>
         ");
+        #endregion Item Image and Details
 
+        #region Item Price and BV
+        //        html.AppendLine(@"
+        //                <div class='price'>
+        //                    " + item.Price.ToString("C") + @"</div>
+        //                <div class='volume'>
+        //                    " + item.BusinessVolume.ToString("N2") + @" " + Resources.Shopping.BV + @"</div>
+        //            </div>
+        //        ");
+        #endregion Item Price and BV
 
-        if (item.IsGroupMaster)
-        {
-            html.AppendLine(@"
-                <div class='productgroup'>
-                    " + Resources.Shopping.ChooseA + " " + item.GroupMembersDescription.ToLower() + @":
-                    <br />
-                    <select class='input-small' id='" + Autoship.Cart.GetFormFieldID("ItemCode", renderedItemCounter) + @"' name='" + Autoship.Cart.GetFormFieldID("ItemCode", renderedItemCounter) + @"'>");
+        #region Group Master Dropdown List
+        //        if (item.IsGroupMaster)
+        //        {
+        //            html.AppendLine(@"
+        //                <div class='productgroup'>
+        //                    " + Resources.Shopping.ChooseA + " " + item.GroupMembersDescription.ToLower() + @":
+        //                    <br />
+        //                    <select class='input-small' id='" + Autoship.Cart.GetFormFieldID("ItemCode", renderedItemCounter) + @"' name='" + Autoship.Cart.GetFormFieldID("ItemCode", renderedItemCounter) + @"'>");
 
-            foreach (var groupMember in item.GroupMembers)
-            {
-                html.AppendLine("<option value='" + groupMember.ItemCode + "'>" + groupMember.MemberDescription + "</option>");
-            }
+        //            foreach (var groupMember in item.GroupMembers)
+        //            {
+        //                html.AppendLine("<option value='" + groupMember.ItemCode + "'>" + groupMember.MemberDescription + "</option>");
+        //            }
+        //            html.AppendLine("</select></div>");
+        //        }
+        #endregion Group Master Dropdown List
 
-
-            html.AppendLine("</select></div>");
-        }
-
+        #region Add to Cart or Select Button
+        //        html.AppendLine(@"
+        //            <div class='addtocart'>
+        //                <a onclick=""" + Page.ClientScript.GetPostBackClientHyperlink(this, "AddToCart|" + renderedItemCounter) + @""" class='btn btn-success'>" + Resources.Shopping.AddToCart + @"</a>
+        //            </div>");
         html.AppendLine(@"
             <div class='addtocart'>
-                <a onclick=""" + Page.ClientScript.GetPostBackClientHyperlink(this, "AddToCart|" + renderedItemCounter) + @""" class='btn btn-success'>" + Resources.Shopping.AddToCart + @"</a>
+                <a class='btn btn-success' href='" + Autoship.UrlProductDetail + "?item=" + item.ItemCode + @"' title='View Details'>" + "Select" + @"</a>
             </div>");
+        #endregion Add to Cart or Select Button
 
 
-        if (!item.IsGroupMaster) html.AppendLine(string.Format("<input type='hidden' id='{0}' name='{0}' value='{1}' />", Autoship.Cart.GetFormFieldID("ItemCode", renderedItemCounter), item.ItemCode));
-        html.AppendLine(string.Format("<input type='hidden' id='{0}' name='{0}' value='{1}' />", Autoship.Cart.GetFormFieldID("Quantity", renderedItemCounter), 1));
-        html.AppendLine(string.Format("<input type='hidden' id='{0}' name='{0}' value='{1}' />", Autoship.Cart.GetFormFieldID("ParentItemCode", renderedItemCounter), string.Empty));
-        html.AppendLine(string.Format("<input type='hidden' id='{0}' name='{0}' value='{1}' />", Autoship.Cart.GetFormFieldID("Type", renderedItemCounter), ShoppingCartItemType.Default));
+        //if (!item.IsGroupMaster) 
+        //    html.AppendLine(string.Format("<input type='hidden' id='{0}' name='{0}' value='{1}' />", Autoship.Cart.GetFormFieldID("ItemCode", renderedItemCounter), item.ItemCode));
+        //    html.AppendLine(string.Format("<input type='hidden' id='{0}' name='{0}' value='{1}' />", Autoship.Cart.GetFormFieldID("Quantity", renderedItemCounter), 1));
+        //    html.AppendLine(string.Format("<input type='hidden' id='{0}' name='{0}' value='{1}' />", Autoship.Cart.GetFormFieldID("ParentItemCode", renderedItemCounter), string.Empty));
+        //    html.AppendLine(string.Format("<input type='hidden' id='{0}' name='{0}' value='{1}' />", Autoship.Cart.GetFormFieldID("Type", renderedItemCounter), ShoppingCartItemType.Default));
 
 
         return html.ToString();

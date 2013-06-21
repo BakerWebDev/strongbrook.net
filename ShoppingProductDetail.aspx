@@ -51,6 +51,9 @@
             <div id="shopping">
                 <h2><%=Resources.Shopping.AllProducts %></h2>
                 <p><%=Resources.Shopping.ReviewYourAvailableProducts_Shopping %></p>
+                <br />
+                <br />
+                <br />
                 <table width="100%">
                     <tr>
                         <td valign="top">

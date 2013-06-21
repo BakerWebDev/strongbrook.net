@@ -124,7 +124,8 @@ public partial class AutoshipCheckoutReview : Page, IPostBackEventHandler
     {
         get
         {
-            if (!string.IsNullOrEmpty(_newCreditCardPaymentToken))
+            //if (!string.IsNullOrEmpty(_newCreditCardPaymentToken))
+            if (string.IsNullOrEmpty(_newCreditCardPaymentToken))
             {
                 var paymentApi = new ExigoPaymentApi();
                 _newCreditCardPaymentToken = paymentApi.FetchCreditCardToken

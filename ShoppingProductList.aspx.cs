@@ -348,56 +348,46 @@ public partial class ShoppingProductList : Page, IPostBackEventHandler
                     <a href='" + Shopping.UrlProductDetail + "?item=" + item.ItemCode + @"' title='" + Resources.Shopping.ViewDetails + "'>" + item.Description + @"</a></div>
         ");
 
-        if(!item.IsGroupMaster)
-        {
-            html.AppendLine(@"
-                    <div class='price'>
-                        " + item.Price.ToString("C") + @"</div>
-                    <div class='volume'>
-                        " + item.BusinessVolume.ToString("N2") + @" " + Resources.Shopping.BV + @"</div>
-            ");            
-        }
+        #region Price and BV
+        //        if (!item.IsGroupMaster)
+        //        {
+        //            html.AppendLine(@"
+        //                    <div class='price'>
+        //                        " + item.Price.ToString("C") + @"</div>
+        //                    <div class='volume'>
+        //                        " + item.BusinessVolume.ToString("N2") + @" " + Resources.Shopping.BV + @"</div>
+        //            ");            
+        //        }
 
-            html.AppendLine(@"
-            </div>
-        ");
-        
-
-//        html.AppendLine(@"
-//            <div class='picture'>
-//                <a href='" + Shopping.UrlProductDetail + "?item=" + item.ItemCode + @"'>
-//                    <img src='" + GlobalUtilities.GetProductImagePath(item.SmallPicture) + @"' alt='" + item.Description + @"' title='" + item.Description + @"' /></a></div>
-//            <div class='detailswrapper'>
-//                <div class='description'>
-//                    <a href='" + Shopping.UrlProductDetail + "?item=" + item.ItemCode + @"' title='" + Resources.Shopping.ViewDetails + "'>" + item.Description + @"</a></div>
-//                <div class='price'>
-//                    " + item.Price.ToString("C") + @"</div>
-//                <div class='volume'>
-//                    " + item.BusinessVolume.ToString("N2") + @" " + Resources.Shopping.BV + @"</div>
-//            </div>
-//        ");
+        //            html.AppendLine(@"
+        //            </div>
+        //        ");
+        #endregion Price and BV
 
 
-        if (item.IsGroupMaster)
-        {
-            html.AppendLine(@"
-                <div class='productgroup'>
+        #region Group Master Dropdown list
+        //        if (item.IsGroupMaster)
+        //        {
+        //            html.AppendLine(@"
+        //                <div class='productgroup'>
+        //
+        //                    <select class='input-block-level' id='" + Shopping.Cart.GetFormFieldID("ItemCode", renderedItemCounter) + @"' name='" + Shopping.Cart.GetFormFieldID("ItemCode", renderedItemCounter) + @"'>");
 
-                    <select class='input-block-level' id='" + Shopping.Cart.GetFormFieldID("ItemCode", renderedItemCounter) + @"' name='" + Shopping.Cart.GetFormFieldID("ItemCode", renderedItemCounter) + @"'>");
-
-            foreach (var groupMember in item.GroupMembers)
-            {
-                html.AppendLine("<option value='" + groupMember.ItemCode + "'>" + groupMember.MemberDescription + "</option>");
-            }
+        //            foreach (var groupMember in item.GroupMembers)
+        //            {
+        //                html.AppendLine("<option value='" + groupMember.ItemCode + "'>" + groupMember.MemberDescription + "</option>");
+        //            }
 
 
-            html.AppendLine("</select></div>");
-        }
+        //            html.AppendLine("</select></div>");
+        //        }
+        #endregion Group Master Dropdown list
 
 
         html.AppendLine(@"
             <div class='addtocart'>
-                <a onclick=""" + Page.ClientScript.GetPostBackClientHyperlink(this, "AddToCart|" + renderedItemCounter) + @""" class='btn btn-success'>" + Resources.Shopping.AddToCart + "</a></div>");
+                <a class='btn btn-success' href='" + Shopping.UrlProductDetail + "?item=" + item.ItemCode + @"' title='" + Resources.Shopping.ViewDetails + "'>" + "Select" + @"</a></div>");
+                //<a onclick=""" + Page.ClientScript.GetPostBackClientHyperlink(this, "AddToCart|" + renderedItemCounter) + @""" class='btn btn-success'>" + Resources.Shopping.AddToCart + "</a></div>");
 
 
         if (!item.IsGroupMaster) html.AppendLine(string.Format("<input type='hidden' id='{0}' name='{0}' value='{1}' />", Shopping.Cart.GetFormFieldID("ItemCode", renderedItemCounter), item.ItemCode));

@@ -171,8 +171,6 @@ public partial class AutoshipList : Page, IPostBackEventHandler
                         <td class='options'>
                             <div class='btn-group'>
                                 <a class='btn' href='AutoshipInvoice.aspx?id={1}' target='_blank'>" + Resources.Shopping.View + @"</a>
-                                <a class='btn' href='javascript:EditExistingAutoship({1});'>" + Resources.Shopping.Edit + @"</a>
-                                <a class='btn' href='javascript:DeleteExistingAutoship({1});'>" + Resources.Shopping.Delete + @"</a>
                             </div>
                         </td>
                     </tr>", autoshipdescription,

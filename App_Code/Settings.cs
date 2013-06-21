@@ -15,8 +15,8 @@ public static class GlobalSettings
 
     public static class ExigoPaymentApiCredentials
     {
-        public static string LoginName                          = "";
-        public static string Password                           = "";
+        public static string LoginName                          = "strongbrook_3iihoa42P";
+        public static string Password                           = "EOmw8jaZp9CS6vr7YLlpUDVU";
     }
 
     public static class LocalSettings
@@ -24,8 +24,11 @@ public static class GlobalSettings
         //public static string TestLoginName                    = "shannastubbs";
         //public static string TestPassword                     = "reic2008";
 
-        public static string TestLoginName                      = "Yoursuccess";
-        public static string TestPassword                       = "ready2go";
+        //public static string TestLoginName                      = "Yoursuccess";
+        //public static string TestPassword                       = "ready2go";
+
+        public static string TestLoginName                      = "asdf";
+        public static string TestPassword                       = "asdf";
     }
 
     public static class Backoffice
