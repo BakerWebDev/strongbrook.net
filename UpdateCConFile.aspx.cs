@@ -233,6 +233,7 @@ public partial class UpdateCConFile : Page, IPostBackEventHandler
                 {
                     Autoship.PropertyBag.ReferredByEndOfCheckout = false;
                     Autoship.PropertyBag.Save();
+                    Request_SaveNewCreditCardToAccount(Autoship.PropertyBag.CreditCardType);
                     Response.Redirect(Autoship.GetStepUrl(AutoshipManagerStep.Review));
                 }
                 else
@@ -246,6 +247,48 @@ public partial class UpdateCConFile : Page, IPostBackEventHandler
         }
     }
     #endregion
+
+
+    private SetAccountCreditCardTokenRequest Request_SaveNewCreditCardToAccount(AccountCreditCardType creditCardType)
+    {
+        SetAccountCreditCardTokenRequest request = new SetAccountCreditCardTokenRequest();
+
+        request.CustomerID = Identity.Current.CustomerID;
+
+        request.CreditCardToken = NewCreditCardPaymentToken;
+        request.CreditCardAccountType = creditCardType;
+        request.ExpirationMonth = Autoship.PropertyBag.CreditCardExpirationDate.Month;
+        request.ExpirationYear = Autoship.PropertyBag.CreditCardExpirationDate.Year;
+
+        request.BillingName = Autoship.PropertyBag.CreditCardNameOnCard;
+        request.BillingAddress = Autoship.PropertyBag.CreditCardBillingAddress;
+        request.BillingCity = Autoship.PropertyBag.CreditCardBillingCity;
+        request.BillingState = Autoship.PropertyBag.CreditCardBillingState;
+        request.BillingZip = Autoship.PropertyBag.CreditCardBillingZip;
+        request.BillingCountry = Autoship.PropertyBag.CreditCardBillingCountry;
+
+        return request;
+    }
+
+    private string NewCreditCardPaymentToken
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_newCreditCardPaymentToken))
+            {
+                var paymentApi = new ExigoPaymentApi();
+                _newCreditCardPaymentToken = paymentApi.FetchCreditCardToken
+                (
+                    Autoship.PropertyBag.CreditCardNumber,
+                    Autoship.PropertyBag.CreditCardExpirationDate.Month,
+                    Autoship.PropertyBag.CreditCardExpirationDate.Year
+                );
+            }
+            return _newCreditCardPaymentToken;
+        }
+    }
+    private string _newCreditCardPaymentToken;
+
 
     #region Render
     public void RenderCreditCardOnFile(AccountCreditCardType creditCardType)

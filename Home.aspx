@@ -192,7 +192,7 @@ You always carry the title of the highest rank you reach, but are “Paid As” 
                     <h2><%=Volumes.Volume56.ToString("N0") %></h2>
                     <h4><%=Resources.Dashboard.HomeTransactionCredits %></h4>
                 </div>
-                <div id="LatestWeeklyEarnings" class="tile tile-icon size-2x1 theme-aqua2" title="The amount of your most recent Weekly Commissions earned.">
+                <div id="LatestWeeklyEarnings" class="tile tile-icon size-2x1 theme-amethyst2" title="The amount of your most recent Weekly Commissions earned.">
                     <h2><% Render_LastAccepted_Weekly_CommissionAmountEarned(); %></h2>
                     <h4>Earnings for <%Render_LastAccepted_Weekly_CommissionAmountEarned_PeriodDescription(); %></h4>
                 </div>
