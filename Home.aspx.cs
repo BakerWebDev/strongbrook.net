@@ -89,398 +89,6 @@ public partial class Home : System.Web.UI.Page
     private CommissionResponse _commissions;
     #endregion Properties
 
-    #region Fetching Data -ADB
-    public PeriodVolume FetchCurrentVolumes()
-    {
-        return ExigoApiContext.CreateODataContext().PeriodVolumes
-            .Where(c => c.CustomerID == Identity.Current.CustomerID)
-            .Where(c => c.PeriodTypeID == periodType)
-            .Where(c => c.Period.IsCurrentPeriod)
-            .FirstOrDefault();
-    }
-    public PeriodVolume FetchLastMonthsVolumes()
-    {
-        var pvcontext = ExigoApiContext.CreateODataContext().PeriodVolumes;
-
-        var row = (from pv in pvcontext
-                   where pv.PeriodTypeID == periodType
-                   where pv.CustomerID == Identity.Current.CustomerID
-                   where pv.PeriodID == GlobalUtilities.GetCurrentPeriodID() -1
-                   select new
-                   {
-                       pv.CustomerID,
-                       pv.PeriodTypeID,
-                       pv.PeriodID,
-                       pv.Volume1,
-                       pv.Volume3
-                   }).SingleOrDefault();
-
-        if (row == null) return new PeriodVolume();
-
-        // Assemble the model
-        var model = new PeriodVolume();
-        model.CustomerID = row.CustomerID;
-        model.PeriodTypeID = row.PeriodTypeID;
-        model.PeriodID = row.PeriodID;
-        model.Volume1 = row.Volume1;
-        model.Volume3 = row.Volume3;
-
-        // Return the model
-        return model; 
-    }
-    public CommissionResponse FetchCurrentCommissions()
-    {
-        try
-        {
-            return ExigoApiContext.CreateWebServiceContext().GetRealTimeCommissions(new GetRealTimeCommissionsRequest
-            {
-                CustomerID = Identity.Current.CustomerID
-            }).Commissions[0];
-        }
-        catch
-        {
-            return new CommissionResponse();
-        }
-    }
-
-    #region Current Commissions Earnings
-    public decimal LastAcceptedWeeklyAmountEarned()
-	{
-        decimal amount;
-        var context = ExigoApiContext.CreateODataContext().Commissions;
-
-		var query = (from c in context
-					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == FetchPreviousWeeklyCommissionRunID()
-					 where c.CurrencyCode == Identity.Current.CurrencyCode
-					 select new
-					 {
-						 c.Earnings
-					 }).FirstOrDefault();
-
-        if(query != null)
-        {
-            amount = query.Earnings;
-        }
-        else
-        {
-            amount = 0;
-        }
-        
-		return amount;	
-	}
-    public string CurrentWeeklyCommissionsPeriodDescription()
-	{
-        string dateString;
-        var context = ExigoApiContext.CreateODataContext().Commissions;
-
-		var query = (from c in context // .Expand("CommissionRun")
-					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == FetchPreviousWeeklyCommissionRunID()
-					 where c.CurrencyCode == Identity.Current.CurrencyCode
-					 select new
-					 {
-						 c.CommissionRun.Period.PeriodDescription
-					 }).FirstOrDefault();
-
-        if(query != null)
-        {
-            dateString = query.PeriodDescription;
-        }
-        else
-        {
-            dateString = "this period not avail.";
-        }
-        
-		return dateString;	
-	}
-	public decimal CurrentMonthlyCommissionsEarnings()
-	{
-        var context = ExigoApiContext.CreateODataContext().Commissions;
-
-		var query = (from c in context // .Expand("CommissionRun")
-					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == 877
-					 where c.CurrencyCode == Identity.Current.CurrencyCode
-					 select new
-					 {
-						 c.Earnings
-					 }).FirstOrDefault();
-
-		var results = query.Earnings;
-		return results;	
-	}	
-    public decimal CurrentMonthsCombinedCommissionsEarnings()
-    {
-        decimal sum = 0;
-        var MonthlyCommissionsTotal = CurrentMonthlyCommissionsEarnings();
-        var WeeklyCommissionsTotal = LastAcceptedWeeklyAmountEarned();
-
-        sum = WeeklyCommissionsTotal + MonthlyCommissionsTotal;
-
-        return sum;
-    }
-    public decimal LatestCheckPaidAmount()
-    {
-        decimal amount = 0;
-        var WeeklyCommissionsTotal = LastAcceptedWeeklyAmountEarned();
-        amount = WeeklyCommissionsTotal;
-        return amount;
-    }
-    public string LatestCheckPaidPeriodDescription()
-    {
-        string dateString = "";
-        var WeeklyCommissionsPeriodDescription = CurrentWeeklyCommissionsPeriodDescription();
-        dateString = WeeklyCommissionsPeriodDescription;
-        return dateString;
-    }
-    #endregion Current Commissions Earnings
-
-    #region Last Weeks Weekly Commissions Earned
-    public decimal LastWeeksWeeklyCommissionsEarned()
-	{
-        decimal amount;
-        var context = ExigoApiContext.CreateODataContext().Commissions;
-
-		var query = (from c in context
-					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == FetchPreviousWeeklyCommissionRunID()
-					 where c.CurrencyCode == Identity.Current.CurrencyCode
-					 select new
-					 {
-						 c.Earnings
-					 }).FirstOrDefault();
-
-        if(query != null)
-        {
-            amount = query.Earnings;
-        }
-        else
-        {
-            amount = 0;
-        }
-        
-		return amount;	
-	}
-    #endregion Last Weeks Weekly Commissions Earned
-
-    #region Commissions Earnings 1 Month Ago
-
-
-
-    public decimal CommissionsEarnings1MonthAgoWeeklyWeek1()
-	{
-        var context = ExigoApiContext.CreateODataContext().Commissions;
-
-        var details = CommissionRunDetails2;
-
-		var query = (from c in context
-					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == details.CommissionRunID // 780
-					 where c.CurrencyCode == Identity.Current.CurrencyCode
-					 select new
-					 {
-						 c.Earnings
-					 }).FirstOrDefault();
-
-		var results = query.Earnings;
-		return results;	
-	}
-
-
-
-
-
-
-
-
-    public decimal CommissionsEarnings1MonthAgoWeeklyWeek2()
-	{
-        var context = ExigoApiContext.CreateODataContext().Commissions;
-
-		var query = (from c in context // .Expand("CommissionRun")
-					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == 809
-					 where c.CurrencyCode == Identity.Current.CurrencyCode
-					 select new
-					 {
-						 c.Earnings
-					 }).FirstOrDefault();
-
-		var results = query.Earnings;
-		return results;	
-	}
-
-	public decimal CommissionsEarnings1MonthAgoMonthly()
-	{
-        var context = ExigoApiContext.CreateODataContext().Commissions;
-        var details = CommissionRunDetails;
-
-		var query = (from c in context
-					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == details.CommissionRunID // 877
-					 where c.CurrencyCode == Identity.Current.CurrencyCode
-					 select new
-					 {
-						 c.Earnings
-					 }).FirstOrDefault();
-
-		var results = query.Earnings;
-		return results;	
-	}	
-
-    public decimal CombinedCommissionsEarnings1MonthAgo()
-    {
-        decimal sum = 0;
-        var MonthlyCommissionsTotal = CommissionsEarnings1MonthAgoMonthly();
-        var WeeklyCommissionsTotalWeek1 = CommissionsEarnings1MonthAgoWeeklyWeek1();
-        //var WeeklyCommissionsTotalWeek2 = CommissionsEarnings1MonthAgoWeeklyWeek2();
-
-        sum = WeeklyCommissionsTotalWeek1; // + WeeklyCommissionsTotalWeek2 + MonthlyCommissionsTotal;
-
-        return sum;
-    }
-    #endregion Commissions Earnings 1 Month Ago
-
-    #region Commissions Earnings 2 Months Ago
-    public decimal CommissionsEarnings2MonthsAgoWeekly()
-	{
-        var context = ExigoApiContext.CreateODataContext().Commissions;
-
-		var query = (from c in context // .Expand("CommissionRun")
-					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == 874
-					 where c.CurrencyCode == Identity.Current.CurrencyCode
-					 select new
-					 {
-						 c.Earnings
-					 }).FirstOrDefault();
-
-		var results = query.Earnings;
-		return results;	
-	}
-	public decimal CommissionsEarnings2MonthsAgoMonthly()
-	{
-        var context = ExigoApiContext.CreateODataContext().Commissions;
-
-		var query = (from c in context // .Expand("CommissionRun")
-					 where c.CustomerID == Identity.Current.CustomerID
-					 where c.CommissionRunID == 834
-					 where c.CurrencyCode == Identity.Current.CurrencyCode
-					 select new
-					 {
-						 c.Earnings
-					 }).FirstOrDefault();
-
-		var results = query.Earnings;
-		return results;	
-	}	
-    public decimal CombinedCommissionsEarnings2MonthsAgo()
-    {
-        decimal sum = 0;
-        var MonthlyCommissionsTotal = CommissionsEarnings2MonthsAgoMonthly();
-        var WeeklyCommissionsTotal = CommissionsEarnings2MonthsAgoWeekly();
-
-        sum = WeeklyCommissionsTotal + MonthlyCommissionsTotal;
-
-        return sum;
-    }
-    #endregion Commissions Earnings 2 Months Ago
-
-    #region Fetch GPR Data
-
-    public List<decimal> WeeklyList = new List<decimal>();
-    public List<decimal> MonthlyList = new List<decimal>();
-
-    public List<ReportDataNode> FetchGPRWeeklyReportData()
-    {
-        //      Query the OData tables      //
-        #region Query the OData tables
-        var query = ExigoApiContext.CreateODataContext().UniLevelTreePeriodVolumes
-            .Where(c => c.TopCustomerID == Identity.Current.CustomerID)
-            .Where(c => c.PeriodTypeID == PeriodTypes.Weekly)
-            .Where(c => c.Period.IsCurrentPeriod)
-            .Where(c => c.PeriodVolume.Volume99 != 0);
-        #endregion Query the OData tables
-
-        //      Fetch the nodes     //
-        #region Fetch the nodes
-        var nodes = query.Select(c => new ReportDataNode
-        {
-            CustomerID = c.CustomerID,
-            VolumeBucket99  = c.PeriodVolume.Volume99, // GPR Credits Weekly
-        }).ToList();
-        #endregion Fetch the nodes
-
-        //      Add values to the Weekly GPR List  //
-        #region Add values to the Weekly GPR List
-        foreach (var customer in nodes)
-        {
-            decimal theValueOfVolumeBucket99 = customer.VolumeBucket99;
-
-            WeeklyList.Add(theValueOfVolumeBucket99);
-        }
-        #endregion
-
-        // Return the nodes
-        return nodes;
-    }
-    public List<ReportDataNode> FetchGPRMonthlyReportData()
-    {
-        #region Query the OData tables
-        var query = ExigoApiContext.CreateODataContext().UniLevelTreePeriodVolumes
-            .Where(c => c.TopCustomerID == Identity.Current.CustomerID)
-            .Where(c => c.PeriodTypeID == PeriodTypes.Monthly)
-            .Where(c => c.Period.IsCurrentPeriod);
-        #endregion Query the OData tables
-
-        #region Fetch the nodes
-        var nodes = query.Select(c => new ReportDataNode
-        {
-            CustomerID = c.CustomerID,
-            VolumeBucket83 = c.PeriodVolume.Volume83, // GPR Credits Monthly
-        }).ToList();
-        #endregion Fetch the nodes
-
-        #region Add values to the Monthly GPR List
-        foreach (var customer in nodes)
-        {
-            decimal theValueOfVolumeBucket83 = customer.VolumeBucket83;
-
-            MonthlyList.Add(theValueOfVolumeBucket83);
-        }
-        #endregion
-
-        // Return the nodes
-        return nodes;
-    }
-
-    public ReportDataNode FetchOrganizationalGPRMonthlyReportData()
-    {
-        #region Query the OData tables
-        var query = ExigoApiContext.CreateODataContext().PeriodVolumes
-            .Where(c => c.CustomerID == Identity.Current.CustomerID)
-
-            .Where(c => c.PeriodTypeID == PeriodTypes.Monthly)
-            .Where(c => c.Period.IsCurrentPeriod);
-
-        #endregion Query the OData tables
-
-        #region Fetch the nodes
-        var nodes = query.Select(c => new ReportDataNode
-        {
-            CustomerID = c.CustomerID,
-            VolumeBucket100  = c.Volume100, // GPR Credits Weekly
-        }).FirstOrDefault();
-        #endregion Fetch the nodes
-
-        // Return the nodes
-        return nodes;
-    }
-
-    #endregion Fetch GPR Data
-    #endregion Fetching Data -ADB
-
     #region Render
     protected override void Render(HtmlTextWriter writer)
     {
@@ -835,128 +443,7 @@ public partial class Home : System.Web.UI.Page
         var writer = new HtmlTextWriter(Response.Output);
         writer.Write(html.ToString());
     }
-    public void Render3MonthsOfEarnings()
-    {
-        DateTime now = DateTime.Now;
-        var ThisMonth = now.ToString("MMMM");
-        var LastMonth = now.AddMonths(-1).ToString("MMMM");
-        var TwoMonthsAgo = now.AddMonths(-2).ToString("MMMM");
-
-        //var commissionsTotal = Commissions.PeriodID.ToString("C");
-        var CurrentCommissionsTotal = CurrentMonthsCombinedCommissionsEarnings();
-        var CommissionsTotal1MonthAgo = CombinedCommissionsEarnings1MonthAgo();
-        var CommissionsTotal2MonthsAgo = CombinedCommissionsEarnings2MonthsAgo();
-
-
-        var html = new StringBuilder();
-
-        html.AppendFormat(@"<tr><td style=""text-align:right"">{0}: </td><td style=""text-align:right;"">{1:C}</td></tr>", TwoMonthsAgo, CommissionsTotal1MonthAgo);
-        html.AppendFormat(@"<tr><td style=""text-align:right"">{0}: </td><td style=""text-align:right;"">{1:C}</td></tr>", LastMonth, CommissionsTotal1MonthAgo);
-        html.AppendFormat(@"<tr><td style=""text-align:right"">{0}: </td><td style=""text-align:right;"">{1:C}</td></tr>", ThisMonth, CommissionsTotal1MonthAgo);
-       
-
-        var writer = new HtmlTextWriter(Response.Output);
-        writer.Write(html.ToString());
-    }
-    public void RenderMyBonuses()
-    {
-        var html = new StringBuilder();
-
-        // Title
-        html.AppendFormat("<h2>Bonuses</h2>");
-
-        // Main Table
-        html.AppendFormat("<table class='table'>");
-
-       
-        if(DataModel.Bonuses.Count == 0)
-        {
-            html.AppendFormat("<tr><td>No bonuses {0} earned for this period.</td></tr>",
-                (CommissionType == CommissionPeriodType.Current) ? "have been" : "were");
-        }
-        else
-        {
-            html.AppendFormat(@"
-                <tr>
-                    <th class='fieldlabel'>Description</th>
-                    <th class='value'>Earned</th>
-                </tr>
-            ");
-
-            foreach (var bonus in DataModel.Bonuses)
-            {                  
-                // Define some contextual labels
-                var amountStyle = (bonus.Amount < 0M) ? "style='color: red;'" : "";
-
-                var currentBonusDescription = string.Format("<a href='CommissionBonusDetails.aspx?type={0}&ptid={1}&pid={2}&bid={3}'>{4}</a>", 
-                    (int)CommissionPeriodType.Current,
-                    DataModel.PeriodTypeID,
-                    DataModel.PeriodID,
-                    bonus.BonusID,
-                    bonus.Description);
-
-                var priorBonusDescription = string.Format("<a href='CommissionBonusDetails.aspx?type={0}&rid={1}&bid={2}'>{3}</a>", 
-                    (int)CommissionPeriodType.Prior,
-                    DataModel.CommissionRunID,
-                    bonus.BonusID,
-                    bonus.Description);
-
-
-                html.AppendFormat(@"
-                        <tr>
-                            <td class='fieldlabel'>{0}</td>
-                            <td class='value' {1}>{2}</td>
-                        </tr>
-                    ", (CommissionType == CommissionPeriodType.Current) ? currentBonusDescription : priorBonusDescription,
-                        amountStyle,
-                        bonus.Amount.ToString("C", GetCultureInfo()));
-            }
-        }
-
-        // End the main table
-        html.AppendFormat("</table>");
-      
-        // Write the HTML to the page
-        var writer = new HtmlTextWriter(Response.Output);
-        writer.Write(html.ToString());
-    }
     #endregion Render
-
-    #region Travis'
-    public void RenderCommissionRunSummary()
-    {
-        var html = new StringBuilder();
-
-        // Title
-        html.AppendFormat("<h1 id='CurrentCommission' class='color2'>{0}</h1>", DataModel.CommissionDescription);
-
-        // Subtitle
-        var colorStyle = (DataModel.Total < 0) ? "style='color: red;'" : "style='color: green;'";
-        if (CommissionType == CommissionPeriodType.Current)
-        {
-            html.AppendFormat("<h2>Will Recieve : <span id='CommissionAmount' {0}>{1}</span></h2>", 
-                colorStyle, 
-                DataModel.Total.ToString("C", GetCultureInfo()));
-        }
-
-        if (CommissionType == CommissionPeriodType.Prior)
-        {
-            html.AppendFormat("<h2>Paid <span id='CommissionAmount' {0}>{1}</span> as a <span id='PaidAsDescription'>{2}</span></h2>", 
-                colorStyle,
-                DataModel.Total.ToString("C", GetCultureInfo()),
-                DataModel.PaidAsRank);
-        }
-
-        // Write the HTML to the page
-        var writer = new HtmlTextWriter(Response.Output);
-        writer.Write(html.ToString());
-    }
-
-    #endregion Travis'
-
-    #region Travis'
-    //private int PeriodTypeID2 = PeriodTypes.Monthly;
-    #endregion Travis'
 
     #region Properties
     // Returns the latest accepted commission period for the initial report.
@@ -983,7 +470,6 @@ public partial class Home : System.Web.UI.Page
             return periodID;
         }
     }
-
     public int CurrentCommissionRunID
     {
         get
@@ -998,19 +484,6 @@ public partial class Home : System.Web.UI.Page
     private int? commissionRunID;
 
     #region I added this
-    public int MonthlyCommissionRunID
-    {
-        get
-        {
-            if(monthlyCommissionRunID == null)
-            {
-                monthlyCommissionRunID = 736; //FetchMonthlyCommissionRunID();
-            }
-            return Convert.ToInt32(monthlyCommissionRunID);
-        }
-    }
-    private int? monthlyCommissionRunID;
-
     public int PreviousCommissionRunID
     {
         get
@@ -1023,12 +496,7 @@ public partial class Home : System.Web.UI.Page
         }
     }
     private int? previousCommissionRunID;
-
-
     #endregion I added this
-
-
-
 
     // Returns 0 if real time commission, 1 if prior commission.
     public CommissionPeriodType CommissionType 
@@ -1043,52 +511,6 @@ public partial class Home : System.Web.UI.Page
             return type;
         }
     }
-
-    public CommissionModel DataModel
-    {
-        get
-        {
-            if(_dataModel == null)
-            {
-                _dataModel = new CommissionModel();
-
-                // Prior Commissions
-                if (CommissionType == CommissionPeriodType.Prior)
-                {
-                    var details = CommissionRunDetails;
-                    var data = CommissionDetails2;
-                    var paidRank = PaidRankDescription;
-                    var bonuses = CommissionBonuses;
-
-                    _dataModel.CommissionRunID = details.CommissionRunID;
-                    _dataModel.CommissionDescription = details.CommissionRunDescription;
-                    _dataModel.PeriodID = details.PeriodID;
-                    _dataModel.PeriodTypeID = details.PeriodTypeID;
-                    _dataModel.StartDate = details.Period.StartDate;
-                    _dataModel.EndDate = details.Period.EndDate;
-                    _dataModel.PaidAsRank = PaidRankDescription;
-                    _dataModel.Earned = data.Earnings;
-                    _dataModel.Fee = data.Fee;
-                    _dataModel.Total = data.Total;
-                    //_dataModel.Volume1 = PeriodVolumes.Volume1;
-                    //_dataModel.Volume2 = PeriodVolumes.Volume2;
-                    //_dataModel.Volume3 = PeriodVolumes.Volume3;
-
-                    foreach(var bonus in bonuses)
-                    {
-                        var detail = new CommissionBonusModel();
-                        detail.BonusID = bonus.BonusID;
-                        detail.Description = bonus.BonusDescription;                    
-                        detail.Amount = bonus.Amount;
-                        _dataModel.Bonuses.Add(detail);
-                    }
-                }
-            }
-
-            return _dataModel;
-        }
-    }
-    private CommissionModel _dataModel;
 
     public List<Commission> PriorCommissions
     {
@@ -1116,19 +538,6 @@ public partial class Home : System.Web.UI.Page
     }
     private Commission _commissionDetails;
 
-    public Commission CommissionDetails2
-    {
-        get
-        {
-            if (_commissionDetails2 == null)
-            {
-                _commissionDetails2 = FetchCommissionDetails2();
-            }
-            return _commissionDetails2;
-        }
-    }
-    private Commission _commissionDetails2;
-
     public CommissionRun CommissionRunDetails
     {
         get
@@ -1141,19 +550,6 @@ public partial class Home : System.Web.UI.Page
         }
     }
     private CommissionRun _commissionRunDetails;
-
-    public CommissionRun CommissionRunDetails2
-    {
-        get
-        {
-            if (_commissionRunDetails2 == null)
-            {
-                _commissionRunDetails2 = FetchCommissionRunDetails2();
-            }
-            return _commissionRunDetails2;
-        }
-    }
-    private CommissionRun _commissionRunDetails2;
 
     public List<CommissionBonus> CommissionBonuses
     {
@@ -1168,12 +564,6 @@ public partial class Home : System.Web.UI.Page
     }
     private List<CommissionBonus> _commissionBonuses;
 
-
-
-
-
-
-
     public string PaidRankDescription
     {
         get
@@ -1186,29 +576,6 @@ public partial class Home : System.Web.UI.Page
         }
     }
     private string _paidRankDescription;    
-
-    //public PeriodVolume PeriodVolumes
-    //{
-    //    get
-    //    {
-    //        if (_periodVolumes == null)
-    //        {
-    //            _periodVolumes = FetchPeriodVolumes();
-    //        }
-    //        return _periodVolumes;
-    //    }
-    //}
-    //private PeriodVolume _periodVolumes;
-
-    //public Period PeriodDetails
-    //{
-    //    get
-    //    {
-    //        _periodDetails = _periodDetails ?? FetchPeriodDetails();
-    //        return _periodDetails;
-    //    }
-    //}
-    //private Period _periodDetails;
     #endregion
 
     #region Fetching Data
@@ -1245,69 +612,6 @@ public partial class Home : System.Web.UI.Page
                 select c).ToList();
     }
 
-    #region I added this
-    private Commission FetchCommissionDetails2()
-    {
-        return (from c in ExigoApiContext.CreateODataContext().Commissions
-                where c.CustomerID == Identity.Current.CustomerID
-                where c.CommissionRunID == MonthlyCommissionRunID
-                where c.CurrencyCode == Identity.Current.CurrencyCode
-                select c).FirstOrDefault();
-    }
-    public CommissionRun FetchCommissionRunDetails2()
-    {
-        var data = (from c in ExigoApiContext.CreateODataContext().CommissionRuns.Expand("Period")
-                    where c.CommissionRunID == MonthlyCommissionRunID
-                    select c).FirstOrDefault();
-
-        if (data == null) return new CommissionRun();
-        else return data;
-    }
-
-
-    private Commission FetchPriorCommissionDetails()
-    {
-        return (from c in ExigoApiContext.CreateODataContext().Commissions
-                where c.CustomerID == Identity.Current.CustomerID
-                where c.CommissionRunID == CurrentCommissionRunID
-                where c.CurrencyCode == Identity.Current.CurrencyCode
-                select c).FirstOrDefault();
-    }
-    public CommissionRun FetchPriorCommissionRunDetails()
-    {
-        var data = (from c in ExigoApiContext.CreateODataContext().CommissionRuns.Expand("Period")
-                    where c.CommissionRunID == CurrentCommissionRunID
-                    select c).FirstOrDefault();
-
-        if (data == null) return new CommissionRun();
-        else return data;
-    }
-    private List<CommissionBonus> FetchPriorCommissionBonuses()
-    {
-        return (from c in ExigoApiContext.CreateODataContext().CommissionBonuses
-                where c.CustomerID == Identity.Current.CustomerID
-                where c.CommissionRunID == CurrentCommissionRunID
-                orderby c.BonusDescription
-                select c).ToList();
-    }
-
-    #endregion I added this
-
-    //private PeriodVolume FetchPeriodVolumes()
-    //{
-    //    return (from o in ExigoApiContext.CreateODataContext().PeriodVolumes
-    //            where o.CustomerID == Identity.Current.CustomerID
-    //            where o.PeriodTypeID == PeriodTypeID2
-    //            where o.PeriodID == PeriodID
-    //            select new PeriodVolume()
-    //            {
-    //                Rank = o.Rank,
-    //                PaidRank = o.PaidRank,
-    //                Volume1 = o.Volume1,
-    //                Volume2 = o.Volume2,
-    //                Volume3 = o.Volume3,
-    //            }).FirstOrDefault();
-    //}
     private string FetchPaidRankDescription()
     {
         return (from c in ExigoApiContext.CreateODataContext().Ranks
@@ -1342,7 +646,84 @@ public partial class Home : System.Web.UI.Page
         else return data.CommissionRunID;
     }
 
-    #region I added this
+    #region Added by ADB
+    private Commission FetchPriorCommissionDetails()
+    {
+        return (from c in ExigoApiContext.CreateODataContext().Commissions
+                where c.CustomerID == Identity.Current.CustomerID
+                where c.CommissionRunID == CurrentCommissionRunID
+                where c.CurrencyCode == Identity.Current.CurrencyCode
+                select c).FirstOrDefault();
+    }
+    public CommissionRun FetchPriorCommissionRunDetails()
+    {
+        var data = (from c in ExigoApiContext.CreateODataContext().CommissionRuns.Expand("Period")
+                    where c.CommissionRunID == CurrentCommissionRunID
+                    select c).FirstOrDefault();
+
+        if (data == null) return new CommissionRun();
+        else return data;
+    }
+    private List<CommissionBonus> FetchPriorCommissionBonuses()
+    {
+        return (from c in ExigoApiContext.CreateODataContext().CommissionBonuses
+                where c.CustomerID == Identity.Current.CustomerID
+                where c.CommissionRunID == CurrentCommissionRunID
+                orderby c.BonusDescription
+                select c).ToList();
+    }
+    public PeriodVolume FetchCurrentVolumes()
+    {
+        return ExigoApiContext.CreateODataContext().PeriodVolumes
+            .Where(c => c.CustomerID == Identity.Current.CustomerID)
+            .Where(c => c.PeriodTypeID == periodType)
+            .Where(c => c.Period.IsCurrentPeriod)
+            .FirstOrDefault();
+    }
+    public PeriodVolume FetchLastMonthsVolumes()
+    {
+        var pvcontext = ExigoApiContext.CreateODataContext().PeriodVolumes;
+
+        var row = (from pv in pvcontext
+                   where pv.PeriodTypeID == periodType
+                   where pv.CustomerID == Identity.Current.CustomerID
+                   where pv.PeriodID == GlobalUtilities.GetCurrentPeriodID() -1
+                   select new
+                   {
+                       pv.CustomerID,
+                       pv.PeriodTypeID,
+                       pv.PeriodID,
+                       pv.Volume1,
+                       pv.Volume3
+                   }).SingleOrDefault();
+
+        if (row == null) return new PeriodVolume();
+
+        // Assemble the model
+        var model = new PeriodVolume();
+        model.CustomerID = row.CustomerID;
+        model.PeriodTypeID = row.PeriodTypeID;
+        model.PeriodID = row.PeriodID;
+        model.Volume1 = row.Volume1;
+        model.Volume3 = row.Volume3;
+
+        // Return the model
+        return model; 
+    }
+    public CommissionResponse FetchCurrentCommissions()
+    {
+        try
+        {
+            return ExigoApiContext.CreateWebServiceContext().GetRealTimeCommissions(new GetRealTimeCommissionsRequest
+            {
+                CustomerID = Identity.Current.CustomerID
+            }).Commissions[0];
+        }
+        catch
+        {
+            return new CommissionResponse();
+        }
+    }
     private int FetchCommissionRunIDFrom1MonthAgo()
     {
         var data = (from c in ExigoApiContext.CreateODataContext().CommissionRuns
@@ -1356,21 +737,304 @@ public partial class Home : System.Web.UI.Page
         if (data == null) return 0;
         else return data.CommissionRunID;
     }
-    #endregion I added this
 
-    // Misc. Data
-    //private Period FetchPeriodDetails()
-    //{
-    //    return (from c in ExigoApiContext.CreateODataContext().Periods
-    //            where c.PeriodID == PeriodID
-    //            where c.PeriodTypeID == PeriodTypeID2
-    //            select new Period()
-    //            {
-    //                StartDate = c.StartDate,
-    //                EndDate = c.EndDate
-    //            }).FirstOrDefault();
-    //}
-    #endregion
+    #region Last Weeks Weekly Commissions Earned
+    public decimal LastWeeksWeeklyCommissionsEarned()
+	{
+        decimal amount;
+        var context = ExigoApiContext.CreateODataContext().Commissions;
+
+		var query = (from c in context
+					 where c.CustomerID == Identity.Current.CustomerID
+					 where c.CommissionRunID == FetchPreviousWeeklyCommissionRunID()
+					 where c.CurrencyCode == Identity.Current.CurrencyCode
+					 select new
+					 {
+						 c.Earnings
+					 }).FirstOrDefault();
+
+        if(query != null)
+        {
+            amount = query.Earnings;
+        }
+        else
+        {
+            amount = 0;
+        }
+        
+		return amount;	
+	}
+    #endregion Last Weeks Weekly Commissions Earned
+
+    #region Commissions Earnings this Month
+    public decimal LastAcceptedWeeklyAmountEarned()
+	{
+        decimal amount;
+        var context = ExigoApiContext.CreateODataContext().Commissions;
+
+		var query = (from c in context
+					 where c.CustomerID == Identity.Current.CustomerID
+					 where c.CommissionRunID == FetchPreviousWeeklyCommissionRunID()
+					 where c.CurrencyCode == Identity.Current.CurrencyCode
+					 select new
+					 {
+						 c.Earnings
+					 }).FirstOrDefault();
+
+        if(query != null)
+        {
+            amount = query.Earnings;
+        }
+        else
+        {
+            amount = 0;
+        }
+        
+		return amount;	
+	}
+    public string CurrentWeeklyCommissionsPeriodDescription()
+	{
+        string dateString;
+        var context = ExigoApiContext.CreateODataContext().Commissions;
+
+		var query = (from c in context // .Expand("CommissionRun")
+					 where c.CustomerID == Identity.Current.CustomerID
+					 where c.CommissionRunID == FetchPreviousWeeklyCommissionRunID()
+					 where c.CurrencyCode == Identity.Current.CurrencyCode
+					 select new
+					 {
+						 c.CommissionRun.Period.PeriodDescription
+					 }).FirstOrDefault();
+
+        if(query != null)
+        {
+            dateString = query.PeriodDescription;
+        }
+        else
+        {
+            dateString = "this period not avail.";
+        }
+        
+		return dateString;	
+	}
+	public decimal CurrentMonthlyCommissionsEarnings()
+	{
+        var context = ExigoApiContext.CreateODataContext().Commissions;
+
+		var query = (from c in context // .Expand("CommissionRun")
+					 where c.CustomerID == Identity.Current.CustomerID
+					 where c.CommissionRunID == 877
+					 where c.CurrencyCode == Identity.Current.CurrencyCode
+					 select new
+					 {
+						 c.Earnings
+					 }).FirstOrDefault();
+
+		var results = query.Earnings;
+		return results;	
+	}	
+    public decimal CurrentMonthsCombinedCommissionsEarnings()
+    {
+        decimal sum = 0;
+        var MonthlyCommissionsTotal = CurrentMonthlyCommissionsEarnings();
+        var WeeklyCommissionsTotal = LastAcceptedWeeklyAmountEarned();
+
+        sum = WeeklyCommissionsTotal + MonthlyCommissionsTotal;
+
+        return sum;
+    }
+    public decimal LatestCheckPaidAmount()
+    {
+        decimal amount = 0;
+        var WeeklyCommissionsTotal = LastAcceptedWeeklyAmountEarned();
+        amount = WeeklyCommissionsTotal;
+        return amount;
+    }
+    public string LatestCheckPaidPeriodDescription()
+    {
+        string dateString = "";
+        var WeeklyCommissionsPeriodDescription = CurrentWeeklyCommissionsPeriodDescription();
+        dateString = WeeklyCommissionsPeriodDescription;
+        return dateString;
+    }
+    #endregion Commissions Earnings this Month
+
+    #region Commissions Earnings 1 Month Ago
+    public decimal CommissionsEarnings1MonthAgoWeeklyWeek2()
+	{
+        var context = ExigoApiContext.CreateODataContext().Commissions;
+
+		var query = (from c in context // .Expand("CommissionRun")
+					 where c.CustomerID == Identity.Current.CustomerID
+					 where c.CommissionRunID == 809
+					 where c.CurrencyCode == Identity.Current.CurrencyCode
+					 select new
+					 {
+						 c.Earnings
+					 }).FirstOrDefault();
+
+		var results = query.Earnings;
+		return results;	
+	}
+	public decimal CommissionsEarnings1MonthAgoMonthly()
+	{
+        var context = ExigoApiContext.CreateODataContext().Commissions;
+        var details = CommissionRunDetails;
+
+		var query = (from c in context
+					 where c.CustomerID == Identity.Current.CustomerID
+					 where c.CommissionRunID == details.CommissionRunID // 877
+					 where c.CurrencyCode == Identity.Current.CurrencyCode
+					 select new
+					 {
+						 c.Earnings
+					 }).FirstOrDefault();
+
+		var results = query.Earnings;
+		return results;	
+	}	
+    #endregion Commissions Earnings 1 Month Ago
+
+    #region Commissions Earnings 2 Months Ago
+    public decimal CommissionsEarnings2MonthsAgoWeekly()
+	{
+        var context = ExigoApiContext.CreateODataContext().Commissions;
+
+		var query = (from c in context // .Expand("CommissionRun")
+					 where c.CustomerID == Identity.Current.CustomerID
+					 where c.CommissionRunID == 874
+					 where c.CurrencyCode == Identity.Current.CurrencyCode
+					 select new
+					 {
+						 c.Earnings
+					 }).FirstOrDefault();
+
+		var results = query.Earnings;
+		return results;	
+	}
+	public decimal CommissionsEarnings2MonthsAgoMonthly()
+	{
+        var context = ExigoApiContext.CreateODataContext().Commissions;
+
+		var query = (from c in context // .Expand("CommissionRun")
+					 where c.CustomerID == Identity.Current.CustomerID
+					 where c.CommissionRunID == 834
+					 where c.CurrencyCode == Identity.Current.CurrencyCode
+					 select new
+					 {
+						 c.Earnings
+					 }).FirstOrDefault();
+
+		var results = query.Earnings;
+		return results;	
+	}	
+    public decimal CombinedCommissionsEarnings2MonthsAgo()
+    {
+        decimal sum = 0;
+        var MonthlyCommissionsTotal = CommissionsEarnings2MonthsAgoMonthly();
+        var WeeklyCommissionsTotal = CommissionsEarnings2MonthsAgoWeekly();
+
+        sum = WeeklyCommissionsTotal + MonthlyCommissionsTotal;
+
+        return sum;
+    }
+    #endregion Commissions Earnings 2 Months Ago
+
+    #region Fetch GPR Data
+
+    public List<decimal> WeeklyList = new List<decimal>();
+    public List<decimal> MonthlyList = new List<decimal>();
+
+    public List<ReportDataNode> FetchGPRWeeklyReportData()
+    {
+        //      Query the OData tables      //
+        #region Query the OData tables
+        var query = ExigoApiContext.CreateODataContext().UniLevelTreePeriodVolumes
+            .Where(c => c.TopCustomerID == Identity.Current.CustomerID)
+            .Where(c => c.PeriodTypeID == PeriodTypes.Weekly)
+            .Where(c => c.Period.IsCurrentPeriod)
+            .Where(c => c.PeriodVolume.Volume99 != 0);
+        #endregion Query the OData tables
+
+        //      Fetch the nodes     //
+        #region Fetch the nodes
+        var nodes = query.Select(c => new ReportDataNode
+        {
+            CustomerID = c.CustomerID,
+            VolumeBucket99  = c.PeriodVolume.Volume99, // GPR Credits Weekly
+        }).ToList();
+        #endregion Fetch the nodes
+
+        //      Add values to the Weekly GPR List  //
+        #region Add values to the Weekly GPR List
+        foreach (var customer in nodes)
+        {
+            decimal theValueOfVolumeBucket99 = customer.VolumeBucket99;
+
+            WeeklyList.Add(theValueOfVolumeBucket99);
+        }
+        #endregion
+
+        // Return the nodes
+        return nodes;
+    }
+    public List<ReportDataNode> FetchGPRMonthlyReportData()
+    {
+        #region Query the OData tables
+        var query = ExigoApiContext.CreateODataContext().UniLevelTreePeriodVolumes
+            .Where(c => c.TopCustomerID == Identity.Current.CustomerID)
+            .Where(c => c.PeriodTypeID == PeriodTypes.Monthly)
+            .Where(c => c.Period.IsCurrentPeriod);
+        #endregion Query the OData tables
+
+        #region Fetch the nodes
+        var nodes = query.Select(c => new ReportDataNode
+        {
+            CustomerID = c.CustomerID,
+            VolumeBucket83 = c.PeriodVolume.Volume83, // GPR Credits Monthly
+        }).ToList();
+        #endregion Fetch the nodes
+
+        #region Add values to the Monthly GPR List
+        foreach (var customer in nodes)
+        {
+            decimal theValueOfVolumeBucket83 = customer.VolumeBucket83;
+
+            MonthlyList.Add(theValueOfVolumeBucket83);
+        }
+        #endregion
+
+        // Return the nodes
+        return nodes;
+    }
+
+    public ReportDataNode FetchOrganizationalGPRMonthlyReportData()
+    {
+        #region Query the OData tables
+        var query = ExigoApiContext.CreateODataContext().PeriodVolumes
+            .Where(c => c.CustomerID == Identity.Current.CustomerID)
+
+            .Where(c => c.PeriodTypeID == PeriodTypes.Monthly)
+            .Where(c => c.Period.IsCurrentPeriod);
+
+        #endregion Query the OData tables
+
+        #region Fetch the nodes
+        var nodes = query.Select(c => new ReportDataNode
+        {
+            CustomerID = c.CustomerID,
+            VolumeBucket100  = c.Volume100, // GPR Credits Weekly
+        }).FirstOrDefault();
+        #endregion Fetch the nodes
+
+        // Return the nodes
+        return nodes;
+    }
+
+    #endregion Fetch GPR Data
+    #endregion Added by ADB
+
+    #endregion Fetching Data
 
     #region Helper Methods
     public CultureInfo GetCultureInfo()
