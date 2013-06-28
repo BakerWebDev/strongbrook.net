@@ -812,7 +812,7 @@ public partial class Home : System.Web.UI.Page
         }
         else
         {
-            dateString = "this period not avail.";
+            dateString = "$0.00";
         }
         
 		return dateString;	

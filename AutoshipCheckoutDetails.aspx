@@ -50,7 +50,7 @@
                 dateFormat: 'DD, MM d, yy',
                 numberOfMonths: 2,
                 showButtonPanel: true,
-                minDate: "<%=(Autoship.PropertyBag.ExistingAutoshipID == 0) ? "0" : "+1D" %>",
+                minDate: "<%=(Autoship.PropertyBag.ExistingAutoshipID == 0) ? "+1D" : "+1D" %>",
                 maxDate: "+1Y",
                 constrainInput: true,
                 beforeShowDay: noWeekendsOrHolidays
@@ -80,7 +80,7 @@
                                 <%=(Autoship.PropertyBag.ExistingAutoshipID == 0) ? Resources.Shopping.WhenShouldYourAutoshipStart : Resources.Shopping.NextProcessingDate %>
                             </td>
                             <td class="fields">
-                                <div class="fieldwrapper width255">
+                                <div class="fieldwrapper width325">
                                     <asp:TextBox ID="txtStartDate" runat="server" CssClass="validate[required] text-input" ClientIDMode="Static" />
                                     <div class="FieldInstructions">
                                         <%=Resources.Shopping.Note_AutoshipProcessingMessage %>

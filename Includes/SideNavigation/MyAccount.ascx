@@ -8,6 +8,7 @@
     <li data-key="notifications"><a href="EmailNotifications.aspx">Notifications</a></li>
     <%--<li data-key="subscriptions"><a href="Subscriptions.aspx">Subscriptions</a></li>--%>
     <li data-key="billinghistory"><a href="BillingHistory.aspx">Billing History</a></li>
+    <li data-key="billinghistory"><a href="UpdateCConFile.aspx">Update Credit Card</a></li>
 </ul>
 
 <script>

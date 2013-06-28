@@ -4,7 +4,6 @@
     <%--<li data-key="forecast"><a href="AutoshipForecast.aspx">Autoship Forecast</a></li>--%>
     <li data-key="list"><a href="AutoshipList.aspx">My Autoships</a></li>
     <li data-key="cart"><a href="AutoshipCart.aspx">My Autoship Cart</a></li>
-    <li data-key="website"><a href="UpdateCConFile.aspx">Update CC</a></li>
 </ul>
 
 <script>

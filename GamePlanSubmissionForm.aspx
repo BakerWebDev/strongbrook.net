@@ -414,6 +414,11 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="well well-small well-white">
+                <div id="Note">
+                    <h3><strong>Note:</strong> Although the Game Plan Report system functions in different browsers, performance of this system is optimized in Google Chrome. If you are using another browser and experiencing technical difficulties, we recommend you download Google Chrome and resubmit your Game Plan Report request using this browser.</h3>
+                </div>
+            </div>
         </div>
     </form>
 

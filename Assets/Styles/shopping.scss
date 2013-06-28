@@ -229,13 +229,13 @@
         .quantity  { text-align: center; 
             input[type=text]  { width: 50px; text-align: center; }
 		    }
-        .total  { text-align: right; }
+        .total  { text-align: right; border-right:solid 1px #999; }
         .options  { TEXT-ALIGN: center; 
             a  { CURSOR: pointer; }
 		    }
 	    }
 
-    #ordertotalsreviewwrapper  { float: right; width: 170px; border: 1px solid #999; background-color: #EEE; PADDING: 3px; TEXT-ALIGN: center; 
+    #ordertotalsreviewwrapper  { float: right; width: 200px; border: 1px solid #999; background-color: #EEE; PADDING: 3px; TEXT-ALIGN: center; 
         a.placeorderbutton  { MARGIN: 15px; }
 	    }
     #ordertotalsreview  { border: 1px solid #CCC; BACKGROUND-COLOR: White; width: 100%; border-collapse: collapse;        

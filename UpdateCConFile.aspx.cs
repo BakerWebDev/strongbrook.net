@@ -13,14 +13,13 @@ public partial class UpdateCConFile : Page, IPostBackEventHandler
     #region Page Load
     protected void Page_Load(object sender, EventArgs e)
     {
-        PopulateCardTypes_OnPageLoad();
-
         if (!IsPostBack)
         {
             PopulateAllCountryRegions((!string.IsNullOrEmpty(Autoship.PropertyBag.ShippingCountry)) ? Autoship.PropertyBag.ShippingCountry : Autoship.Cart.Country);
             PopulateExpirationDateFields_PageLoad();
             PopulatePropertyBagValues_PageLoad();
             PopulateDefaultFields();
+            PopulateCardTypes_OnPageLoad();
         }
 
         FetchAndPopulatePaymentMethodsOnFile();
@@ -124,7 +123,6 @@ public partial class UpdateCConFile : Page, IPostBackEventHandler
         get { return (AccountCreditCardType)Enum.Parse(typeof(AccountCreditCardType), lstSaveCardAs.SelectedValue); }
         set { lstSaveCardAs.SelectedValue = ((int)value).ToString(); }
     }
-
     #endregion
 
     #region Load Data
@@ -228,18 +226,13 @@ public partial class UpdateCConFile : Page, IPostBackEventHandler
         {
             case "UseCard":
                 SaveCardDataToPropertyBag(args[1]);
+                Autoship.PropertyBag.Save();
 
-                if (Autoship.PropertyBag.ReferredByEndOfCheckout)
-                {
-                    Autoship.PropertyBag.ReferredByEndOfCheckout = false;
-                    Autoship.PropertyBag.Save();
-                    Request_SaveNewCreditCardToAccount(Autoship.PropertyBag.CreditCardType);
-                    Response.Redirect(Autoship.GetStepUrl(AutoshipManagerStep.Review));
-                }
-                else
-                {
-                    Response.Redirect(Autoship.GetStepUrl(AutoshipManagerStep.Review));
-                }
+                // Submit our order to the Exigo API for order creation and payment processing.
+                SubmitOrderToExigoAPI();
+
+                //Response.Redirect(Autoship.GetStepUrl(AutoshipManagerStep.Completed) + "?last4=" + lastfourdigits);
+                Response.Redirect(Autoship.GetStepUrl(AutoshipManagerStep.Completed));
                 break;
 
             default:
@@ -289,6 +282,47 @@ public partial class UpdateCConFile : Page, IPostBackEventHandler
     }
     private string _newCreditCardPaymentToken;
 
+    #region Exigo API Transaction Requests
+    private TransactionalRequest Request_AutoshipTransaction()
+    {
+        TransactionalRequest request = new TransactionalRequest();
+        List<ApiRequest> details = new List<ApiRequest>();
+
+        // Add the request to create an order
+        details.Add(Request_SaveNewCreditCardToAccount(Autoship.PropertyBag.CreditCardType));
+
+        request.TransactionRequests = details.ToArray();
+        return request;
+    }
+    #endregion
+
+    private string lastfourdigits;
+
+    #region Submit Order
+    private void SubmitOrderToExigoAPI()
+    {
+        // Call the Exigo API to process the order transaction and all the requests contained inside.
+        var orderResponse = ExigoApiContext.CreateWebServiceContext().ProcessTransaction(Request_AutoshipTransaction());
+
+
+        //// If successful, parse each APIResponse object and grab the necessary variables.
+        //if (orderResponse.Result.Status == ResultStatus.Success)
+        //{
+        //    foreach (var apiResponse in orderResponse.TransactionResponses)
+        //    {
+        
+        //        string CreditCardToken = NewCreditCardPaymentToken;
+        //        string last4inCT = "";
+        //        for(var i = 0; i < CreditCardToken.Length - 4; i++)
+        //        last4inCT += "*";
+        //        last4inCT += CreditCardToken.Substring(CreditCardToken.Length - 4);
+
+        //        //if (apiResponse is CreateAutoOrderResponse) NewAutoOrderID = ((CreateAutoOrderResponse)apiResponse).AutoOrderID;
+        //        if (CreditCardNumber != null) lastfourdigits = last4inCT;
+        //    }
+        //}
+    }
+    #endregion
 
     #region Render
     public void RenderCreditCardOnFile(AccountCreditCardType creditCardType)
@@ -298,13 +332,13 @@ public partial class UpdateCConFile : Page, IPostBackEventHandler
             StringBuilder html = new StringBuilder();
 
             var creditCardOnFile = CreditCardsOnFile.Where(c => c.CreditCardType == creditCardType).FirstOrDefault();
-            var creditCardIsVisa = creditCardOnFile.CreditCardProvider == CreditCardOnFile.CreditCardProviderType.Visa;
 
             html.Append(@"
                 <tr>
                     <td class='allowablepaymentmethodicons'>
                         <p class='btn btn-success Next'>
-                            " + string.Format("{0}", creditCardType.ToString()) + " " + "Card on file" + @"</p>
+                            " + string.Format("{0}", creditCardType.ToString()) + " " + "Card on file" + @"
+                        </p>
                     </td>
                     <td class='allowablepaymentmethodicons'>
             ");

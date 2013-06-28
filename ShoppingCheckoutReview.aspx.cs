@@ -524,7 +524,6 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
                 rdoShipMethod.Items.Add(newListItem);
             }
 
-
             // Do one final check to see if any ship methods in the radio list are currently selected, and if not, select the least expensive option that isn't $0.00
             var selectedShippingMethodItems = rdoShipMethod.Items.Cast<ListItem>().Where(i => i.Selected == true).ToList();
             if (selectedShippingMethodItems.Count == 0)

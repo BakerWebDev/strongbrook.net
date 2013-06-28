@@ -149,6 +149,40 @@ public partial class AutoshipList : Page, IPostBackEventHandler
             var customNextRunDateDescription = (autoship.NextRunDate != new DateTime()) ? Convert.ToDateTime(autoship.NextRunDate).ToString("M/d/yyyy") : "---";
 
 
+//            html.Append(string.Format(@"
+//                    <tr>
+//                        <td>
+//                            {0}
+//                            <input type='hidden' id='AutoshipDescription{1}' value='{0}' />
+//                            <input type='hidden' id='AutoshipFrequencyDescription{1}' value='{2}' />                      
+//                        </td>
+//                        <td>
+//                            {3}
+//                        </td>
+//                        <td>
+//                            {4}
+//                        </td>
+//                        <td class='price'>
+//                            {5:C}
+//                        </td>
+//                        <td class='price'>
+//                            {6:N0}
+//                        </td>
+//                        <td class='options'>
+//                            <div class='btn-group'>
+//                                <a class='btn' href='AutoshipInvoice.aspx?id={1}' target='_blank'>" + Resources.Shopping.View + @"</a>
+//                                <a class='btn' href='javascript:EditExistingAutoship({1});'>" + Resources.Shopping.Edit + @"</a>
+//                                <a class='btn' href='javascript:DeleteExistingAutoship({1});'>" + Resources.Shopping.Delete + @"</a>
+//                            </div>
+//                        </td>
+//                    </tr>", autoshipdescription,
+//                          autoship.AutoOrderID,
+//                          customFrequencyDescription,
+//                          customPaymentTypeDescription,
+//                          customNextRunDateDescription,
+//                          autoship.Total,
+//                          autoship.BusinessVolumeTotal));
+
             html.Append(string.Format(@"
                     <tr>
                         <td>

@@ -276,7 +276,7 @@ public partial class ShoppingCheckoutShippingAddress : Page, IPostBackEventHandl
         }
     }
     #endregion
-    
+
     #region Render
     public void RenderAddress(ShoppingCartPropertyBag.AddressType addressType)
     {

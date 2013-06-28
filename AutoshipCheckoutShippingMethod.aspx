@@ -5,7 +5,7 @@
     <script>
         // Set page variables
         var page = {
-            activenavigation: 'orders'
+            activenavigation: 'autoships'
         };
     </script>
 
@@ -26,10 +26,17 @@
                     
                     <h2><%=Resources.Shopping.ShippingMethod %></h2>
 
-                    <p><%=Resources.Shopping.ChooseAShippingSpeed %>:
-                    </p>
+                    
 
-                    <asp:RadioButtonList ID="rdoShipMethod" runat="server" CssClass="checkboxes" />
+                                <%if(CalculatedOrder.ShipMethods[0].ShipMethodID == 8) { %>
+                                <p>Free Shipping on this item, please continue.</p>
+                                <asp:RadioButtonList ID="rdoShipMethod2" runat="server" CssClass="checkboxes" Visible="false" />
+                                <% } else { %>
+                                <p><%=Resources.Shopping.ChooseAShippingSpeed %>:</p>
+                                <asp:RadioButtonList ID="rdoShipMethod" runat="server" CssClass="checkboxes" />
+                                <% } %>
+
+
                     <br />
                     <p>
                         <asp:LinkButton ID="cmdCheckoutShippingMethodNext_Click" runat="server" CssClass="btn btn-success Next" OnClick="SelectShipMethod_Click"  />

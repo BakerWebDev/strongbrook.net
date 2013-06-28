@@ -66,6 +66,7 @@
 --%>
 
                 <asp:ContentPlaceHolder ID="Content" runat="server" />
+                <asp:ContentPlaceHolder ID="ResetPasswordContent" runat="server"></asp:ContentPlaceHolder>
             </div>
         </div>
     </div>

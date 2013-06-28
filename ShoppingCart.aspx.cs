@@ -11,7 +11,7 @@ public partial class ShoppingCartPage : Page, IPostBackEventHandler
     #region Page Load
     protected void Page_Load(object sender, EventArgs e)
     {
-            
+          Shopping.PropertyBag.ReferredByEndOfCheckout = false; // Added this to see if it would fix the CC issue.  
     }
     #endregion
 

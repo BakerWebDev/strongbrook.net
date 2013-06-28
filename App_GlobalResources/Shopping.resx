@@ -630,7 +630,7 @@
     <comment>Order Invoice</comment>
   </data>
   <data name="Note_AutoshipProcessingMessage" xml:space="preserve">
-    <value>Note: your processing date cannot be in the past.</value>
+    <value>Note: Your Autoship start date cannot be today or in the past.</value>
     <comment>Autoship Checkout Details</comment>
   </data>
   <data name="NumbersOnly_NoSpecialChar" xml:space="preserve">

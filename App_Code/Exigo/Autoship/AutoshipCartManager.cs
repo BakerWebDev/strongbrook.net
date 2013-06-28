@@ -24,6 +24,7 @@ public class AutoshipCartManager
     public string UrlCheckoutPayment                    = "AutoshipCheckoutPayment.aspx";
     public string UrlCheckoutReview                     = "AutoshipCheckoutReview.aspx";
     public string UrlCheckoutComplete                   = "AutoshipCheckoutComplete.aspx";
+    public string UrlCheckoutCompleted                  = "UpdateCConFileComplete.aspx";
 
     // Navigation Methods
     public string GetStepUrl(AutoshipManagerStep step)
@@ -42,6 +43,7 @@ public class AutoshipCartManager
             case AutoshipManagerStep.Payment:                       url = UrlCheckoutPayment; break;
             case AutoshipManagerStep.Review:                        url = UrlCheckoutReview; break;
             case AutoshipManagerStep.Complete:                      url = UrlCheckoutComplete; break;
+            case AutoshipManagerStep.Completed:                     url = UrlCheckoutCompleted; break;
         }
 
         return url;
@@ -139,6 +141,23 @@ public class AutoshipCartManager
     }
     private IAutoOrderConfiguration _configuration;
 
+    public IAutoOrderConfiguration Configuration2
+    {
+        get
+        {
+            if (_configuration2 == null)
+            {
+                switch(Identity.Current.Market.Name)
+                {
+                    case MarketName.UnitedStates:
+                    default:                            _configuration2 = new USAutoshipConfiguration2(); break;
+                }
+            }
+            return _configuration2;
+        }
+    }
+    private IAutoOrderConfiguration _configuration2;
+
     public IAddressConfiguration AddressSettings
     {
         get
@@ -206,5 +225,6 @@ public enum AutoshipManagerStep
     ShippingMethod,
     Payment,
     Review,
-    Complete
+    Complete,
+    Completed
 }

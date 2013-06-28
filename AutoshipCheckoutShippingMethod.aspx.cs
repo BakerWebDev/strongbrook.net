@@ -24,7 +24,14 @@ public partial class AutoshipCheckoutShippingMethod : Page
 
         if (!IsPostBack)
         {
-            PopulateAvailableShippingMethods_Load();
+            if(CalculatedOrder.ShipMethods[0].ShippingAmount == 0M)
+            {
+                PopulateAvailableShippingMethods_Load2();
+            }
+            else
+            {
+                PopulateAvailableShippingMethods_Load();
+            }
         }
     }
 
@@ -123,7 +130,6 @@ public partial class AutoshipCheckoutShippingMethod : Page
         {
             rdoShipMethod.Items.Clear();
 
-
             foreach (var shipMethod in CalculatedOrder.ShipMethods
                 .Where(c => Autoship.Configuration.AvailableShipMethods.Contains(c.ShipMethodID))
                 .OrderBy(s => s.ShippingAmount))
@@ -134,7 +140,6 @@ public partial class AutoshipCheckoutShippingMethod : Page
                     Value = shipMethod.ShipMethodID.ToString()
                 };
 
-
                 if (Autoship.PropertyBag.ShipMethodID == shipMethod.ShipMethodID)
                 {
                     // De-select any previously selected items
@@ -143,7 +148,6 @@ public partial class AutoshipCheckoutShippingMethod : Page
                     // Select our new list item
                     newListItem.Selected = true;
                 }
-
 
                 rdoShipMethod.Items.Add(newListItem);
             }
@@ -164,6 +168,54 @@ public partial class AutoshipCheckoutShippingMethod : Page
                 }
             }
         }
+    }
+    public void PopulateAvailableShippingMethods_Load2()
+    {
+        // Populate the available ship methods if we have any.
+        if (CalculatedOrder.ShipMethods.Length == 0)
+        {
+            // Do nothing
+        }
+        else
+        {
+            rdoShipMethod2.Items.Clear();
+
+
+            foreach (var shipMethod in CalculatedOrder.ShipMethods
+                .Where(c => Autoship.Configuration2.AvailableShipMethods.Contains(c.ShipMethodID))
+                .OrderBy(s => s.ShippingAmount))
+            {
+                ListItem newListItem = new ListItem
+                {
+                    Text = shipMethod.Description + " (" + shipMethod.ShippingAmount.ToString("C") + ")",
+                      Value = shipMethod.ShipMethodID.ToString()                  
+                };
+
+                if (Autoship.PropertyBag.ShipMethodID == shipMethod.ShipMethodID)
+                {
+                    // De-select any previously selected items
+                    rdoShipMethod2.Items.Cast<ListItem>().Where(i => i.Selected == true).ToList().ForEach(i => i.Selected = false);
+
+                    // Select our new list item
+                    newListItem.Selected = true;
+                }
+
+                rdoShipMethod2.Items.Add(newListItem);
+            }
+
+
+            // Do one final check to see if any ship methods in the radio list are currently selected, and if not, select the least expensive option that is $0.00
+            var selectedShippingMethodItems = rdoShipMethod2.Items.Cast<ListItem>().Where(i => i.Selected == true).ToList();
+            if (selectedShippingMethodItems.Count == 0)
+            {
+                var defaultShippingMethodID = CalculatedOrder.ShipMethods.FirstOrDefault();
+                if (defaultShippingMethodID != null)
+                {
+                    rdoShipMethod2.Items.FindByValue(defaultShippingMethodID.ShipMethodID.ToString()).Selected = true;
+                }
+            }
+        }
+        Response.Redirect(Autoship.UrlCheckoutReview);
     }
     #endregion
 }

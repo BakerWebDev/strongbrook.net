@@ -5,7 +5,7 @@
     <script>
         // Set page variables
         var page = {
-            activenavigation: 'orders'
+            activenavigation: 'autoships'
         };
     </script>
 

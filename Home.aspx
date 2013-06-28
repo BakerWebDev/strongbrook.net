@@ -194,7 +194,7 @@ You always carry the title of the highest rank you reach, but are “Paid As” 
                 </div>
                 <div id="LatestWeeklyEarnings" class="tile tile-icon size-2x1 theme-amethyst2" title="The amount of your most recent Weekly Commissions earned.">
                     <h2><% Render_LastAccepted_Weekly_CommissionAmountEarned(); %></h2>
-                    <h4>Earnings for <%Render_LastAccepted_Weekly_CommissionAmountEarned_PeriodDescription(); %></h4>
+                    <h4>Earnings <%Render_LastAccepted_Weekly_CommissionAmountEarned_PeriodDescription(); %></h4>
                 </div>
                 <div id="CorporateInfo" class="tile tile-icon size-2x4 theme-skyblue" style="width:205px; padding:5px;" title="Corporate Information">
                     <h2 style="margin-bottom:0px;">National Team Call</h2>

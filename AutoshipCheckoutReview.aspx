@@ -11,9 +11,84 @@
 
     <link href="Assets/Styles/shopping.min.css" rel="stylesheet" type="text/css" />
 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($('INPUT[type="hidden"][id*="ApplicationErrors"]').val() != null) {
+                alert($('INPUT[type="hidden"][id*="ApplicationErrors"]').val());
+                $(function () {
+                    $(this).css('background-color', '#315885');
+                    $('DIV#Message').children('p').hide();
+                    $('DIV#Message DIV.Close').children('p').hide();
+                    $('DIV#Message').show();
+                    $('DIV#Message').animate({ width: '400px' }, 400, function () {
+                        $('DIV#Message DIV.Close').children('p').fadeIn('fast');
+                    });
+                    $('DIV#Message').children('p').fadeIn('slow');
+                    setTimeout(function () {
+                        $('DIV#Message DIV.Close').children('p').fadeOut("fast", function () {
+                            $('DIV#Message').children('p').fadeOut("fast");
+                            $('DIV#Message').animate({ width: '0px' }, 400);
+                            $('DIV#Message').fadeOut("slow");
+                        });
+                    }, 16000);
+                });
+            }
+            else {
+                if ($('INPUT[type="hidden"][id*="ApplicationErrors"]').val() != '') {
+                    $(function () {
+                        $('DIV#Message').hide();
+                    });
+                }
+            }
+
+            $('DIV#Message DIV.Close').hover(function () {
+                $(this).css('background-color', '#aaa');
+                $(this).css('width', '14px');
+                $(this).css('height', '20px');
+                $(this).css('border-radius', '3px');
+                $(this).css('margin-bottom', '24px');
+            }).click(function () {
+                $(this).css('background-color', '#5aa1f3');
+                $(this).delay(200).fadeOut("fast", function () {
+                    $('DIV#Message').children('p').fadeOut("fast");
+                    $('DIV#Message').animate({ width: '0px' }, 400);
+                    $('DIV#Message').fadeOut("fast");
+                });
+            });
+
+            $('DIV#Message DIV.Close').mouseout(function () {
+                $(this).css('width', '14px');
+                $(this).css('height', '20px');
+                $(this).css('border-radius', '3px');
+                $(this).css('background-color', '#ccc');
+            });
+
+        });
+
+
+
+
+        function UseNewCard() {
+            <%=Page.ClientScript.GetPostBackEventReference(this, "UseCard")%>
+        }
+
+
+    </script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Content" runat="server">
+
+     <asp:HiddenField ID="ApplicationErrors" runat="server" />
+     <div id="Message" class="loginwrapper well" style="display: none; position:absolute; right:0px; top:25px;">
+     
+         <div class="Close">
+             <p style="width:10px; padding:2px; margin-bottom:20px; text-align:center; background-color:#ccc; border-radius:3px; font-weight:bold; color:white;">X</p>
+         </div>
+         
+         <div style="width:100%;">
+             <p style="padding-left:20px; font-weight:bold;"><%=ErrorString %></p>
+         </div>
+     </div>
 
 
     <h1><%=Resources.Shopping.Autoships %></h1>
@@ -25,8 +100,6 @@
         <div class="well well-large well-white">
             <div id="shopping">
                 <div id="shoppingcheckout">
-
-                    <exigo:ApplicationErrorModal ID="ApplicationErrors" runat="server" />
                     <div id="ordertotalsreviewwrapper">
                         <asp:LinkButton ID="cmdPlaceOrder" runat="server" CssClass="btn btn-success addtocart placeorderbutton" OnClick="PlaceOrder_Click" />
                         <table cellpadding="0" cellspacing="0" id="ordertotalsreview">
@@ -45,7 +118,84 @@
                             <tr class="shipping">
                                 <td class="fieldlabel"><%=Resources.Shopping.EstimatedShipping %><br />
                                     <span style="font-size: 10px;">
-                                        <%=CalculatedOrder.ShipMethods.Where(s => s.ShipMethodID.ToString() == rdoShipMethod.SelectedValue).FirstOrDefault().Description %></span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        <%if(CalculatedOrder.ShipMethods[0].ShipMethodID == 8) { %>
+                                        <%=CalculatedOrder.ShipMethods.Where(s => s.ShipMethodID.ToString() == rdoShipMethod2.SelectedValue).FirstOrDefault().Description %>
+                                        <% } else { %>
+                                        <%=CalculatedOrder.ShipMethods.Where(s => s.ShipMethodID.ToString() == rdoShipMethod.SelectedValue).FirstOrDefault().Description %>
+                                        <% } %>
+
+
+
+
+
+
+
+                                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    </span>
                                 </td>
                                 <td class="value">
                                     <%=string.Format("{0:C}", CalculatedOrder.ShippingTotal)%>
@@ -115,8 +265,26 @@
                                    || Autoship.PropertyBag.PaymentType == AutoshipCartPropertyBag.PaymentMethodType.SecondaryCreditCard
                                    || Autoship.PropertyBag.PaymentType == AutoshipCartPropertyBag.PaymentMethodType.NewCreditCard)
                                    { %>
+
+
+
+
+
+
                                 <%=Autoship.PropertyBag.CreditCardType %> <%=Resources.Shopping.CreditDebitEndingIn %>
-                            <%=Autoship.PropertyBag.CreditCardNumber.Substring(Autoship.PropertyBag.CreditCardNumber.Length - 4, 4)%>
+                                <%=Autoship.PropertyBag.CreditCardNumber.Substring(Autoship.PropertyBag.CreditCardNumber.Length - 4, 4)%>
+
+
+
+
+
+
+
+
+
+
+
+
                                 <br />
                                 <br />
                                 <strong><%=Resources.Shopping.BillingAddress %>:</strong><br />
@@ -143,9 +311,15 @@
                                 <% } %>
                             </td>
                             <td class="shippingoptions checkboxes">
+                                <%if(CalculatedOrder.ShipMethods[0].ShipMethodID == 8) { %>
+                                <strong>No Shipping on this item.</strong><br />
+                                <asp:RadioButtonList ID="rdoShipMethod2" runat="server" RepeatLayout="Flow" OnSelectedIndexChanged="ChangeShippingMethod_SelectedIndexChanged"
+                                    AutoPostBack="true" Visible="false" />
+                                <% } else { %>
                                 <strong><%=Resources.Shopping.ChooseAShippingSpeed %>:</strong><br />
                                 <asp:RadioButtonList ID="rdoShipMethod" runat="server" RepeatLayout="Flow" OnSelectedIndexChanged="ChangeShippingMethod_SelectedIndexChanged"
                                     AutoPostBack="true" />
+                                <% } %>
                             </td>
                         </tr>
                     </table>

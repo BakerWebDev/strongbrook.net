@@ -471,14 +471,15 @@
           width: 50px;
           text-align: center; }
       #shopping #shoppingcheckout #cartcontents .total {
-        text-align: right; }
+        text-align: right;
+        border-right: solid 1px #999; }
       #shopping #shoppingcheckout #cartcontents .options {
         TEXT-ALIGN: center; }
         #shopping #shoppingcheckout #cartcontents .options a {
           CURSOR: pointer; }
     #shopping #shoppingcheckout #ordertotalsreviewwrapper {
       float: right;
-      width: 170px;
+      width: 200px;
       border: 1px solid #999;
       background-color: #EEE;
       PADDING: 3px;

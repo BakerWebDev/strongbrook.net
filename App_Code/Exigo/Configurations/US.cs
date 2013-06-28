@@ -53,14 +53,14 @@ public class USAutoshipConfiguration : IAutoOrderConfiguration
     public int PriceTypeID              { get { return (int)PriceTypes.Distributor; } }
     public int LanguageID               { get { return (int)Languages.English; } }
     public int DefaultShipMethodID      { get { return 2; } }
-    public List<int> AvailableShipMethods { get { return new List<int> { 2, 3, 11 }; } }
+    public List<int> AvailableShipMethods { get { return new List<int> { 2, 3, 11  }; } }
     public string DefaultCountryCode    { get { return "US"; } }
     public FrequencyType Frequency      { get { return FrequencyType.Monthly; } }
     public DateTime StartDate           { get { return GlobalUtilities.GetNewAutoOrderStartDate(FrequencyType.Monthly); } }
     public DateTime? StopDate           { get { return null; } }
 
     public int WebID                    { get { return 3; } }
-    public int WebCategoryID            { get { return 42; } }
+    public int WebCategoryID            { get { return 47; } }
     public string[] ItemCodes           { get { return null; } }
 }
 
@@ -73,7 +73,7 @@ public class USAnnualSubscriptionAutoshipConfiguration : IAutoOrderConfiguration
     public int PriceTypeID              { get { return (int)PriceTypes.Distributor; } }
     public int LanguageID               { get { return (int)Languages.English; } }
     public int DefaultShipMethodID      { get { return 2; } }
-    public List<int> AvailableShipMethods { get { return new List<int> { 2, 3, 11 }; } }
+    public List<int> AvailableShipMethods { get { return new List<int> { 2, 3, 11  }; } }
     public string DefaultCountryCode    { get { return "US"; } }
     public FrequencyType Frequency      { get { return FrequencyType.Yearly; } }
     public DateTime StartDate           { get { return GlobalUtilities.GetNewAutoOrderStartDate(FrequencyType.Yearly); } }
@@ -82,6 +82,26 @@ public class USAnnualSubscriptionAutoshipConfiguration : IAutoOrderConfiguration
     public int WebID                    { get { return 0; } }
     public int WebCategoryID            { get { return 0; } }
     public string[] ItemCodes           { get { return new string[] { "ANNUAL" }; } }
+}
+
+// Free Shipping Autoships
+public class USAutoshipConfiguration2 : IAutoOrderConfiguration
+{
+    public string Description           { get { return "My Monthly Autoship"; } }
+    public int WarehouseID              { get { return (int)Warehouses.Default; } }
+    public string CurrencyCode          { get { return Exigo.Global.Currencies.USDollars; } }
+    public int PriceTypeID              { get { return (int)PriceTypes.Distributor; } }
+    public int LanguageID               { get { return (int)Languages.English; } }
+    public int DefaultShipMethodID      { get { return 8; } }
+    public List<int> AvailableShipMethods { get { return new List<int> { 8 }; } }
+    public string DefaultCountryCode    { get { return "US"; } }
+    public FrequencyType Frequency      { get { return FrequencyType.Monthly; } }
+    public DateTime StartDate           { get { return GlobalUtilities.GetNewAutoOrderStartDate(FrequencyType.Monthly); } }
+    public DateTime? StopDate           { get { return null; } }
+
+    public int WebID                    { get { return 3; } }
+    public int WebCategoryID            { get { return 47; } }
+    public string[] ItemCodes           { get { return null; } }
 }
 
 // Autoship Settings

@@ -5,7 +5,7 @@
     <script>
         // Set page variables
         var page = {
-            activenavigation: 'autoships'
+            activenavigation: 'myaccount'
         };
     </script>
 
@@ -44,10 +44,10 @@
 
     <asp:ScriptManager ID="ScriptManager1" runat="server" />
 
-    <h1><%=Resources.Shopping.Autoships %></h1>
+    <h1>My Account</h1>
 
     <div class="sidebar">
-        <navigation:Autoships ID="SideNavigation" ActiveNavigation="cart" runat="server" />
+        <navigation:MyAccount ID="SideNavigation" ActiveNavigation="settings" runat="server" />
     </div>
     <div class="maincontent">
         <div class="well well-large well-white">
@@ -57,7 +57,6 @@
                     <% if(HasOneOrMoreValidPaymentMethodsOnFile())
                        { %>
                     <h2>Edit or Replace your Credit Card on File</h2>
-
                     <table cellpadding="0" cellspacing="0" id="paymentmethodsonfile">
                         <tr>
                             <th colspan="2" class="options"><%=Resources.Shopping.YourStoredPaymentMethods %>
@@ -77,7 +76,7 @@
                     <% }
                        else
                        { %>
-                    <h2>Here</h2>
+
                     <% } %>
 
                     <% if(Autoship.Payments.AvailablePaymentMethodTypes.Contains(Exigo.WebService.PaymentType.CreditCard))

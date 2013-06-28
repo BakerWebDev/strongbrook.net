@@ -71,6 +71,11 @@
 
                 <% RenderAutoshipList(); %>
             </div>
+            <div class="well well-small well-white">
+                <div id="Note">
+                    <h3><strong>Note:</strong> To modify or cancel your Autoship, please contact Strongbrook Support Services at 801-679-4723 during regular business hours (Mon – Fri, 8:00 am to 5:00 pm MT).</h3>
+                </div>
+            </div>
         </div>
     </div>
 </asp:Content>
