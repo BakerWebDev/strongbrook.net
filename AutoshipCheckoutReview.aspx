@@ -14,12 +14,12 @@
     <script type="text/javascript">
         $(document).ready(function () {
             if ($('INPUT[type="hidden"][id*="ApplicationErrors"]').val() != null) {
-                alert($('INPUT[type="hidden"][id*="ApplicationErrors"]').val());
+                //alert($('INPUT[type="hidden"][id*="ApplicationErrors"]').val());
                 $(function () {
                     $(this).css('background-color', '#315885');
                     $('DIV#Message').children('p').hide();
                     $('DIV#Message DIV.Close').children('p').hide();
-                    $('DIV#Message').show();
+                    //$('DIV#Message').show();
                     $('DIV#Message').animate({ width: '400px' }, 400, function () {
                         $('DIV#Message DIV.Close').children('p').fadeIn('fast');
                     });
@@ -84,10 +84,13 @@
          <div class="Close">
              <p style="width:10px; padding:2px; margin-bottom:20px; text-align:center; background-color:#ccc; border-radius:3px; font-weight:bold; color:white;">X</p>
          </div>
-         
+<%--         
+
          <div style="width:100%;">
              <p style="padding-left:20px; font-weight:bold;"><%=ErrorString %></p>
          </div>
+--%>
+
      </div>
 
 

@@ -333,32 +333,40 @@ public partial class AutoshipCheckoutReview : Page, IPostBackEventHandler
     #region Submit Order
     private void SubmitOrderToExigoAPI()
     {
-        // Call the Exigo API to process the order transaction and all the requests contained inside.
-        var orderResponse = ExigoApiContext.CreateWebServiceContext().ProcessTransaction(Request_AutoshipTransaction());
-
-
-        // If successful, parse each APIResponse object and grab the necessary variables.
-        if (orderResponse.Result.Status == ResultStatus.Success)
+        try
         {
-            foreach (var apiResponse in orderResponse.TransactionResponses)
-            {
-                if (apiResponse is CreateAutoOrderResponse) NewAutoOrderID = ((CreateAutoOrderResponse)apiResponse).AutoOrderID;
-            }
-            #region Create Litmos User
-            if (IsPurchasingTheStrongbrookAcademySubscription)
-            {
-                CreateLitmosUserID();
-                SendRestCall();
-                CreateWealthClubMonthlySubscription();
-                Request_UpdateCustomer();
+            // Call the Exigo API to process the order transaction and all the requests contained inside.
+            var orderResponse = ExigoApiContext.CreateWebServiceContext().ProcessTransaction(Request_AutoshipTransaction());
 
-                string response = AddLitmosTeamForCoaching();
-                if (response != "Success")
+
+            // If successful, parse each APIResponse object and grab the necessary variables.
+            if (orderResponse.Result.Status == ResultStatus.Success)
+            {
+                foreach (var apiResponse in orderResponse.TransactionResponses)
                 {
-                    ErrorString += "We could not create your Academy Account";
+                    if (apiResponse is CreateAutoOrderResponse) NewAutoOrderID = ((CreateAutoOrderResponse)apiResponse).AutoOrderID;
                 }
+                #region Create Litmos User
+                if (IsPurchasingTheStrongbrookAcademySubscription)
+                {
+                    CreateLitmosUserID();
+                    SendRestCall();
+                    CreateWealthClubMonthlySubscription();
+                    Request_UpdateCustomer();
+
+                    string response = AddLitmosTeamForCoaching();
+                    if (response != "Success")
+                    {
+                        Response.Write("We could not create your Academy Account");
+                        //ApplicationErrors.ErrorMessage += "We could not create your Academy Account";
+                    }
+                }
+                #endregion Create Litmos User
             }
-            #endregion Create Litmos User
+        }
+        catch (Exception ex)
+        {
+            Response.Write(ex.Message);
         }
     }
     #endregion
@@ -590,16 +598,8 @@ public partial class AutoshipCheckoutReview : Page, IPostBackEventHandler
             {
                 Response.Write("<br />The email on your account is already on file with Strongbrook Academy.<br />You most likely already have a Strongbrook Academy account.");
             }
-            if(ex.Message.Equals("The remote server returned an error: (400) Bad Request."))
-            {
-                Response.Write("<br />Please double check your email address.<br />You must have a valid email address on file with Strongbrook.");
-            }
-
-
-
-
             
-            ErrorString += ex.Message;
+            //ApplicationErrors.ErrorMessage += ex.Message;
         }
     }
 
@@ -1158,7 +1158,6 @@ public partial class AutoshipCheckoutReview : Page, IPostBackEventHandler
 
 
 
-    public string ErrorString { get; set; }
 
 
 }

@@ -7,18 +7,15 @@
     function jsonpCallback(response) {
         alert(response.data);
     }
-
     $(document).ready(function () {
-
         $.ajax({
-            url: 'http://localhost:30413/getprice.aspx',
+            url: 'test.aspx',
             dataType: 'jsonp',
             error: function (xhr, status, error) {
                 alert(error);
             },
             success: jsonpCallback
         });
-
     });
 </script>
 
