@@ -1042,7 +1042,8 @@ public partial class AutoshipCheckoutReview : Page, IPostBackEventHandler
         UpdateCustomerRequest req = new UpdateCustomerRequest()
         {
             CustomerID = CustomerID,
-            Field4 = LitmosID
+            Field4 = LitmosID,
+            Field13 = "Wealth"
         };
 
         UpdateCustomerResponse res = ExigoApiContext.CreateWebServiceContext().UpdateCustomer(req);

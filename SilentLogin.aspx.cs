@@ -28,12 +28,12 @@ public partial class SilentLogin : System.Web.UI.Page
             {
                 DecryptQueryString();
             }
+            if (Request.QueryString["shop"] != null)
+            {
+                DecryptShoppingQueryString();
+            }
         }
 
-
-
-        //if (AuthenticateSessionID()) return;
-        //if (AutenticateSilentLogin()) return;
         IfAllisWellRedirect();
     }
 
@@ -43,19 +43,18 @@ public partial class SilentLogin : System.Web.UI.Page
     public string ToPortal = "https://strongbrookbackoffice.secure-backoffice.net/Public/SilentLogin.aspx";
     public string ToPortal2 = "http://strongbrookdirect.com/Secure/WealthClub.aspx";
     public string ToPortal3 = "Home.aspx";
+    public string ToPortal4 = "ShoppingProductList.aspx";
 
     public void IfAllisWellRedirect()
     {
         try
         {
-
-
-
             if (AutenticateSilentLogin())
             {
                 if (AuthenticateUserInfo())
                 {
-                    Response.Redirect(ToPortal3);
+                    if(Request.QueryString["confirm"] != null)Response.Redirect(ToPortal3);
+                    if(Request.QueryString["shop"] != null)Response.Redirect(ToPortal4);
                 }
                 else
                 {
@@ -205,20 +204,27 @@ public partial class SilentLogin : System.Web.UI.Page
             // Validate that we have a query string request called 'token'
             if (Request.QueryString["confirm"] != null)
             {
-                // Decrypt the 'token' query string
-                //var decryptedString = Decrypt(Request.QueryString["token"], WebSettingsContext.SilentLogins.EncryptionKey);
+                //// Decrypt the 'token' query string
+                ////var decryptedString = Decrypt(Request.QueryString["token"], WebSettingsContext.SilentLogins.EncryptionKey);
 
-                // Are we even allowed to silently login? If not, let's stop right here.
-                if (1 == 2) //!WebSettingsContext.SilentLogins.AllowSilentLogins)
-                {
-                    Response.Write("Silent logins are not permitted at this time.");
-                    isValid = false;
-                    return isValid;
-                }
-                else
-                {
+                //// Are we even allowed to silently login? If not, let's stop right here.
+                //if (1 == 2) //!WebSettingsContext.SilentLogins.AllowSilentLogins)
+                //{
+                //    Response.Write("Silent logins are not permitted at this time.");
+                //    isValid = false;
+                //    return isValid;
+                //}
+                //else
+                //{
                     isValid = true;
-                }
+                //}
+            }
+
+            // Validate that we have a query string request called 'token'
+            else if (Request.QueryString["shop"] != null)
+            {
+                isValid = true;
+                return isValid;
             }
             else
             {
@@ -441,6 +447,12 @@ public partial class SilentLogin : System.Web.UI.Page
     public void DecryptQueryString()
     {
         string[] Decrypted = Server.UrlDecode(Decrypt(Request.QueryString["confirm"], "justdoit")).Split('|');
+        _NewCustomerID = Convert.ToInt32(Decrypted[0]);
+        _NewUsername = (Decrypted[1]);
+    }
+    public void DecryptShoppingQueryString()
+    {
+        string[] Decrypted = Server.UrlDecode(Decrypt(Request.QueryString["shop"], "justdoit")).Split('|');
         _NewCustomerID = Convert.ToInt32(Decrypted[0]);
         _NewUsername = (Decrypted[1]);
     }

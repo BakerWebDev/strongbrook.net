@@ -93,7 +93,7 @@
             </div>
             <div class="tiles" style="min-width: 300px; max-width: 301px;">
                 <div id="Actual_Months_Qualified_Rank" class="tile tile-icon size-2x1andAhalf theme-skyblue" title="Your highest Rank title achieved in the compensation plan. You always carry the title of the highest Rank reached.">
-                    <h2><%=currentMonthsQualifiedRank %></h2>
+                    <h2><%=guaranteedMinPaidAsRank %></h2>
                     <h4><%=Resources.Dashboard.ActualRankTitle %></h4>
                 </div>
                 <div id="Current_Months_Qualified_Rank" class="tile tile-icon size-2x1andAhalf theme-peach2" title="The Rank you have achieved in the current month to date based on your 3 month OCV and the compensation plan qualification criteria.
@@ -102,7 +102,7 @@ You always carry the title of the highest rank you reach, but are “Paid As” 
                     <h4><%=Resources.Dashboard.CurrentMonthsQualifiedRank %></h4>
                 </div>
                 <div id="Guaranteed_Minimum_PaidAs_Rank" class="tile tile-icon size-2x1andAhalf theme-amethyst2" title="Your qualified rank in any given month prequalifies you at that “Paid As” level for the next two months in the future. You are guaranteed to be “Paid As” no less than this Rank.">
-                    <h2><%=guaranteedMinPaidAsRank %></h2>
+                    <h2><%=currentMonthsQualifiedRank %></h2>
                     <h4><%=Resources.Dashboard.GuaranteedMinPaidAsRank %></h4>
                 </div>
             </div>
@@ -192,7 +192,7 @@ You always carry the title of the highest rank you reach, but are “Paid As” 
                     <h2><%=Volumes.Volume56.ToString("N0") %></h2>
                     <h4><%=Resources.Dashboard.HomeTransactionCredits %></h4>
                 </div>
-                <div id="LatestWeeklyEarnings" class="tile tile-icon size-2x1 theme-amethyst2" title="The amount of your most recent Weekly Commissions earned.">
+                <div id="LatestWeeklyEarnings" class="tile tile-icon size-2x1 theme-amethyst2" title="The total amount of your commissions paid in the last WEEKLY commission check.">
                     <h2><% Render_LastAccepted_Weekly_CommissionAmountEarned(); %></h2>
                     <h4>Earnings <%Render_LastAccepted_Weekly_CommissionAmountEarned_PeriodDescription(); %></h4>
                 </div>
