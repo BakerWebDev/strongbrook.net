@@ -1662,7 +1662,7 @@ public partial class GPRform : System.Web.UI.Page
         MailAddress from = new MailAddress("support@strongbrookdirect.com", "No Reply");
         MailAddress to = new MailAddress("GamePlanRequest@strongbrook.com", "GPR Group");
         MailAddress cc = new MailAddress("Chris.Ferguson@strongbrook.com");
-        MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
+        //MailAddress bcc = new MailAddress("Tyler.Bennett@strongbrook.com");
 
         //Construct the email - just simple text email
         MailMessage message = new MailMessage(from, to);
