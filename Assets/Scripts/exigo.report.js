@@ -321,6 +321,8 @@ function searchReport(searchField, searchOperator, searchFilter) {
 function setInitialSort(field, order) {
     report.settings.current.sortField = field;
     report.settings.current.sortOrder = order;
+    console.log(field);
+    console.log(order);
 }
 function initializeReport() {
     report.actions.init();

@@ -101,12 +101,23 @@ public partial class ShoppingProductNavigation : UserControl
 
                     cat = i.Category;
                 }
+                if(i.ItemCode != "6601")
+                {
+                    s.Append(string.Format("<li><a href='{0}' rel='{2}' class='{3}'>{1}</a></li>"
+                        , Shopping.UrlProductDetail + "?item=" + i.ItemCode
+                        , (i.IsGroupMaster) ? i.GroupDescription : i.Description
+                        , i.ItemCode
+                        , (i.ItemCode == activeItemCode) ? "active" : ""));                
+                }
+                else
+                {
+                    s.Append(string.Format("<li><a href='{0}' target='_blank' rel='{2}' class='{3}'>{1}</a></li>"
+                        , Shopping.UrlBusinessCardsLink
+                        , (i.IsGroupMaster) ? i.GroupDescription : i.Description
+                        , i.ItemCode
+                        , (i.ItemCode == activeItemCode) ? "active" : ""));                
+                }
 
-                s.Append(string.Format("<li><a href='{0}' rel='{2}' class='{3}'>{1}</a></li>"
-                    , Shopping.UrlProductDetail + "?item=" + i.ItemCode
-                    , (i.IsGroupMaster) ? i.GroupDescription : i.Description
-                    , i.ItemCode
-                    , (i.ItemCode == activeItemCode) ? "active" : ""));
             }
         }
 

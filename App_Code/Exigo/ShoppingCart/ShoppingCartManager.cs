@@ -20,6 +20,7 @@ public class ShoppingCartManager
     // Page URL's
     public string UrlProductList                        = "ShoppingProductList.aspx";
     public string UrlProductDetail                      = "ShoppingProductDetail.aspx";
+    public string UrlBusinessCardsLink                  = "http://printing.strongbrook.me";
     public string UrlCart                               = "ShoppingCart.aspx";
     public string UrlCheckoutShippingAddress            = "ShoppingCheckoutShippingAddress.aspx";
     public string UrlCheckoutShippingMethod             = "ShoppingCheckoutShippingMethod.aspx";
@@ -36,6 +37,7 @@ public class ShoppingCartManager
         {
             case ShoppingStep.ProductList:                      url = UrlProductList; break;
             case ShoppingStep.ProductDetail:                    url = UrlProductDetail; break;
+            case ShoppingStep.BusinessCards:                    url = UrlBusinessCardsLink; break;
             case ShoppingStep.Cart:                             url = UrlCart; break;
             case ShoppingStep.ShippingAddress:                  url = UrlCheckoutShippingAddress; break;
             case ShoppingStep.ShippingMethod:                   url = UrlCheckoutShippingMethod; break;
@@ -198,6 +200,7 @@ public class ShoppingCartManager
 public enum ShoppingStep
 {
     ProductList,
+    BusinessCards,
     ProductDetail,
     Cart,
     ShippingAddress,

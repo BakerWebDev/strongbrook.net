@@ -384,10 +384,21 @@ public partial class ShoppingProductList : Page, IPostBackEventHandler
         #endregion Group Master Dropdown list
 
 
-        html.AppendLine(@"
-            <div class='addtocart'>
-                <a class='btn btn-success' href='" + Shopping.UrlProductDetail + "?item=" + item.ItemCode + @"' title='" + Resources.Shopping.ViewDetails + "'>" + "Select" + @"</a></div>");
-                //<a onclick=""" + Page.ClientScript.GetPostBackClientHyperlink(this, "AddToCart|" + renderedItemCounter) + @""" class='btn btn-success'>" + Resources.Shopping.AddToCart + "</a></div>");
+        #region Select Button
+        if(item.ItemCode != "6601")
+        {
+            html.AppendLine(@"
+                <div class='addtocart'>
+                    <a class='btn btn-success' href='" + Shopping.UrlProductDetail + "?item=" + item.ItemCode + @"' title='" + Resources.Shopping.ViewDetails + "'>" + "Select" + @"</a></div>");
+                    //<a onclick=""" + Page.ClientScript.GetPostBackClientHyperlink(this, "AddToCart|" + renderedItemCounter) + @""" class='btn btn-success'>" + Resources.Shopping.AddToCart + "</a></div>");            
+        }
+        else
+        {
+            html.AppendLine(@"
+                <div class='addtocart'>
+                    <a class='btn btn-success' href='" + Shopping.UrlBusinessCardsLink + "' target='_blank'>" + "Select" + @"</a></div>");
+        }
+        #endregion Select Button
 
 
         if (!item.IsGroupMaster) html.AppendLine(string.Format("<input type='hidden' id='{0}' name='{0}' value='{1}' />", Shopping.Cart.GetFormFieldID("ItemCode", renderedItemCounter), item.ItemCode));

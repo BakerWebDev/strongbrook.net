@@ -163,6 +163,7 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
             });
 
             if (item.ItemCode == "3130") IsPurchasingTheStrongbrookAcademySubscription = true;
+            if (item.ItemCode == "1270") IsPurchasingThe_99PSA_Subscription = true;
 
         });
 
@@ -364,6 +365,11 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
             // Add the request to create an Autoship Order
             details.Add(CreateWealthClubMonthlySubscription());        
         }
+        if (IsPurchasingThe_99PSA_Subscription)
+        {
+            // Add the request to create and Autoship Order for item code 1160
+            details.Add(Create_99PSA_MonthlySubscription());
+        }
 
         // Add the requests that handle the payment method for the order
         switch (Shopping.PropertyBag.PaymentType)
@@ -377,7 +383,10 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
                 break;
 
             case ShoppingCartPropertyBag.PaymentMethodType.PrimaryCreditCard:
-                details.Add(Request_ChargeCreditCardOnFile(AccountCreditCardType.Primary));
+                if (!IsTestCreditCard(Shopping.PropertyBag.CreditCardNumber))
+                {
+                    details.Add(Request_ChargeCreditCardOnFile(AccountCreditCardType.Primary));
+                }
                 break;
 
             case ShoppingCartPropertyBag.PaymentMethodType.SecondaryCreditCard:
@@ -477,7 +486,7 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
     // Return a boolean that reflects whether the credit card equals "9696" or not.
     private bool IsTestCreditCard(string cardNumber)
     {
-        return (cardNumber == "9696");
+        return (cardNumber == "***********9696");
     }
 
     // Return a boolean that reflects whether the credit card equals "9696" or not.
@@ -673,6 +682,7 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
     #endregion Get the password from the cookie
     public string WealthClubOrder;
     public bool IsPurchasingTheStrongbrookAcademySubscription { get; set; }
+    public bool IsPurchasingThe_99PSA_Subscription { get; set; }
 
     #endregion Properties required by Litmos
 
@@ -957,6 +967,46 @@ public partial class ShoppingCheckoutReview : Page, IPostBackEventHandler
         return details.ToArray();
     }
 
+    private CreateAutoOrderRequest Create_99PSA_MonthlySubscription()
+    {
+        CreateAutoOrderRequest request = new CreateAutoOrderRequest();
+
+        request.CustomerID = Identity.Current.CustomerID;
+
+        request.CurrencyCode = Shopping.Configuration.CurrencyCode;
+        request.WarehouseID = Shopping.Configuration.WarehouseID;
+        request.PriceType = Shopping.Configuration.PriceTypeID;
+        request.ShipMethodID = Shopping.PropertyBag.ShipMethodID;
+
+        request.ProcessType = Exigo.WebService.AutoOrderProcessType.AlwaysProcess;
+        request.PaymentType = Exigo.WebService.AutoOrderPaymentType.PrimaryCreditCard;
+        request.Frequency = Exigo.WebService.FrequencyType.Monthly;
+        request.StartDate = DateTime.Now.AddDays(30);
+
+        request.FirstName = Shopping.PropertyBag.ShippingFirstName;
+        request.LastName = Shopping.PropertyBag.ShippingLastName;
+        request.Address1 = Shopping.PropertyBag.ShippingAddress1;
+        request.Address2 = Shopping.PropertyBag.ShippingAddress2;
+        request.City = Shopping.PropertyBag.ShippingCity;
+        request.State = Shopping.PropertyBag.ShippingState;
+        request.Zip = Shopping.PropertyBag.ShippingZip;
+        request.Country = Shopping.PropertyBag.ShippingCountry;
+        request.Phone = Shopping.PropertyBag.Phone;
+        request.Email = Shopping.PropertyBag.Email;
+        request.Details = Monthly_99PSA_Details();
+
+        return request;
+    }
+    OrderDetailRequest[] Monthly_99PSA_Details()
+    {
+        List<OrderDetailRequest> details = new List<OrderDetailRequest>();
+        details.Add(new OrderDetailRequest
+        {
+            ItemCode = "1160",
+            Quantity = 1
+        });
+        return details.ToArray();
+    }
     #endregion Create the Autoship Order
 
     #region Update the customer with the new Litmos User ID

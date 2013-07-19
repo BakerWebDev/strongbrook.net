@@ -15,7 +15,7 @@
         
         $(function () {
             // Report
-            setInitialSort('IndentedSort', report.sortOrderTypes.ASCENDING);
+            setInitialSort('CustomerID', report.sortOrderTypes.ASCENDING);
             initializeReport();
 
             // Searching in report
