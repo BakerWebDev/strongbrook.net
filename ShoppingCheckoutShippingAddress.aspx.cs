@@ -181,7 +181,7 @@ public partial class ShoppingCheckoutShippingAddress : Page, IPostBackEventHandl
         set { lstCountry.SelectedValue = value; }
     }
 
-    public bool IsPurchasingThe_99PSA_Subscription { get; set; }
+    public bool IsVirtualItemAndQtyOne { get; set; }
     #endregion
 
     #region Load Data
@@ -266,7 +266,7 @@ public partial class ShoppingCheckoutShippingAddress : Page, IPostBackEventHandl
                 ParentItemCode  = item.ParentItemCode                    
             });
 
-            if (item.ItemCode == "1270") IsPurchasingThe_99PSA_Subscription = true;
+            if (item.ItemCode == "1270") IsVirtualItemAndQtyOne = true;
 
         });
 
@@ -293,7 +293,7 @@ public partial class ShoppingCheckoutShippingAddress : Page, IPostBackEventHandl
                 else
                 {
                     GetOrderDetails();
-                    if(IsPurchasingThe_99PSA_Subscription)
+                    if(IsVirtualItemAndQtyOne)
                     {
                         Response.Redirect(Shopping.GetStepUrl(ShoppingStep.Review));
                     }

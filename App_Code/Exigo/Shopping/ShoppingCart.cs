@@ -533,6 +533,120 @@ public class ShoppingCartItem
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #region This is all new
+
+
+    public ShoppingCartManager Shopping
+    {
+        get
+        {
+            if (_shopping == null)
+            {
+                _shopping = new ShoppingCartManager();
+            }
+            return _shopping;
+        }
+    }
+    private ShoppingCartManager _shopping;
+
+
+
+    public CalculateOrderResponse CalculatedOrder
+    {
+        get
+        {
+            if (_calculatedOrder == null)
+            {
+                _calculatedOrder = ExigoApiContext.CreateWebServiceContext().CalculateOrder(new CalculateOrderRequest
+                {
+                    WarehouseID = Shopping.Configuration.WarehouseID,
+                    PriceType = Shopping.Configuration.PriceTypeID,
+                    CurrencyCode = Shopping.Configuration.CurrencyCode,
+                    ReturnShipMethods = true,
+                    ShipMethodID = Shopping.PropertyBag.ShipMethodID,
+                    Details = Shopping.Cart.Items.Select(i => new OrderDetailRequest
+                    {
+                        ItemCode = i.ItemCode,
+                        Quantity = i.Quantity,
+                        ParentItemCode = i.ParentItemCode
+                    }).ToArray(),
+
+                    City = Shopping.PropertyBag.ShippingCity,
+                    State = Shopping.PropertyBag.ShippingState,
+                    Zip = Shopping.PropertyBag.ShippingZip,
+                    Country = Shopping.PropertyBag.ShippingCountry
+                });
+            }
+            return _calculatedOrder;
+        }
+    }
+    private CalculateOrderResponse _calculatedOrder;
+
+
+
+
+
+    /// <summary>
+    /// Determines if the item is a virtual item.
+    /// </summary>
+    public bool IsVirtualItem
+    {
+        get
+        {
+            bool isVirtual = false;
+
+
+            List<ShoppingCartItem> cartItems = new List<ShoppingCartItem>();
+            foreach (var item in cartItems)
+            {
+                if (CalculatedOrder.)
+                {
+                    //
+                }
+            }
+
+
+
+            return isVirtual;
+        }
+    }
+    #endregion This is all new
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     #region Serialize/Deserialize Methods
     /// <summary>
     /// Returns an XML string based on the ShoppingCart object.
