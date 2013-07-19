@@ -180,6 +180,8 @@ public partial class ShoppingCheckoutShippingAddress : Page, IPostBackEventHandl
         get { return lstCountry.SelectedValue; }
         set { lstCountry.SelectedValue = value; }
     }
+
+    public bool IsPurchasingThe_99PSA_Subscription { get; set; }
     #endregion
 
     #region Load Data
@@ -249,6 +251,29 @@ public partial class ShoppingCheckoutShippingAddress : Page, IPostBackEventHandl
     }
     #endregion
 
+    #region Order Details
+    private OrderDetailRequest[] GetOrderDetails()
+    {
+        List<OrderDetailRequest> details = new List<OrderDetailRequest>();
+
+        // Add the items from the shopping cart
+        Shopping.Cart.Items.Where(c => c.Type == ShoppingCartItemType.Default).ToList().ForEach(item =>
+        {
+            details.Add(new OrderDetailRequest
+            {
+                ItemCode        = item.ItemCode,
+                Quantity        = item.Quantity,
+                ParentItemCode  = item.ParentItemCode                    
+            });
+
+            if (item.ItemCode == "1270") IsPurchasingThe_99PSA_Subscription = true;
+
+        });
+
+        return details.ToArray();
+    }
+    #endregion
+
     #region IPostBackEventHandlers
     public void RaisePostBackEvent(string eventArgument)
     {
@@ -267,7 +292,15 @@ public partial class ShoppingCheckoutShippingAddress : Page, IPostBackEventHandl
                 }
                 else
                 {
-                    Response.Redirect(Shopping.GetStepUrl(ShoppingStep.ShippingMethod));
+                    GetOrderDetails();
+                    if(IsPurchasingThe_99PSA_Subscription)
+                    {
+                        Response.Redirect(Shopping.GetStepUrl(ShoppingStep.Review));
+                    }
+                    else
+                    {
+                         Response.Redirect(Shopping.GetStepUrl(ShoppingStep.ShippingMethod));                   
+                    }
                 }
                 break;
 
